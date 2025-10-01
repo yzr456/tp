@@ -1,14 +1,28 @@
-[![CI Status](https://github.com/se-edu/addressbook-level3/workflows/Java%20CI/badge.svg)](https://github.com/se-edu/addressbook-level3/actions)
+[![Java CI](https://github.com/AY2526S1-CS2103-F12-4/tp/actions/workflows/gradle.yml/badge.svg?branch=master)](https://github.com/AY2526S1-CS2103-F12-4/tp/actions/workflows/gradle.yml)
 
 ![Ui](docs/images/Ui.png)
 
-* This is **a sample project for Software Engineering (SE) students**.<br>
-  Example usages:
-  * as a starting point of a course project (as opposed to writing everything from scratch)
-  * as a case study
-* The project simulates an ongoing software project for a desktop application (called _AddressBook_) used for managing contact details.
-  * It is **written in OOP fashion**. It provides a **reasonably well-written** code base **bigger** (around 6 KLoC) than what students usually write in beginner-level SE modules, without being overwhelmingly big.
-  * It comes with a **reasonable level of user and developer documentation**.
-* It is named `AddressBook Level 3` (`AB3` for short) because it was initially created as a part of a series of `AddressBook` projects (`Level 1`, `Level 2`, `Level 3` ...).
-* For the detailed documentation of this project, see the **[Address Book Product Website](https://se-education.org/addressbook-level3)**.
-* This project is a **part of the se-education.org** initiative. If you would like to contribute code to this project, see [se-education.org](https://se-education.org/#contributing-to-se-edu) for more info.
+# Zenith
+## Project Overview
+
+
+Zenith is a desktop address book application for tech-savvy private tutors who prefer using a Command Line Interface (CLI) for its efficiency and minimalism. It simplifies the tutoring workflow by centralizing student details, payments, tracking skill progress, and optimizing schedules. The application is designed to enhance personalized tutoring through quick, efficient access and management of student information.
+
+- The application is optimized for fast typing via a **Command Line Interface (CLI)**.
+- The application is intended for a **single user**.
+- It is designed to work with data stored locally on your computer.
+
+## Features
+- **Add:** Adds a student's contact record with their name, contact details, study year, and location.
+- **Delete:** Removes a student's contact record.
+- **Edit:** Modifies the details of an existing student contact.
+- **Find:** Searches for and retrieves a specific student's contact information.
+- **List:** Displays a list of all student contacts.
+- **Help:** Shows a help window with a list of available commands.
+- **Tagging:** Allows for adding session and subject tags to a student's record for better organization and tracking.
+- **Exit:** Exits the application.
+
+*For a more detailed breakdown of the features and how to use them, please refer to the [User Guide](docs/DeveloperGuide.md).*
+
+## Credits
+- This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
