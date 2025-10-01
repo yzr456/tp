@@ -9,6 +9,14 @@ We are a team based in the [School of Computing, National University of Singapor
 
 ## Project team
 
+### Zirui
+
+<img src="images/yzr456.png" width="200px">
+
+[[github](https://github.com/yzr456)]
+
+* Role: In charge of Code quality
+
 ### Yeo Kai Bin
 
 <img src="images/kbyeo.png" width="200px">
