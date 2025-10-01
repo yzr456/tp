@@ -3,8 +3,6 @@
 ![Ui](docs/images/Ui.png)
 
 # Zenith
-
----
 ## Project Overview
 
 
