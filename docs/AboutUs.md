@@ -9,6 +9,15 @@ We are a team based in the [School of Computing, National University of Singapor
 
 ## Project team
 
+### Yeo Kai Bin
+
+<img src="images/kbyeo.png" width="200px">
+
+[[github](https://github.com/kbyeo)]
+
+* Role: Scheduling and tracking
+* Responsibilities: Storage
+
 ### Jin Seng
 
 <img src="images/teejinseng.png" width="200px">
