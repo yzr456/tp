@@ -9,6 +9,15 @@ We are a team based in the [School of Computing, National University of Singapor
 
 ## Project team
 
+### Zavier
+
+<img src="images/zaviercsj.png" width="200px">
+
+[[github](https://github.com/ZavierCSJ)]
+[[portfolio](team/johndoe.md)]
+
+* Role: Deliverables and deadlines
+
 ### Zirui
 
 <img src="images/yzr456.png" width="200px">
