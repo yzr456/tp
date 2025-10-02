@@ -274,13 +274,13 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
-* prefer desktop apps over other types
-* can type fast
-* prefers typing to mouse interactions
-* is reasonably comfortable using CLI apps
+* Tech savvy private tutor
+* constantly juggle students of different levels, hard to provide personalised learning experiences
+* constantly juggle students’ different schedules, hard to plan out their own time
+* juggling student locations and timetables, bad planning could lead to long travel times between each tutoring session
+* has student and parent details scattered across phone contacts, WhatsApp chats, and loose business cards
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: This product is for a tech savvy private tutor who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, tracks skill progress, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 
 ### User stories
@@ -289,12 +289,12 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
 |----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
+| `* * *`  | private tutor                             | add a tutee contact record with name, contact, location, age/level | can quickly access essential details  |
+| `* * *`  | private tutor                             | remove a tutee contact      | can have an updated contact list                                                |
+| `* * *`  | first time user                           | have a help command         | can know how to use the application                                                 |
+| `* * *`  | private tutor                             | be able to view all the current records in a list | can be more convenient when accessing records               |
+| `* * *`  | private tutor                             | safely exit the app         | all my data is saved correctly                                                   |
+| `* * *`  | private tutor                             | locally store all student-related and personal data | never lose important information                            |
 
 *{More to be added}*
 
