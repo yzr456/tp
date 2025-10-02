@@ -332,6 +332,11 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
 2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+4.  Autosave functionality must always preserve user data immediately after every data-changing command (add, delete, edit, session/subject changes) with no perceptible delay.
+5.  Application startup, shutdown, and command responses for core actions (add, edit, delete, addsession, addsubject) should complete in under 1 second for databases with up to 1000 students on consumer-grade hardware.
+6.  The application shall recover gracefully from partial file corruption, access errors, or disk space insufficiency, displaying clear error messages, attempting restoration from the most recent backup, and never crashing silently or destroying unsaved user data.
+7.  All error and warning messages must be concise, clear, and non-ambiguous, allowing users to recover independently without technical support.
+8.  The _core functions_ of the application must work completely offline with no network dependencies, ensuring reliability regardless of internet connectivity.
 
 *{More to be added}*
 
