@@ -274,13 +274,17 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* Tech savvy private tutor
-* constantly juggle students of different levels, hard to provide personalised learning experiences
-* constantly juggle students’ different schedules, hard to plan out their own time
-* juggling student locations and timetables, bad planning could lead to long travel times between each tutoring session
+* tech savvy private tutor
+* manages 10-50+ students across different education levels (primary to university)
+* prefers typing commands over mouse clicks for speed and efficiency
+* needs quick access to information during back-to-back sessions (no time for slow navigation)
+* juggles students of different levels, making it hard to provide personalized learning experiences
+* struggles to manage students' conflicting schedules and optimize their own time
+* faces long travel times between sessions due to poor planning around student locations and timetables
 * has student and parent details scattered across phone contacts, WhatsApp chats, and loose business cards
+* values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: This product is for a tech savvy private tutor who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, tracks skill progress, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
+**Value proposition**: A lightning-fast CLI address book designed for tech-savvy private tutors managing 10-50+ students. Centralizes scattered student information, tracks subjects and session schedules, and enables instant filtering by location, time, or student details—all through efficient keyboard commands that outpace traditional apps. Spend less time organizing, more time teaching. 
 
 
 ### User stories
@@ -289,12 +293,30 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
 |----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | private tutor                             | add a tutee contact record with name, contact, location, age/level | can quickly access essential details  |
-| `* * *`  | private tutor                             | remove a tutee contact      | can have an updated contact list                                                |
-| `* * *`  | first time user                           | have a help command         | can know how to use the application                                                 |
-| `* * *`  | private tutor                             | be able to view all the current records in a list | can be more convenient when accessing records               |
-| `* * *`  | private tutor                             | safely exit the app         | all my data is saved correctly                                                   |
-| `* * *`  | private tutor                             | locally store all student-related and personal data | never lose important information                            |
+| `* * *`  | private tutor                              | add a tutee contact record with name, contact, location, age/level | quickly access essential details |
+| `* * *`  | private tutor                              | remove a tutee contact       | have an updated contact list                                           |
+| `* * *`  | private tutor                              | edit student details         | keep their records up to date                                          |
+| `* * *`  | private tutor with many students           | easily look for students by name | quickly access their information during busy tutoring days         |
+| `* * *`  | fast typing private tutor                  | perform tasks using short efficient commands | save time                                              |
+| `* * *`  | first time user                            | have a help command          | know how to use the application                                        |
+| `* * *`  | private tutor                              | store multiple contact methods per person (phone, email, WhatsApp, etc.) | have backup communication options |
+| `* * *`  | private tutor                              | locally store all student-related and personal data | never lose important information                |
+| `* *`    | private tutor                              | view a calendar of upcoming sessions | manage my time before those sessions                           |
+| `* *`    | private tutor                              | group students by classes    | organise my addressbook                                                |
+| `* *`    | private tutor                              | receive reminders for lessons | don't miss any sessions                                               |
+| `* *`    | private tutor who earns money              | keep track of payments I received |  streamline my finances                                           |
+| `* *`    | user                                       | delete all my personal data (non-contact related information) | remove all personal information       |
+| `* *`    | private tutor                              | track test scores            | monitor improvement over time                                          |
+| `* *`    | private tutor                              | record the topics each student has covered | identify gaps in knowledge                               |
+| `* *`    | effective private tutor                    | mark areas where a student struggles | focus those in future lessons.                                 |
+| `* *`    | effective private tutor                    | highlight a student’s strong skills | build on them                                                   |
+| `* *`    | private tutor                              | record different rates for different students or classes | manage varying fees more easily            |
+| `* *`    | private tutor                              | log actual hours worked per student |  accurately bill and track my time investment                   |
+| `* *`    | beginner user                              | have a demo/tutorial         | have an intuitive way to learn the application                         |
+| `*`      | private tutor                              | assign projects to each student |  tailor their learning paths                                        |
+| `*`      | private tutor                              | update project completion status |  track project progress                                            |
+| `*`      | time-efficient private tutor               | filter students by location  |  arrange back-to-back F2F lessons efficiently                          |
+| `*`      | online private tutor                       | track time zones for international students |  schedule sessions at reasonable hours for everyone     |
 
 *{More to be added}*
 
