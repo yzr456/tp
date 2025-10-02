@@ -300,30 +300,230 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Use cases
 
-(For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `Zenith` and the **Actor** is the `Tutor`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: UC01 – Add Contact**
+
+**Guarantees**
+- A new contact is stored only if all fields are valid and the phone number is unique.
+- On success, the updated list will reflect the new contact.
 
 **MSS**
-
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
-
-    Use case ends.
+1. Tutor provides a contact with its details to add.
+2. Zenith validates the details.
+3. Zenith adds the contact to the list and shows the new contact.
+4. Includes: UC11 Autosave.
+Use case ends.
 
 **Extensions**
+* 2a. Zenith detects that any detail is invalid.
+    * 2a1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError).
+      Use case ends.
+* 2b. Zenith detects that the contact already exists.
+    * 2b1. Zenith shows DuplicateError.
+      Use case ends.
 
-* 2a. The list is empty.
 
-  Use case ends.
+**Use case: UC02 – Delete Contact**
 
-* 3a. The given index is invalid.
+**Preconditions** 
+- At least one contact is listed.
 
-    * 3a1. AddressBook shows an error message.
+**Guarantees**
+- The specified contact is removed only if a valid index is given.
+- On success, the updated list will no longer show the contact.
 
-      Use case resumes at step 2.
+**MSS**
+1. Tutor provides the index of the contact to be deleted.
+2. Zenith validates the index.
+3. Zenith removes the contact from the list and shows the deleted contact.
+4. Includes: UC11 Autosave.
+Use case ends.
+
+**Extensions**
+* 2a. Zenith detects that the index is invalid or missing.
+    * 2a1. Zenith shows InvalidIndexError or ArgumentError.
+      Use case ends.
+	
+	
+**Use case: UC03 – Edit Contact**
+
+**Preconditions**
+- The target contact exists.
+
+**Guarantees**
+- Only provided fields are updated; phone numbers in the list remain unique.
+- On success, Zenith shows the updated contact.
+
+**MSS**
+1. Tutor provides the index and new values of the details of the contact to be edited.
+2. Zenith validates the index and any provided values.
+3. Zenith updates the contact and shows the updated contact.
+4. Includes: UC11 Autosave.
+Use case ends.
+  
+**Extensions**
+* 2a. Zenith detects that the index is invalid or missing. 
+    * 2a1. Zenith shows InvalidIndexError / ArgumentError. 
+      Use case ends.
+* 2b. Zenith detects that any provided field is invalid.
+    * 2b1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError). 
+      Use case ends.
+
+	
+**Use case: UC04 – Edit Session Timing for a Contact**
+
+**Preconditions** 
+- The contact and the target session exist.
+
+**Guarantees**
+- The session time is updated only if the new slot is valid and non-overlapping.
+- On success, Zenith shows the contact with updated sessions.
+
+**MSS**
+1. Tutor provides the contact index, session timing details to be edited.
+2. Zenith validates indices and time values.
+3. Zenith checks for overlaps with that contact’s existing sessions.
+4. Zenith updates the session and shows the updated contact.
+5. Includes: UC11 Autosave.
+Use case ends.
+  
+**Extensions**
+* 2a. Zenith detects that the index is missing or invalid. 
+    * 2a1. Zenith shows InvalidIndexError / InvalidSessionIndexError. 
+      Use case ends.
+* 2b. Zenith detects that the day is invalid.
+    *2 b1. Zenith shows InvalidDayError. 
+      Use case ends.
+* 2c. Zenith detects that the time format or range is invalid.
+    * 2c1. Zenith shows TimeFormatError / TimeRangeError. 
+      Use case ends.
+* 3a. Zenith detects that the updated session overlaps an existing session 
+    * 3a1. Zenith shows SessionConflictError. 
+      Use case ends.
+
+
+**Use case: UC05 – Add Session Timing to a Contact**
+
+**Preconditions**
+- The contact exists.
+
+**Guarantees**
+- A session is added only if the slot is valid and non-overlapping.
+- On success, Zenith shows the contact with the new session.
+
+**MSS**
+1. Tutor provides the contact index and session timing details to be added.
+2. Zenith validates indices and time values.
+3. Zenith checks for overlaps with that contact’s existing sessions.
+4. Zenith adds the session and shows the updated contact.
+5. Includes: UC11 Autosave.
+Use case ends.
+
+**Extensions**
+Same as UC04
+
+
+**Use case: UC06 – Add Subject Tag to a Contact**
+
+**Preconditions** 
+- The contact exists.
+
+**Guarantees**
+- A subject tag is added only if the subject code is valid and not already present.
+- On success, Zenith shows the contact with the new tag.
+
+**MSS**
+1. Tutor provides the contact index and the subject code for the tag to be added.
+2. Zenith validates the index and subject code.
+3. Zenith adds the tag and shows the updated contact.
+4. Includes: UC11 Autosave.
+Use case ends.
+
+**Extensions**
+* 2a. Zenith detects that the index is invalid or missing
+    * 2a1. Zenith shows InvalidIndexError / ArgumentError. 
+      Use case ends.
+* 2b. Zenith detects that the subject code is missing or invalid
+    * 2b1. Zenith shows InvalidSubjectError. 
+      Use case ends.
+* 2c. Zenith detects that the subject tag is already on the contact 
+    * 2c1. Zenith shows DuplicateSubjectError. 
+      Use case ends.
+	
+
+**Use case: UC07 – Find Contacts**
+
+**Guarantees**
+- Zenith shows a filtered contact list based on the keywords; no data is modified.
+
+**MSS**
+1. Tutor provides the keywords to find contacts by.
+2. Zenith validates that at least one non-empty keyword is provided.
+3. Zenith filters the list and shows the results.
+Use case ends.
+
+**Extensions**
+* 2a. Zenith detects that no valid keyword is provided 
+    * 2a1. Zenith shows ArgumentError. 
+      Use case ends.
+	
+	
+**Use case: UC08 – List Contacts**
+
+**Guarantees**
+- Zenith shows the full contact list; no data is modified.
+
+**MSS**
+1. Tutor requests to list contacts.
+2. Zenith shows all contacts.
+Use case ends.
+  
+ 
+**Use case: UC09 – Help**
+
+**Guarantees**
+- Zenith shows the available commands with brief descriptions.
+
+**MSS**
+1. Tutor requests help.
+2. Zenith displays the available commands.
+Use case ends.
+  
+  
+**Use case: UC10 – Exit**
+
+**Guarantees**
+- Zenith exits gracefully
+
+**MSS**
+1. Tutor requests to exit.
+2. Zenith terminates.
+Use case ends.
+  
+
+**Use case: UC11 – Autosave**
+
+**Actor: File System**
+
+**Preconditions**
+- A data-modifying command has just succeeded.
+
+**Guarantees**
+- Latest state is written to local storage
+- On failure Zenith warns with an error message
+
+**MSS**
+1. Zenith writes the updated data to the save file.
+Use case ends.
+
+**Extensions**
+* 1a. Zenith detects write failure due to permissions/disk
+    * 1a1. Zenith shows FileAccessError or DiskSpaceError. 
+      Use case ends.
+* 1b. Zenith detects that the existing save file is corrupted
+    * 1b1. Zenith shows FileCorruptionError and attempts recovery/backup; on failure show BackupCreationError.
+	  Use case ends.
 
 *{More to be added}*
 
