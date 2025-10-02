@@ -337,8 +337,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
+* **CLI (Command Line Interface)**: Text-based interface where users interact with the application by typing commands rather than clicking buttons or menus.
+* **Contact**: A student record in zenith containing personal details, subjects, sessions, and other tutoring-related information.
+* **Core Functions**: Add, Edit, Delete, add Session, add Subject
+* **HHmm format**: 24-hour time notation using 4 digits (e.g., 0900 for 9:00 AM, 1530 for 3:30 PM).
+* **Index**: The position number of a student contact as displayed in the current list (e.g., 1, 2, 3).
+* **JC1/JC2**: Junior College Year 1 and Year 2 - pre-university education levels in Singapore (usually ages 17-18).
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
+* **SEC1 - SEC5**: Secondary school years 1-5 in Singapore education system (usually ages 13-17).
 
 --------------------------------------------------------------------------------------------------------------------
 
