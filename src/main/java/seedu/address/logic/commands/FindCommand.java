@@ -2,6 +2,9 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
+
+import seedu.address.commons.util.StringUtil;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.model.Model;
@@ -21,17 +24,25 @@ public class FindCommand extends Command {
             + "Example: " + COMMAND_WORD + " alice bob charlie";
 
     private final NameContainsKeywordsPredicate predicate;
+    private final List<String> nameKeywords;
 
-    public FindCommand(NameContainsKeywordsPredicate predicate) {
+    /**
+     * @param predicate the predicate used to filter contacts by name
+     * @param nameKeywords the keywords entered by the user
+     */
+    public FindCommand(NameContainsKeywordsPredicate predicate, List<String> nameKeywords) {
         this.predicate = predicate;
+        this.nameKeywords = nameKeywords;
     }
 
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredPersonList(predicate);
+
         return new CommandResult(
-                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, model.getFilteredPersonList().size()));
+                String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW,
+                        model.getFilteredPersonList().size(), StringUtil.wrapEachInQuotesAndJoin(nameKeywords)));
     }
 
     @Override
