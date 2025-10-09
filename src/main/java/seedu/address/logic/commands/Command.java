@@ -8,6 +8,7 @@ import seedu.address.model.Model;
  */
 public abstract class Command {
     public static final String COMMAND_WORD = "command";
+    public static final String MESSAGE_USAGE = COMMAND_WORD;
     /**
      * Executes the command and returns the result message.
      *
