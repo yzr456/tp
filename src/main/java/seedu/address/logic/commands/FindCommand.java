@@ -22,7 +22,7 @@ public class FindCommand extends Command {
             + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
             + "Parameters: KEYWORD [MORE_KEYWORDS]...\n"
             + "Command syntax: find [KEYWORDS]\n"
-            + "Example: " + COMMAND_WORD + " alice bob charlie";
+            + "Example: " + COMMAND_WORD + " alice bob charlie\n";
 
     private final NameContainsKeywordsPredicate predicate;
     private final List<String> nameKeywords;
