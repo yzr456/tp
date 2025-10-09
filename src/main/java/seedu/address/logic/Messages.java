@@ -18,7 +18,7 @@ public class Messages {
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contact(s) found for search %2$s";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
-    public static final String MESSAGE_ARGUMENT_ERROR = "Missing value for one or more parameters. "
+    public static final String MESSAGE_ARGUMENT_ERROR = "ArgumentError: Missing value for one or more parameters. "
                 + "Please ensure all parameters have non-empty values.";
 
     /**
