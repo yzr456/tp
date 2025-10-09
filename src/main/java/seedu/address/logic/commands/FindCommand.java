@@ -24,7 +24,6 @@ public class FindCommand extends Command {
             + "Command syntax: find [KEYWORDS]\n"
             + "Example: " + COMMAND_WORD + " alice bob charlie\n";
 
-
     private final NameContainsKeywordsPredicate predicate;
     private final List<String> nameKeywords;
 
