@@ -99,9 +99,10 @@ public class HelpWindow extends UiPart<Stage> {
         getRoot().requestFocus();
     }
 
+    /**
+     * @return A string containing how to use the commands
+     */
     public static String getCommandUsage() {
-        StringBuilder commandUsages = new StringBuilder();
-
         //mini command registry
         List<Class<? extends Command>> registeredCommands = new ArrayList<>();
         registeredCommands.add(AddCommand.class);
@@ -111,11 +112,21 @@ public class HelpWindow extends UiPart<Stage> {
         registeredCommands.add(HelpCommand.class);
         registeredCommands.add(ExitCommand.class);
 
-        for (Class<? extends Command> command : registeredCommands) {
+        return getCommandUsage(registeredCommands);
+    }
+
+    /**
+     * @param commands The list of command classes to generate usage for
+     * @return A string containing how to use the commands
+     */
+    public static String getCommandUsage(List<Class<? extends Command>> commands) {
+        StringBuilder commandUsages = new StringBuilder();
+
+        for (Class<? extends Command> command : commands) {
             try {
                 Field commandWord = command.getDeclaredField("COMMAND_WORD");
-                Field messageUsage = command.getDeclaredField("MESSAGE_USAGE");
                 commandUsages.append("▶ ").append(commandWord.get(null)).append("\n");
+                Field messageUsage = command.getDeclaredField("MESSAGE_USAGE");
                 commandUsages.append(messageUsage.get(null));
                 commandUsages.append("\n");
             } catch (NoSuchFieldException | IllegalAccessException e) {
