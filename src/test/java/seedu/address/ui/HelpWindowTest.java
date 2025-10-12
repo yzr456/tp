@@ -27,7 +27,7 @@ public class HelpWindowTest {
     @Test
     public void getCommandUsage_containsExpectedCommands() {
         String commandUsage = HelpWindow.getCommandUsage();
-        
+
         // Check that all expected commands are present
         assertTrue(commandUsage.contains("add"));
         assertTrue(commandUsage.contains("delete"));
@@ -35,7 +35,7 @@ public class HelpWindowTest {
         assertTrue(commandUsage.contains("find"));
         assertTrue(commandUsage.contains("help"));
         assertTrue(commandUsage.contains("exit"));
-        
+
         // Check that it contains usage information (should have multiple lines)
         assertTrue(commandUsage.contains("\n"));
         assertTrue(commandUsage.contains("▶"));
@@ -71,8 +71,8 @@ public class HelpWindowTest {
     @Test
     public void getCommandUsage_invalidCommandInput() {
         List<Class<? extends Command>> invalidCommands = new ArrayList<>();
-        invalidCommands.add( MockInvalidCommand.class);
-        invalidCommands.add( MockInvalidMessageUsageCommand.class );
+        invalidCommands.add(MockInvalidCommand.class);
+        invalidCommands.add(MockInvalidMessageUsageCommand.class);
         String commandUsage = HelpWindow.getCommandUsage(invalidCommands);
 
         assertEquals("▶ Mock\n", commandUsage);
