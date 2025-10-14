@@ -49,6 +49,14 @@ public class EditPersonDescriptorBuilder {
     }
 
     /**
+     * Sets the {@code StudyYear} of the {@code EditPersonDescriptor} that we are building.
+     */
+    public EditPersonDescriptorBuilder withStudyYear(String studyYear) {
+        descriptor.setStudyYear(new String(studyYear));
+        return this;
+    }
+
+    /**
      * Sets the {@code Phone} of the {@code EditPersonDescriptor} that we are building.
      */
     public EditPersonDescriptorBuilder withPhone(String phone) {
