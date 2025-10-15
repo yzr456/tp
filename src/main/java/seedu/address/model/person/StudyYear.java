@@ -48,7 +48,7 @@ public class StudyYear {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof Phone)) {
+        if (!(other instanceof StudyYear)) {
             return false;
         }
 

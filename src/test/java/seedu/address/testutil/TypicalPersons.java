@@ -39,17 +39,17 @@ public class TypicalPersons {
             .withPhone("87652533").withEmail("cornelia@example.com").withAddress("10th street")
             .withTags("friends").build();
     public static final Person ELLE = new PersonBuilder().withName("Elle Meyer").withStudyYear("UNI3")
-            .withPhone("9482224").withEmail("werner@example.com").withAddress("michegan ave").build();
+            .withPhone("94822294").withEmail("werner@example.com").withAddress("michegan ave").build();
     public static final Person FIONA = new PersonBuilder().withName("Fiona Kunz").withStudyYear("UNI3")
-            .withPhone("9482427").withEmail("lydia@example.com").withAddress("little tokyo").build();
+            .withPhone("94892427").withEmail("lydia@example.com").withAddress("little tokyo").build();
     public static final Person GEORGE = new PersonBuilder().withName("George Best").withStudyYear("UNI3")
-            .withPhone("9482442").withEmail("anna@example.com").withAddress("4th street").build();
+            .withPhone("94892442").withEmail("anna@example.com").withAddress("4th street").build();
 
     // Manually added
     public static final Person HOON = new PersonBuilder().withName("Hoon Meier").withStudyYear("UNI3")
-            .withPhone("8482424").withEmail("stefan@example.com").withAddress("little india").build();
+            .withPhone("84824924").withEmail("stefan@example.com").withAddress("little india").build();
     public static final Person IDA = new PersonBuilder().withName("Ida Mueller").withStudyYear("UNI3")
-            .withPhone("8482131").withEmail("hans@example.com").withAddress("chicago ave").build();
+            .withPhone("84821331").withEmail("hans@example.com").withAddress("chicago ave").build();
 
     // Manually added - Person's details found in {@code CommandTestUtil}
     public static final Person AMY = new PersonBuilder().withName(VALID_NAME_AMY).withStudyYear(VALID_STUDY_YEAR_AMY)

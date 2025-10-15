@@ -3,11 +3,7 @@ package seedu.address.testutil;
 import java.util.HashSet;
 import java.util.Set;
 
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.person.*;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
 
@@ -23,7 +19,7 @@ public class PersonBuilder {
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
 
     private Name name;
-    private String studyYear;
+    private StudyYear studyYear;
     private Phone phone;
     private Email email;
     private Address address;
@@ -34,7 +30,7 @@ public class PersonBuilder {
      */
     public PersonBuilder() {
         name = new Name(DEFAULT_NAME);
-        studyYear = DEFAULT_STUDY_YEAR;
+        studyYear = new StudyYear(DEFAULT_STUDY_YEAR);
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
@@ -65,7 +61,7 @@ public class PersonBuilder {
      * Sets the {@code StudyYear} of the {@code Person} that we are building.
      */
     public PersonBuilder withStudyYear(String studyYear) {
-        this.studyYear = studyYear;
+        this.studyYear = new StudyYear(studyYear);
         return this;
     }
 
