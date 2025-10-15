@@ -21,11 +21,7 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.person.Address;
-import seedu.address.model.person.Email;
-import seedu.address.model.person.Name;
-import seedu.address.model.person.Person;
-import seedu.address.model.person.Phone;
+import seedu.address.model.person.*;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -96,7 +92,7 @@ public class EditCommand extends Command {
         assert personToEdit != null;
 
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
-        String updatedStudyYear = editPersonDescriptor.getStudyYear().orElse(personToEdit.getStudyYear());
+        StudyYear updatedStudyYear = editPersonDescriptor.getStudyYear().orElse(personToEdit.getStudyYear());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
@@ -135,7 +131,7 @@ public class EditCommand extends Command {
      */
     public static class EditPersonDescriptor {
         private Name name;
-        private String studyYear;
+        private StudyYear studyYear;
         private Phone phone;
         private Email email;
         private Address address;
@@ -171,11 +167,11 @@ public class EditCommand extends Command {
             return Optional.ofNullable(name);
         }
 
-        public void setStudyYear(String studyYear) {
+        public void setStudyYear(StudyYear studyYear) {
             this.studyYear = studyYear;
         }
 
-        public Optional<String> getStudyYear() {
+        public Optional<StudyYear> getStudyYear() {
             return Optional.ofNullable(studyYear);
         }
 
