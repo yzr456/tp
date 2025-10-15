@@ -1,6 +1,38 @@
+@font-face {
+    font-family: 'Telegraf';
+    src: url('/fonts/Telegraf-Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Telegraf';
+    src: url('/fonts/Telegraf-UltraBold.otf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Garet';
+    src: url('/fonts/Garet-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Garet';
+    src: url('/fonts/Garet-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
 .background {
-    -fx-background-color: derive(#1d1d1d, 20%);
-    background-color: #383838; /* Used in the default.html file */
+    -fx-background-color: #2e2e2e;
+    background-color: #2e2e2e;
+}
+
+.root {
+    -fx-font-family: 'Telegraf', 'Segoe UI', sans-serif;
 }
 
 .label {
@@ -19,14 +51,15 @@
 
 .label-header {
     -fx-font-size: 32pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: 'Telegraf';
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
 
 .text-field {
+    -fx-font-family: 'Telegraf';
     -fx-font-size: 12pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-weight: normal;
 }
 
 .tab-pane {
@@ -77,101 +110,128 @@
 }
 
 .split-pane:horizontal .split-pane-divider {
-    -fx-background-color: derive(#1d1d1d, 20%);
-    -fx-border-color: transparent transparent transparent #4d4d4d;
+    -fx-background-color: #2e2e2e;
+    -fx-border-color: transparent;
+}
+
+.divider-line {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
 }
 
 .split-pane {
-    -fx-border-radius: 1;
-    -fx-border-width: 1;
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: #2e2e2e;
+    -fx-border-width: 0;
 }
 
+
 .list-view {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
     -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-padding: 10;
 }
 
 .list-cell {
     -fx-label-padding: 0 0 0 0;
-    -fx-graphic-text-gap : 0;
-    -fx-padding: 0 0 0 0;
+    -fx-graphic-text-gap: 0;
+    -fx-padding: 0 0 20 0;
+    -fx-background-color: transparent;
 }
 
-.list-cell:filled:even {
-    -fx-background-color: #3c3e3f;
-}
-
-.list-cell:filled:odd {
-    -fx-background-color: #515658;
-}
-
-.list-cell:filled:selected {
-    -fx-background-color: #424d5f;
+.list-cell:filled:even #cardPane,
+.list-cell:filled:odd #cardPane {
+    -fx-background-color: rgba(1, 143, 166, 0.15); /* #018fa6 with 15% opacity */
 }
 
 .list-cell:filled:selected #cardPane {
-    -fx-border-color: #3e7b91;
+    -fx-background-color: rgba(189, 141, 22, 0.15); /* #bd8d16 with 15% opacity */
+}
+
+.list-cell:filled:selected #cardPane {
+    -fx-border-color: #bd8d16;
     -fx-border-width: 1;
 }
 
 .list-cell .label {
+    -fx-font-family: 'Telegraf';
     -fx-text-fill: white;
 }
 
+.list-cell:filled:hover #cardPane {
+    -fx-background-color: rgba(1, 143, 166, 0.25);
+}
+
 .cell_big_label {
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: 'Telegraf';
     -fx-font-size: 16px;
-    -fx-text-fill: #010504;
+    -fx-text-fill: #ffffff;
 }
 
 .cell_small_label {
-    -fx-font-family: "Segoe UI";
+    -fx-font-family: 'Telegraf';
     -fx-font-size: 13px;
-    -fx-text-fill: #010504;
+    -fx-text-fill: #e0e0e0;
 }
 
 .stack-pane {
-     -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: #2e2e2e;
 }
 
 .pane-with-border {
-     -fx-background-color: derive(#1d1d1d, 20%);
-     -fx-border-color: derive(#1d1d1d, 10%);
-     -fx-border-top-width: 1px;
+    -fx-background-color: #2e2e2e;
+    -fx-border-color: transparent;
+    -fx-border-top-width: 0;
 }
 
 .status-bar {
-    -fx-background-color: derive(#1d1d1d, 30%);
+    -fx-background-color: #2e2e2e;
 }
 
 .result-display {
     -fx-background-color: transparent;
-    -fx-font-family: "Segoe UI Light";
-    -fx-font-size: 13pt;
-    -fx-text-fill: white;
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 12pt;
+    -fx-text-fill: #d4d4d7;
 }
 
 .result-display .label {
-    -fx-text-fill: black !important;
+    -fx-font-family: 'Telegraf';
+    -fx-text-fill: #d4d4d7 !important;
+}
+
+.result-display .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 15;
+}
+
+.result-display .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.result-display .scroll-pane .content {
+    -fx-background-color: transparent;
 }
 
 .status-bar .label {
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
+    -fx-font-family: 'Telegraf';
+    -fx-text-fill: #d4d4d7;
     -fx-padding: 4px;
     -fx-pref-height: 30px;
 }
 
 .status-bar-with-border {
-    -fx-background-color: derive(#1d1d1d, 30%);
-    -fx-border-color: derive(#1d1d1d, 25%);
-    -fx-border-width: 1px;
+    -fx-background-color: #2e2e2e;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
 }
 
 .status-bar-with-border .label {
-    -fx-text-fill: white;
+    -fx-font-family: 'Telegraf';
+    -fx-text-fill: #d4d4d7;
+}
+
+#statusbarPlaceholder {
+    -fx-background-color: #2e2e2e;
 }
 
 .grid-pane {
@@ -282,12 +342,17 @@
 }
 
 .scroll-bar {
-    -fx-background-color: derive(#1d1d1d, 20%);
+    -fx-background-color: transparent;
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: derive(#1d1d1d, 50%);
+    -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-background-insets: 3;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
 }
 
 .scroll-bar .increment-button, .scroll-bar .decrement-button {
@@ -309,7 +374,16 @@
 
 #cardPane {
     -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
     -fx-border-width: 0;
+}
+
+#commandBoxPlaceholder {
+    -fx-background-color: #2e2e2e;
+    -fx-background-radius: 0 0 0 0;
+
+
 }
 
 #commandTypeLabel {
@@ -318,23 +392,45 @@
 }
 
 #commandTextField {
-    -fx-background-color: transparent #383838 transparent #383838;
+    -fx-font-family: 'Telegraf';
+    -fx-background-color: #f8f8f8;
+    -fx-background-radius: 15 15 15 15;
     -fx-background-insets: 0;
-    -fx-border-color: #383838 #383838 #ffffff #383838;
     -fx-border-insets: 0;
     -fx-border-width: 1;
-    -fx-font-family: "Segoe UI Light";
     -fx-font-size: 13pt;
-    -fx-text-fill: white;
+    -fx-text-fill: #000000;
+}
+
+#personList {
+    -fx-background-color: #000000;
+    -fx-background-radius: 15;
 }
 
 #filterField, #personListPanel, #personWebpage {
     -fx-effect: innershadow(gaussian, black, 10, 0, 0, 0);
 }
 
+.person-card-hover {
+    -fx-background-color: rgba(1, 143, 166, 0.25);
+    -fx-cursor: hand;
+}
+
+/* ========== COMMAND RESPONSE BOX (RESULT DISPLAY) ========== */
+#resultDisplayPlaceholder {
+    -fx-background-color: #2e2e2e;
+}
+
+#resultDisplay {
+    -fx-background-color: #2e2e2e;
+    -fx-background-radius: 15 15 15 15;
+}
+
 #resultDisplay .content {
-    -fx-background-color: transparent, #383838, transparent, #383838;
-    -fx-background-radius: 0;
+    -fx-background-color: #000000;
+    -fx-text-fill: #d4d4d7;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
 }
 
 #tags {
@@ -343,10 +439,245 @@
 }
 
 #tags .label {
+    -fx-font-family: 'Telegraf';
     -fx-text-fill: white;
     -fx-background-color: #3e7b91;
-    -fx-padding: 1 3 1 3;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
+    -fx-padding: 3 8 3 8;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
     -fx-font-size: 11;
+}
+
+/* Subject Tags - Base Style */
+.tag {
+    -fx-font-family: 'Telegraf';
+    -fx-background-radius: 12;
+    -fx-padding: 4 12 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Subject-Specific Tag Colors */
+.tag-math {
+    -fx-background-color: #f56565;
+}
+
+.tag-eng, .tag-english {
+    -fx-background-color: #4299e1;
+}
+
+.tag-sci {
+    -fx-background-color: #48bb78;
+}
+
+.tag-phy {
+    -fx-background-color: #9f7aea;
+}
+
+.tag-chem {
+    -fx-background-color: #ed8936;
+}
+
+.tag-bio {
+    -fx-background-color: #38b2ac;
+}
+
+.tag-hist {
+    -fx-background-color: #d69e2e;
+}
+
+.tag-geog {
+    -fx-background-color: #667eea;
+}
+
+.tag-lit {
+    -fx-background-color: #ed64a6;
+}
+
+.tag-chi {
+    -fx-background-color: #fc8181;
+}
+
+.tag-malay {
+    -fx-background-color: #f6ad55;
+}
+
+.tag-tamil {
+    -fx-background-color: #68d391;
+}
+
+.tag-poa {
+    -fx-background-color: #4fd1c5;
+}
+
+.tag-econs {
+    -fx-background-color: #4299e1;
+}
+
+.tag-art {
+    -fx-background-color: #f687b3;
+}
+
+.tag-music {
+    -fx-background-color: #b794f4;
+}
+
+.tag-comsci {
+    -fx-background-color: #63b3ed;
+}
+
+/* ========== HEADER STYLING ========== */
+
+/* Header Box Styling */
+.header-box {
+    -fx-font-family: 'Telegraf';
+    -fx-background-color: #d4d4d7;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 70px;
+    -fx-pref-height: 70px;
+}
+
+/* Header Label - "zenith" */
+.header-label {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-padding: 0;
+    -fx-line-spacing: 0;
+}
+
+/* Header Subtitle - "TUTOR SMARTER" */
+.header-subtitle {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #000000;
+    -fx-padding: 0;
+    -fx-translate-y: -3;
+}
+
+/* Header Menu Bar - Make it blend with white header */
+.header-menu-bar {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.header-menu-bar .label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 12px;
+}
+
+.header-menu-bar .menu-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 10 5 10;
+}
+
+.header-menu-bar .menu-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-background-radius: 3;
+}
+
+.header-menu-bar .menu-button:showing {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Context Menu styling for dropdown */
+.header-menu-bar .context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+}
+
+.header-menu-bar .menu-item {
+    -fx-background-color: white;
+    -fx-text-fill: #2c3e50;
+}
+
+.header-menu-bar .menu-item:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ========== RIGHT PANEL - DETAILED VIEW ========== */
+
+/* Detailed View Header Bar */
+.detailed-view-header-bar {
+    -fx-background-color: rgba(205, 183, 182, 0.24);
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-width: 0;
+    -fx-min-height: 40px;
+    -fx-pref-height: 40px;
+}
+
+.detailed-view-header-label {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4d4d7;
+    -fx-letter-spacing: 1px;
+}
+
+.detailed-view-panel-container {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+/* Detailed View Content Background */
+.detailed-view-scroll {
+    -fx-background-color: #232323;
+    -fx-border-width: 0;
+    -fx-border-color: #232323;
+    }
+}
+
+.detailed-view-container {
+    -fx-background-color: #232323;
+    -fx-border-width: 0;
+}
+
+#detailedViewPlaceholder {
+    -fx-background-color: rgba(0, 0, 0, 0.23);
+    -fx-background-radius: 15 15 15 15;
+    -fx-border-radius: 15, 15, 15, 15;
+}
+
+/* Contact Name (Large Display) */
+.contact-name-large {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4fd1c5;
+    -fx-padding: 0 0 3 0;
+}
+
+/* Detail Labels and Values */
+.detail-label {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #d4d4d7;
+}
+
+.detail-value {
+    -fx-font-family: 'Telegraf';
+    -fx-font-size: 13px;
+    -fx-text-fill: #d4d4d7;
+}
+
+/* Session Placeholder */
+.session-placeholder {
+    -fx-font-family: 'Telegraf';
+    -fx-text-fill: #a0aec0;
+    -fx-font-style: italic;
+    -fx-font-size: 12px;
+}
+
+/* ========== HEADER SPACER ========== */
+.header-spacer {
+    -fx-background-color: #2e2e2e;
+    -fx-min-height: 10px;
+    -fx-pref-height: 10px;
+    -fx-max-height: 10px;
 }

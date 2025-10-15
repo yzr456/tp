@@ -29,18 +29,23 @@
 
       <VBox>
         <!-- Header with Logo and Menu Bar Combined -->
-        <HBox styleClass="header-box" alignment="CENTER_LEFT" spacing="10" VBox.vgrow="NEVER">
+        <HBox styleClass="header-box" alignment="CENTER_LEFT" spacing="15" VBox.vgrow="NEVER">
           <padding>
             <Insets top="10" right="15" bottom="10" left="15" />
           </padding>
 
-          <!-- Left side: Logo and Title -->
-          <HBox spacing="10" alignment="CENTER_LEFT" prefHeight="65.0">
-            <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+          <!-- Left side: Logo and Stacked Title -->
+          <HBox spacing="15" alignment="CENTER_LEFT">
+            <!-- Logo -->
+            <ImageView fitHeight="60" fitWidth="60" preserveRatio="true">
               <Image url="@/images/zenith_logo.png" />
             </ImageView>
-            <Label styleClass="header-label" text="zenith" />
-            <Label styleClass="header-subtitle" text="TUTOR SMARTER" />
+
+            <!-- Stacked Text: zenith + TUTOR SMARTER -->
+            <VBox alignment="CENTER_LEFT" spacing="0">
+              <Label styleClass="header-label" text="zenith" />
+              <Label styleClass="header-subtitle" text="TUTOR SMARTER" />
+            </VBox>
           </HBox>
 
           <!-- Spacer to push menu to the right -->
@@ -57,11 +62,14 @@
           </MenuBar>
         </HBox>
 
+        <!-- Spacer below header -->
+        <VBox styleClass="header-spacer" VBox.vgrow="NEVER" />
+
 
         <!-- Command Box -->
         <StackPane VBox.vgrow="NEVER" fx:id="commandBoxPlaceholder" styleClass="pane-with-border">
           <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
+            <Insets top="5" right="15" bottom="5" left="15" />
           </padding>
         </StackPane>
 
@@ -69,12 +77,16 @@
         <StackPane VBox.vgrow="NEVER" fx:id="resultDisplayPlaceholder" styleClass="pane-with-border"
                    minHeight="140" prefHeight="155" maxHeight="200">
           <padding>
-            <Insets top="5" right="10" bottom="5" left="10" />
+            <Insets top="5" right="15" bottom="5" left="15" />
           </padding>
         </StackPane>
 
         <!-- Main Content: Split Pane - 30% LEFT, 70% RIGHT -->
         <SplitPane id="splitPane" fx:id="splitPane" dividerPositions="0.30" VBox.vgrow="ALWAYS">
+
+          <padding>
+            <Insets top="5" right="15" bottom="5" left="15" />
+          </padding>
 
           <!-- Left Panel: Contact List (30%) -->
           <VBox fx:id="personList" styleClass="pane-with-border" minWidth="250" prefWidth="340">
@@ -85,11 +97,12 @@
           </VBox>
 
           <!-- Right Panel: Detailed View with Header (70%) -->
-          <VBox styleClass="pane-with-border" minWidth="400">
+          <VBox styleClass="detailed-view-panel-container" minWidth="400" spacing="10">
+
             <!-- Detailed View Header -->
             <HBox styleClass="detailed-view-header-bar" alignment="CENTER_LEFT" VBox.vgrow="NEVER">
               <padding>
-                <Insets top="10" right="15" bottom="10" left="15" />
+                <Insets top="10" right="20" bottom="10" left="20" />
               </padding>
               <Label styleClass="detailed-view-header-label" text="DETAILED VIEW" />
             </HBox>
