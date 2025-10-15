@@ -10,7 +10,7 @@ import javafx.scene.layout.Region;
 import seedu.address.model.person.Person;
 
 /**
- * An UI component that displays information of a {@code Person}.
+ * A UI component that displays information of a {@code Person}.
  */
 public class PersonCard extends UiPart<Region> {
 
@@ -25,6 +25,7 @@ public class PersonCard extends UiPart<Region> {
      */
 
     public final Person person;
+    private final MainWindow mainWindow;
 
     @FXML
     private HBox cardPane;
@@ -44,11 +45,16 @@ public class PersonCard extends UiPart<Region> {
     private FlowPane tags;
 
     /**
-     * Creates a {@code PersonCode} with the given {@code Person} and index to display.
+     * Creates a {@code PersonCard} with the given {@code Person} and index to display.
+     *
+     * @param person The person whose information is to be displayed.
+     * @param displayedIndex The index shown on the card.
+     * @param mainWindow The main window used to update the detailed view on click.
      */
-    public PersonCard(Person person, int displayedIndex) {
+    public PersonCard(Person person, int displayedIndex, MainWindow mainWindow) {
         super(FXML);
         this.person = person;
+        this.mainWindow = mainWindow;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
         studyYear.setText(person.getStudyYear());
@@ -58,5 +64,27 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        setupClickHandler();
+    }
+
+    /**
+     * Sets up the click handler to update the detailed view when this card is clicked.
+     */
+    private void setupClickHandler() {
+        // When card is clicked, update the detailed view
+        cardPane.setOnMouseClicked(event -> {
+            mainWindow.updateDetailedView(person);
+        });
+
+        // Add hover effect - changes cursor to hand pointer
+        cardPane.setOnMouseEntered(event -> {
+            cardPane.setStyle("-fx-cursor: hand;");
+            cardPane.getStyleClass().add("person-card-hover");
+        });
+
+        cardPane.setOnMouseExited(event -> {
+            cardPane.setStyle("-fx-cursor: default;");
+            cardPane.getStyleClass().remove("person-card-hover");
+        });
     }
 }
