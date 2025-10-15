@@ -3,6 +3,10 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
+/**
+ *  Represent a Person's year of study in the address book
+ *  Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
+ */
 public class StudyYear {
     public static final String MESSAGE_CONSTRAINTS =
             "Study year should be of format {ACAD_LEVEL}{NUMBER} "
@@ -17,6 +21,11 @@ public class StudyYear {
     public static final String VALIDATION_REGEX = "^(PRI[1-6]|SEC[1-5]|JC[1-2]|POLY[1-3]|UNI[1-5])$";
     public final String studyYear;
 
+    /**
+     * Constructs a {@code StudyYear}.
+     *
+     * @param studyYear A valid year of study
+     */
     public StudyYear(String studyYear) {
         requireNonNull(studyYear);
         checkArgument(isValidStudyYear(studyYear), MESSAGE_CONSTRAINTS);

@@ -9,7 +9,11 @@ import java.util.Set;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.*;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Email;
+import seedu.address.model.person.Name;
+import seedu.address.model.person.Phone;
+import seedu.address.model.person.StudyYear;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,6 +39,7 @@ public class ParserUtil {
     /**
      * Parses a {@code String name} into a {@code Name}.
      * Leading and trailing whitespaces will be trimmed.
+     * Duplicate whitespaces are removed
      *
      * @throws ParseException if the given {@code name} is invalid.
      */
@@ -47,6 +52,12 @@ public class ParserUtil {
         return new Name(trimmedName);
     }
 
+    /**
+     * Parses a {@code String studyYear} into a {@code StudyYear}.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code studyYear} is invalid.
+     */
     public static StudyYear parseStudyYear(String studyYear) throws ParseException {
         requireNonNull(studyYear);
         String trimmedStudyYear = studyYear.trim();
@@ -74,6 +85,7 @@ public class ParserUtil {
     /**
      * Parses a {@code String address} into an {@code Address}.
      * Leading and trailing whitespaces will be trimmed.
+     * Duplicate whitespaces are removed
      *
      * @throws ParseException if the given {@code address} is invalid.
      */
