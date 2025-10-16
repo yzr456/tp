@@ -5,7 +5,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
@@ -39,19 +40,29 @@ public class EditCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
             + "by the index number used in the displayed person list. "
             + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: INDEX (must be a positive integer) "
+            + "Parameters: -c INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
+            + "[" + PREFIX_STUDY_YEAR + "STUDY_YEAR] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
-            + "[" + PREFIX_TAG + "TAG]...\n"
-            + "Example: " + COMMAND_WORD + " 1 "
-            + PREFIX_PHONE + "91234567 "
-            + PREFIX_EMAIL + "johndoe@example.com";
+            + "[" + PREFIX_SUBJECT + "SUBJECT]...\n"
+            + "Example: " + COMMAND_WORD + " -c 1 "
+            + PREFIX_NAME + "John Doe "
+            + PREFIX_STUDY_YEAR + "SEC3 "
+            + PREFIX_PHONE + "99999999 "
+            + PREFIX_EMAIL + "johndoe@example.com"
+            + PREFIX_ADDRESS + "21 Lower Kent Ridge Road";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_INVALID_FLAG = "InvalidFlagError: Invalid flag provided. "
+            + "Use -c for contact or -s for session.";
+    public static final String MESSAGE_MISSING_FLAG = "ArgumentError: A valid flag must be provided. "
+            + "Use -c for contact or -s for session.";
+    public static final String MESSAGE_DUPLICATE_SUBJECT = "DuplicateSubjectError: Subject Tag: %s "
+            + "has already been assigned to %s";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -101,7 +112,16 @@ public class EditCommand extends Command {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
+
+        // Handle subjects - replace existing subject tags with new ones if provided
+        Set<Tag> updatedTags = new HashSet<>();
+        if (editPersonDescriptor.getSubjects().isPresent()) {
+            // If subjects are being edited, use only the new subjects
+            updatedTags.addAll(editPersonDescriptor.getSubjects().get());
+        } else {
+            // If subjects are not being edited, keep existing tags
+            updatedTags.addAll(personToEdit.getTags());
+        }
 
         return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags);
     }
@@ -140,7 +160,7 @@ public class EditCommand extends Command {
         private Phone phone;
         private Email email;
         private Address address;
-        private Set<Tag> tags;
+        private Set<Tag> subjects;
 
         public EditPersonDescriptor() {}
 
@@ -154,14 +174,14 @@ public class EditCommand extends Command {
             setPhone(toCopy.phone);
             setEmail(toCopy.email);
             setAddress(toCopy.address);
-            setTags(toCopy.tags);
+            setSubjects(toCopy.subjects);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, studyYear, phone, email, address, tags);
+            return CollectionUtil.isAnyNonNull(name, studyYear, phone, email, address, subjects);
         }
 
         public void setName(Name name) {
@@ -205,20 +225,20 @@ public class EditCommand extends Command {
         }
 
         /**
-         * Sets {@code tags} to this object's {@code tags}.
-         * A defensive copy of {@code tags} is used internally.
+         * Sets {@code subjects} to this object's {@code subjects}.
+         * A defensive copy of {@code subjects} is used internally.
          */
-        public void setTags(Set<Tag> tags) {
-            this.tags = (tags != null) ? new HashSet<>(tags) : null;
+        public void setSubjects(Set<Tag> subjects) {
+            this.subjects = (subjects != null) ? new HashSet<>(subjects) : null;
         }
 
         /**
-         * Returns an unmodifiable tag set, which throws {@code UnsupportedOperationException}
+         * Returns an unmodifiable subject set, which throws {@code UnsupportedOperationException}
          * if modification is attempted.
-         * Returns {@code Optional#empty()} if {@code tags} is null.
+         * Returns {@code Optional#empty()} if {@code subjects} is null.
          */
-        public Optional<Set<Tag>> getTags() {
-            return (tags != null) ? Optional.of(Collections.unmodifiableSet(tags)) : Optional.empty();
+        public Optional<Set<Tag>> getSubjects() {
+            return (subjects != null) ? Optional.of(Collections.unmodifiableSet(subjects)) : Optional.empty();
         }
 
         @Override
@@ -238,7 +258,7 @@ public class EditCommand extends Command {
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
-                    && Objects.equals(tags, otherEditPersonDescriptor.tags);
+                    && Objects.equals(subjects, otherEditPersonDescriptor.subjects);
         }
 
         @Override
@@ -249,7 +269,7 @@ public class EditCommand extends Command {
                     .add("phone", phone)
                     .add("email", email)
                     .add("address", address)
-                    .add("tags", tags)
+                    .add("subjects", subjects)
                     .toString();
         }
     }
