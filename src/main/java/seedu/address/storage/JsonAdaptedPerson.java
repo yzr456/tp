@@ -15,6 +15,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.StudyYear;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -53,7 +54,7 @@ class JsonAdaptedPerson {
      */
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
-        studyYear = source.getStudyYear();
+        studyYear = source.getStudyYear().studyYear;
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
@@ -84,7 +85,7 @@ class JsonAdaptedPerson {
         if (studyYear == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "Study Year"));
         }
-        final String modelStudyYear = new String(studyYear);
+        final StudyYear modelStudyYear = new StudyYear(studyYear);
 
         if (phone == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Phone.class.getSimpleName()));

@@ -29,7 +29,7 @@ public class AddCommand extends Command {
             + PREFIX_ADDRESS + "ADDRESS \n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
-            + PREFIX_STUDY_YEAR + "SEC4 "
+            + PREFIX_STUDY_YEAR + "SEC3 "
             + PREFIX_PHONE + "98765432 "
             + PREFIX_EMAIL + "johnd@example.com "
             + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 \n";
