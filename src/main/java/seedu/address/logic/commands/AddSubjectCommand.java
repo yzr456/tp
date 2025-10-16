@@ -74,7 +74,8 @@ public class AddSubjectCommand extends Command {
                 personToEdit.getPhone(),
                 personToEdit.getEmail(),
                 personToEdit.getAddress(),
-                newTags
+                newTags,
+                personToEdit.getSessions()
         );
 
         model.setPerson(personToEdit, editedPerson);
