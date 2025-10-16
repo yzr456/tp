@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="detailed-view-scroll" fitToWidth="true" fitToHeight="true">
+    <VBox styleClass="detailed-view-container" spacing="15">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20" />
+        </padding>
+
+        <!-- Contact Name (Large) -->
+        <Label fx:id="contactName" styleClass="contact-name-large" text="Select a contact" />
+
+        <!-- Divider Line -->
+        <VBox styleClass="divider-line" prefHeight="2" />
+
+        <!-- Contact Details Section -->
+        <VBox spacing="10" styleClass="details-section">
+
+            <!-- Name -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="NAME:" minWidth="100" />
+                <Label fx:id="nameLabel" styleClass="detail-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Study Year -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="STUDY YEAR:" minWidth="100" />
+                <Label fx:id="studyYearLabel" styleClass="detail-value" text="-" />
+            </HBox>
+
+            <!-- Phone -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="PHONE:" minWidth="100" />
+                <Label fx:id="phoneLabel" styleClass="detail-value" text="-" />
+            </HBox>
+
+            <!-- Email -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="EMAIL:" minWidth="100" />
+                <Label fx:id="emailLabel" styleClass="detail-value" text="-" />
+            </HBox>
+
+            <!-- Address -->
+            <HBox spacing="10" alignment="TOP_LEFT">
+                <Label styleClass="detail-label" text="ADDRESS:" minWidth="100" />
+                <Label fx:id="addressLabel" styleClass="detail-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Subject Tags -->
+            <VBox spacing="8">
+                <Label styleClass="detail-label" text="SUBJECT:" />
+                <FlowPane fx:id="subjectTags" hgap="8" vgap="8" styleClass="tag-container" />
+            </VBox>
+
+            <!-- Sessions -->
+            <VBox spacing="8">
+                <Label styleClass="detail-label" text="SESSIONS:" />
+                <VBox fx:id="sessionsList" spacing="5" styleClass="sessions-list" />
+            </VBox>
+        </VBox>
+    </VBox>
+</ScrollPane>
