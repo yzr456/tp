@@ -18,7 +18,7 @@ public class Person {
 
     // Identity fields
     private final Name name;
-    private final String studyYear;
+    private final StudyYear studyYear;
     private final Phone phone;
     private final Email email;
 
@@ -29,7 +29,7 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, String studyYear, Phone phone, Email email, Address address, Set<Tag> tags) {
+    public Person(Name name, StudyYear studyYear, Phone phone, Email email, Address address, Set<Tag> tags) {
         requireAllNonNull(name, studyYear, phone, email, address, tags);
         this.name = name;
         this.studyYear = studyYear;
@@ -43,7 +43,7 @@ public class Person {
         return name;
     }
 
-    public String getStudyYear() {
+    public StudyYear getStudyYear() {
         return studyYear;
     }
 

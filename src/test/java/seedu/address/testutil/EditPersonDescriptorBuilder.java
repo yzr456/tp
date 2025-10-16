@@ -37,7 +37,10 @@ public class EditPersonDescriptorBuilder {
         descriptor.setPhone(person.getPhone());
         descriptor.setEmail(person.getEmail());
         descriptor.setAddress(person.getAddress());
-        descriptor.setTags(person.getTags());
+        // Only set subjects if the person has tags, to match parser behavior
+        if (!person.getTags().isEmpty()) {
+            descriptor.setSubjects(person.getTags());
+        }
     }
 
     /**
@@ -78,7 +81,7 @@ public class EditPersonDescriptorBuilder {
      */
     public EditPersonDescriptorBuilder withTags(String... tags) {
         Set<Tag> tagSet = Stream.of(tags).map(Tag::new).collect(Collectors.toSet());
-        descriptor.setTags(tagSet);
+        descriptor.setSubjects(tagSet);
         return this;
     }
 

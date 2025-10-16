@@ -7,10 +7,11 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.subject.Subject;
 
 /**
  * Parses input arguments and creates a new EditCommand object
@@ -32,9 +34,43 @@ public class EditCommandParser implements Parser<EditCommand> {
      */
     public EditCommand parse(String args) throws ParseException {
         requireNonNull(args);
+
+        String trimmedArgs = args.trim();
+
+        // Check for flag
+        if (trimmedArgs.isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        }
+
+        // Parse flag
+        String flag = "";
+        String remainingArgs = trimmedArgs;
+
+        if (trimmedArgs.startsWith("-")) {
+            int spaceIndex = trimmedArgs.indexOf(' ');
+            if (spaceIndex == -1) {
+                throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
+            }
+            flag = trimmedArgs.substring(0, spaceIndex).trim();
+            remainingArgs = trimmedArgs.substring(spaceIndex).trim();
+        } else {
+            throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
+        }
+
+        // Validate flag
+        if (!flag.equals("-c") && !flag.equals("-s")) {
+            throw new ParseException(EditCommand.MESSAGE_INVALID_FLAG);
+        }
+
+        // For now, only -c is supported
+        if (flag.equals("-s")) {
+            throw new ParseException("Session editing is not yet implemented.");
+        }
+
+        // Parse contact edit command
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
-                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_TAG);
+                ArgumentTokenizer.tokenize(remainingArgs, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT);
 
         Index index;
 
@@ -53,7 +89,7 @@ public class EditCommandParser implements Parser<EditCommand> {
             editPersonDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()));
         }
         if (argMultimap.getValue(PREFIX_STUDY_YEAR).isPresent()) {
-            editPersonDescriptor.setStudyYear(argMultimap.getValue(PREFIX_STUDY_YEAR).get());
+            editPersonDescriptor.setStudyYear(ParserUtil.parseStudyYear(argMultimap.getValue(PREFIX_STUDY_YEAR).get()));
         }
         if (argMultimap.getValue(PREFIX_PHONE).isPresent()) {
             editPersonDescriptor.setPhone(ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get()));
@@ -64,13 +100,45 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (argMultimap.getValue(PREFIX_ADDRESS).isPresent()) {
             editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
-        parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
+
+        // Parse subjects
+        parseSubjectsForEdit(argMultimap.getAllValues(PREFIX_SUBJECT)).ifPresent(editPersonDescriptor::setSubjects);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
         }
 
         return new EditCommand(index, editPersonDescriptor);
+    }
+
+    /**
+     * Parses {@code Collection<String> subjects} into a {@code Set<Tag>} if {@code subjects} is non-empty.
+     * Validates that each subject is a valid subject code.
+     */
+    private Optional<Set<Tag>> parseSubjectsForEdit(Collection<String> subjects) throws ParseException {
+        assert subjects != null;
+
+        if (subjects.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Set<Tag> subjectTags = new HashSet<>();
+        for (String subjectStr : subjects) {
+            if (subjectStr.trim().isEmpty()) {
+                continue;
+            }
+
+            Subject subject = Subject.of(subjectStr);
+            if (subject == null) {
+                throw new ParseException(
+                    "Invalid subject provided. The Subject provided must be a valid subject code: "
+                    + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
+                    + "POA, ECONS, ART, MUSIC, COMSCI");
+            }
+            subjectTags.add(new Tag(subject.name()));
+        }
+
+        return subjectTags.isEmpty() ? Optional.empty() : Optional.of(subjectTags);
     }
 
     /**

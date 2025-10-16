@@ -65,6 +65,5 @@
                 <VBox fx:id="sessionsList" spacing="5" styleClass="sessions-list" />
             </VBox>
         </VBox>
-
     </VBox>
 </ScrollPane>

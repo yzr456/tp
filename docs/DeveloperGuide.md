@@ -469,7 +469,7 @@ Use case ends.
 * 2b. Zenith detects that the subject code is missing or invalid
     * 2b1. Zenith shows InvalidSubjectError.
       Use case ends.
-* 2c. Zenith detects that the subject tag is already on the contact 
+* 2c. Zenith detects that the subject tag is already on the contact
     * 2c1. Zenith shows DuplicateSubjectError.
       Use case ends.
 
