@@ -2,6 +2,7 @@ package seedu.address.ui;
 
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -16,6 +17,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Person;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -38,6 +40,7 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     private StackPane commandBoxPlaceholder;
 
+
     @FXML
     private MenuItem helpMenuItem;
 
@@ -49,6 +52,14 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane statusbarPlaceholder;
+
+    @FXML
+    private StackPane detailedViewPlaceholder;
+
+    @FXML
+    private javafx.scene.control.SplitPane splitPane;
+
+    private DetailedView detailedView;
 
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
@@ -110,7 +121,7 @@ public class MainWindow extends UiPart<Stage> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        personListPanel = new PersonListPanel(logic.getFilteredPersonList());
+        personListPanel = new PersonListPanel(logic.getFilteredPersonList(), this);
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
         resultDisplay = new ResultDisplay();
@@ -118,6 +129,9 @@ public class MainWindow extends UiPart<Stage> {
 
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
+
+        detailedView = new DetailedView();
+        detailedViewPlaceholder.getChildren().add(detailedView.getRoot());
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
@@ -149,6 +163,21 @@ public class MainWindow extends UiPart<Stage> {
 
     void show() {
         primaryStage.show();
+        Platform.runLater(() -> {
+            splitPane.setDividerPositions(0.30);
+        });
+
+        // Lock the divider at 30% position - prevents reset on window resize
+        if (!splitPane.getDividers().isEmpty()) {
+            splitPane.getDividers().get(0).positionProperty().addListener((observable,
+                    oldValue, newValue) -> {
+                        // Only reset if it drifts too far from 0.30
+                        if (Math.abs(newValue.doubleValue() - 0.30) > 0.01) {
+                            splitPane.setDividerPositions(0.30);
+                        }
+                    }
+            );
+        }
     }
 
     /**
@@ -192,5 +221,12 @@ public class MainWindow extends UiPart<Stage> {
             resultDisplay.setFeedbackToUser(e.getMessage());
             throw e;
         }
+    }
+
+    /**
+     * Updates the detailed view with the selected person's information.
+     */
+    public void updateDetailedView(Person person) {
+        detailedView.setPerson(person);
     }
 }

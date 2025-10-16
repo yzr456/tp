@@ -1,5 +1,8 @@
 package seedu.address.ui;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
@@ -9,6 +12,13 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.HelpCommand;
+import seedu.address.logic.commands.ListCommand;
 
 /**
  * Controller for a help page
@@ -16,7 +26,7 @@ import seedu.address.commons.core.LogsCenter;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL + "\n" + getCommandUsage();
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -87,6 +97,43 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void focus() {
         getRoot().requestFocus();
+    }
+
+    /**
+     * @return A string containing how to use the commands
+     */
+    public static String getCommandUsage() {
+        //mini command registry
+        List<Class<? extends Command>> registeredCommands = new ArrayList<>();
+        registeredCommands.add(AddCommand.class);
+        registeredCommands.add(DeleteCommand.class);
+        registeredCommands.add(ListCommand.class);
+        registeredCommands.add(FindCommand.class);
+        registeredCommands.add(HelpCommand.class);
+        registeredCommands.add(ExitCommand.class);
+
+        return getCommandUsage(registeredCommands);
+    }
+
+    /**
+     * @param commands The list of command classes to generate usage for
+     * @return A string containing how to use the commands
+     */
+    public static String getCommandUsage(List<Class<? extends Command>> commands) {
+        StringBuilder commandUsages = new StringBuilder();
+
+        for (Class<? extends Command> command : commands) {
+            try {
+                Field commandWord = command.getDeclaredField("COMMAND_WORD");
+                commandUsages.append("▶ ").append(commandWord.get(null)).append("\n");
+                Field messageUsage = command.getDeclaredField("MESSAGE_USAGE");
+                commandUsages.append(messageUsage.get(null));
+                commandUsages.append("\n");
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                logger.warning(e.getMessage());
+            }
+        }
+        return commandUsages.toString();
     }
 
     /**
