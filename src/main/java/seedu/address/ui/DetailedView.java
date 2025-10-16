@@ -53,7 +53,7 @@ public class DetailedView extends UiPart<Region> {
 
         // Update all detail fields
         nameLabel.setText(person.getName().fullName);
-        studyYearLabel.setText(person.getStudyYear());
+        studyYearLabel.setText(person.getStudyYear().studyYear);
         phoneLabel.setText(person.getPhone().value);
         emailLabel.setText(person.getEmail().value);
         addressLabel.setText(person.getAddress().value);
