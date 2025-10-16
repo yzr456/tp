@@ -284,7 +284,7 @@ _{Explain here how the data archiving feature will be implemented}_
 * has student and parent details scattered across phone contacts, WhatsApp chats, and loose business cards
 * values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: A lightning-fast CLI address book designed for tech-savvy private tutors managing 10-50+ students. Centralizes scattered student information, tracks subjects and session schedules, and enables instant filtering by location, time, or student details—all through efficient keyboard commands that outpace traditional apps. Spend less time organizing, more time teaching. 
+**Value proposition**: A lightning-fast CLI address book designed for tech-savvy private tutors managing 10-50+ students. Centralizes scattered student information, tracks subjects and session schedules, and enables instant filtering by location, time, or student details—all through efficient keyboard commands that outpace traditional apps. Spend less time organizing, more time teaching.
 
 
 ### User stories
@@ -348,7 +348,7 @@ Use case ends.
 
 **Use case: UC02 – Delete Contact**
 
-**Preconditions** 
+**Preconditions**
 - At least one contact is listed.
 
 **Guarantees**
@@ -366,8 +366,8 @@ Use case ends.
 * 2a. Zenith detects that the index is invalid or missing.
     * 2a1. Zenith shows InvalidIndexError or ArgumentError.
       Use case ends.
-	
-	
+
+
 **Use case: UC03 – Edit Contact**
 
 **Preconditions**
@@ -383,19 +383,19 @@ Use case ends.
 3. Zenith updates the contact and shows the updated contact.
 4. Includes: UC11 Autosave.
 Use case ends.
-  
+
 **Extensions**
-* 2a. Zenith detects that the index is invalid or missing. 
-    * 2a1. Zenith shows InvalidIndexError / ArgumentError. 
+* 2a. Zenith detects that the index is invalid or missing.
+    * 2a1. Zenith shows InvalidIndexError / ArgumentError.
       Use case ends.
 * 2b. Zenith detects that any provided field is invalid.
-    * 2b1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError). 
+    * 2b1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError).
       Use case ends.
 
-	
+
 **Use case: UC04 – Edit Session Timing for a Contact**
 
-**Preconditions** 
+**Preconditions**
 - The contact and the target session exist.
 
 **Guarantees**
@@ -409,19 +409,19 @@ Use case ends.
 4. Zenith updates the session and shows the updated contact.
 5. Includes: UC11 Autosave.
 Use case ends.
-  
+
 **Extensions**
-* 2a. Zenith detects that the index is missing or invalid. 
-    * 2a1. Zenith shows InvalidIndexError / InvalidSessionIndexError. 
+* 2a. Zenith detects that the index is missing or invalid.
+    * 2a1. Zenith shows InvalidIndexError / InvalidSessionIndexError.
       Use case ends.
 * 2b. Zenith detects that the day is invalid.
-    *2 b1. Zenith shows InvalidDayError. 
+    *2 b1. Zenith shows InvalidDayError.
       Use case ends.
 * 2c. Zenith detects that the time format or range is invalid.
-    * 2c1. Zenith shows TimeFormatError / TimeRangeError. 
+    * 2c1. Zenith shows TimeFormatError / TimeRangeError.
       Use case ends.
-* 3a. Zenith detects that the updated session overlaps an existing session 
-    * 3a1. Zenith shows SessionConflictError. 
+* 3a. Zenith detects that the updated session overlaps an existing session
+    * 3a1. Zenith shows SessionConflictError.
       Use case ends.
 
 
@@ -448,7 +448,7 @@ Same as UC04
 
 **Use case: UC06 – Add Subject Tag to a Contact**
 
-**Preconditions** 
+**Preconditions**
 - The contact exists.
 
 **Guarantees**
@@ -464,15 +464,15 @@ Use case ends.
 
 **Extensions**
 * 2a. Zenith detects that the index is invalid or missing
-    * 2a1. Zenith shows InvalidIndexError / ArgumentError. 
+    * 2a1. Zenith shows InvalidIndexError / ArgumentError.
       Use case ends.
 * 2b. Zenith detects that the subject code is missing or invalid
-    * 2b1. Zenith shows InvalidSubjectError. 
+    * 2b1. Zenith shows InvalidSubjectError.
       Use case ends.
 * 2c. Zenith detects that the subject tag is already on the contact 
-    * 2c1. Zenith shows DuplicateSubjectError. 
+    * 2c1. Zenith shows DuplicateSubjectError.
       Use case ends.
-	
+
 
 **Use case: UC07 – Find Contacts**
 
@@ -486,11 +486,11 @@ Use case ends.
 Use case ends.
 
 **Extensions**
-* 2a. Zenith detects that no valid keyword is provided 
-    * 2a1. Zenith shows ArgumentError. 
+* 2a. Zenith detects that no valid keyword is provided
+    * 2a1. Zenith shows ArgumentError.
       Use case ends.
-	
-	
+
+
 **Use case: UC08 – List Contacts**
 
 **Guarantees**
@@ -500,8 +500,8 @@ Use case ends.
 1. Tutor requests to list contacts.
 2. Zenith shows all contacts.
 Use case ends.
-  
- 
+
+
 **Use case: UC09 – Help**
 
 **Guarantees**
@@ -511,8 +511,8 @@ Use case ends.
 1. Tutor requests help.
 2. Zenith displays the available commands.
 Use case ends.
-  
-  
+
+
 **Use case: UC10 – Exit**
 
 **Guarantees**
@@ -522,7 +522,7 @@ Use case ends.
 1. Tutor requests to exit.
 2. Zenith terminates.
 Use case ends.
-  
+
 
 **Use case: UC11 – Autosave**
 
@@ -541,7 +541,7 @@ Use case ends.
 
 **Extensions**
 * 1a. Zenith detects write failure due to permissions/disk
-    * 1a1. Zenith shows FileAccessError or DiskSpaceError. 
+    * 1a1. Zenith shows FileAccessError or DiskSpaceError.
       Use case ends.
 * 1b. Zenith detects that the existing save file is corrupted
     * 1b1. Zenith shows FileCorruptionError and attempts recovery/backup; on failure show BackupCreationError.

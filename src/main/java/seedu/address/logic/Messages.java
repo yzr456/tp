@@ -21,6 +21,8 @@ public class Messages {
                 "Multiple values specified for the following single-valued field(s): ";
     public static final String MESSAGE_ARGUMENT_ERROR = "ArgumentError: Missing value for one or more parameters. "
                 + "Please ensure all parameters have non-empty values.";
+    public static final String MESSAGE_MISSING_PARAMETER =
+            "MissingParameterError: Invalid input provided. Ensure that your input follows this format: \n%1$s";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
