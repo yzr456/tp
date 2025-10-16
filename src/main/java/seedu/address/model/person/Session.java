@@ -42,7 +42,7 @@ public class Session implements Comparable<Session> {
     public Session(String day, String start, String end) {
         requireAllNonNull(day, start, end);
         checkArgument(isValidSession(day, start, end), MESSAGE_CONSTRAINTS);
-        dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day));
+        dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day) + 1);
         startTime = LocalTime.parse(start, SESSION_FORMATTER);
         endTime = LocalTime.parse(end, SESSION_FORMATTER);
     }
@@ -88,7 +88,7 @@ public class Session implements Comparable<Session> {
      * @param dayOfWeek a valid day of week
      */
     public boolean isHappeningOn(String dayOfWeek) {
-        return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek)));
+        return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek) + 1));
     }
 
     /**
@@ -117,7 +117,8 @@ public class Session implements Comparable<Session> {
 
     @Override
     public String toString() {
-        return dayOfWeek + " " + startTime + " - " + endTime;
+        return DAY_OF_WEEKS.get(dayOfWeek.getValue() - 1) + " " + startTime.format(SESSION_FORMATTER) + " - "
+                + endTime.format(SESSION_FORMATTER);
     }
 
     @Override

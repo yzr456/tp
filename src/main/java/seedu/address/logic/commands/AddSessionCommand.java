@@ -69,7 +69,6 @@ public class AddSessionCommand extends Command {
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
         newTags.add(sessionTag);
 
-        newTags.add(sessionTag);
 
         Person editedPerson = new Person(
                 personToEdit.getName(),
@@ -77,7 +76,7 @@ public class AddSessionCommand extends Command {
                 personToEdit.getPhone(),
                 personToEdit.getEmail(),
                 personToEdit.getAddress(),
-                personToEdit.getTags()
+                newTags
         );
 
         model.setPerson(personToEdit, editedPerson);
