@@ -54,7 +54,7 @@ class JsonAdaptedPerson {
      */
     public JsonAdaptedPerson(Person source) {
         name = source.getName().fullName;
-        studyYear = source.getStudyYear().value;
+        studyYear = source.getStudyYear().studyYear;
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;

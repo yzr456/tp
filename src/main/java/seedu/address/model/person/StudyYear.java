@@ -3,64 +3,42 @@ package seedu.address.model.person;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Represents a Person's study year in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
+ *  Represent a Person's year of study in the address book
+ *  Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
  */
 public class StudyYear {
+    public static final String MESSAGE_CONSTRAINTS =
+            "Study year should be of format {ACAD_LEVEL}{NUMBER} "
+            + "and adhere to the following constraints:\n"
+            + "ACAD_LEVEL           NUMBER(range)\n"
+            + " PRI                         1 - 6\n"
+            + " SEC                         1 - 5\n"
+            + " JC                          1 - 2\n"
+            + " POLY                        1 - 3\n"
+            + " UNI                         1 - 5";
 
-    public static final String MESSAGE_CONSTRAINTS = "Study year should be a capitalized level followed by a number";
-
-    public static final Map<String, Integer> STUDY_YEARS = Map.of(
-            "PRI", 6,
-            "SEC", 5,
-            "JC", 2,
-            "POLY", 3,
-            "UNI", 5
-    );
-
-    /*
-     * The Study Year must start with one or more
-     * **uppercase letters** and immediately end with one or more **digits**
-     */
-    public static final Pattern STUDY_YEAR_FORMAT = Pattern.compile("(?<acadLevel>[A-Z]+)(?<number>[0-9]+)");
-
-    public final String value;
+    public static final String VALIDATION_REGEX = "^(PRI[1-6]|SEC[1-5]|JC[1-2]|POLY[1-3]|UNI[1-5])$";
+    public final String studyYear;
 
     /**
      * Constructs a {@code StudyYear}.
      *
-     * @param studyYear A valid studyYear.
+     * @param studyYear A valid year of study
      */
     public StudyYear(String studyYear) {
         requireNonNull(studyYear);
         checkArgument(isValidStudyYear(studyYear), MESSAGE_CONSTRAINTS);
-        value = studyYear;
+        this.studyYear = studyYear;
     }
 
-    /**
-     * Returns true if a given string is a valid study year.
-     */
     public static boolean isValidStudyYear(String test) {
-        final Matcher matcher = STUDY_YEAR_FORMAT.matcher(test);
-        if (!matcher.matches()) {
-            return false;
-        }
-
-        final String acadLevel = matcher.group("acadLevel");
-        final String numberStr = matcher.group("number");
-
-        final int number = Integer.parseInt(numberStr);
-        return STUDY_YEARS.containsKey(acadLevel) && number >= 1 && number <= STUDY_YEARS.get(acadLevel);
+        return test.matches(VALIDATION_REGEX);
     }
 
     @Override
     public String toString() {
-        return value;
+        return studyYear;
     }
 
     @Override
@@ -75,12 +53,12 @@ public class StudyYear {
         }
 
         StudyYear otherStudyYear = (StudyYear) other;
-        return value.equals(otherStudyYear.value);
+        return studyYear.equals(otherStudyYear.studyYear);
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return studyYear.hashCode();
     }
 
 }
