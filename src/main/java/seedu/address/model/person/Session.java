@@ -4,7 +4,6 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -21,12 +20,12 @@ public class Session implements Comparable<Session> {
     public static final String MESSAGE_CONSTRAINTS = "day must be one of MON TUE WED THU FRI SAT SUN"
             + "start and end must be in format \"HHmm\" and start must be before end";
 
-    public static final List<String> dayOfWeeks = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
+    public static final List<String> DAY_OF_WEEKS = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
 
     /*
      * The time must be in the format {@code HHmm}.
      */
-    public static final DateTimeFormatter sessionFormatter = DateTimeFormatter.ofPattern("HHmm")
+    public static final DateTimeFormatter SESSION_FORMATTER = DateTimeFormatter.ofPattern("HHmm")
             .withResolverStyle(ResolverStyle.STRICT);
 
     public final DayOfWeek dayOfWeek;
@@ -43,22 +42,22 @@ public class Session implements Comparable<Session> {
     public Session(String day, String start, String end) {
         requireAllNonNull(day, start, end);
         checkArgument(isValidSession(day, start, end), MESSAGE_CONSTRAINTS);
-        dayOfWeek = DayOfWeek.of(dayOfWeeks.indexOf(day));
-        startTime = LocalTime.parse(start, sessionFormatter);
-        endTime = LocalTime.parse(end, sessionFormatter);
+        dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day));
+        startTime = LocalTime.parse(start, SESSION_FORMATTER);
+        endTime = LocalTime.parse(end, SESSION_FORMATTER);
     }
 
     /**
      * Returns true if the given arguments is valid for session construction.
      */
     public static boolean isValidSession(String day, String start, String end) {
-        if (!dayOfWeeks.contains(day)) {
+        if (!DAY_OF_WEEKS.contains(day)) {
             return false;
         }
 
         try {
-            LocalTime startTime = LocalTime.parse(start, sessionFormatter);
-            LocalTime endTime = LocalTime.parse(end, sessionFormatter);
+            LocalTime startTime = LocalTime.parse(start, SESSION_FORMATTER);
+            LocalTime endTime = LocalTime.parse(end, SESSION_FORMATTER);
 
             return !startTime.plusMinutes(15).isAfter(endTime);
         } catch (DateTimeParseException e) {
@@ -89,18 +88,7 @@ public class Session implements Comparable<Session> {
      * @param dayOfWeek a valid day of week
      */
     public boolean isHappeningOn(String dayOfWeek) {
-        return this.dayOfWeek.equals(DayOfWeek.of(dayOfWeeks.indexOf(dayOfWeek)));
-    }
-
-    /**
-     * Returns true if this session is happening at particular time.
-     *
-     * @param time a valid time string
-     */
-    public boolean isHappeningAt(String time) {
-        LocalTime timeToCheck =  LocalTime.parse(time, sessionFormatter);
-
-        return !(startTime.isAfter(timeToCheck) || endTime.isBefore(timeToCheck));
+        return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek)));
     }
 
     /**
@@ -110,10 +98,21 @@ public class Session implements Comparable<Session> {
      * @param end a valid time string
      */
     public boolean isHappeningOn(String start, String end) {
-        LocalTime startTime =  LocalTime.parse(start, sessionFormatter);
-        LocalTime endTime =  LocalTime.parse(end, sessionFormatter);
+        LocalTime startTime = LocalTime.parse(start, SESSION_FORMATTER);
+        LocalTime endTime = LocalTime.parse(end, SESSION_FORMATTER);
 
         return !(this.startTime.isAfter(startTime) || this.endTime.isBefore(endTime));
+    }
+
+    /**
+     * Returns true if this session is happening at particular time.
+     *
+     * @param time a valid time string
+     */
+    public boolean isHappeningAt(String time) {
+        LocalTime timeToCheck = LocalTime.parse(time, SESSION_FORMATTER);
+
+        return !(startTime.isAfter(timeToCheck) || endTime.isBefore(timeToCheck));
     }
 
     @Override

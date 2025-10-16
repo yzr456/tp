@@ -1,6 +1,8 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.parser.CliSyntax.*;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 
 import java.util.stream.Stream;
 
@@ -29,7 +31,8 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         }
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
-            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PARAMETER, AddSessionCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PARAMETER,
+                    AddSessionCommand.MESSAGE_USAGE));
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DAY, PREFIX_START, PREFIX_END);
