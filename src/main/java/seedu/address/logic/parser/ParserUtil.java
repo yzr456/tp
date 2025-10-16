@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Session;
 import seedu.address.model.person.StudyYear;
 import seedu.address.model.tag.Tag;
 
@@ -138,5 +140,21 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    /**
+     * Parses {@code day}, {@code start}, {@code end} into a {@code Session}.
+     */
+    public static Tag parseSessionTag(String day, String start, String end) throws ParseException {
+        requireAllNonNull(day, start, end);
+        String trimmedDay = day.trim();
+        String trimmedStart = start.trim();
+        String trimmedEnd = end.trim();
+
+        if (!Session.isValidSession(trimmedDay, trimmedStart, trimmedEnd)) {
+            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        }
+
+        return new Tag(new Session(trimmedDay, trimmedStart, trimmedEnd).toString());
     }
 }
