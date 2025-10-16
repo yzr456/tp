@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Set;
@@ -54,11 +55,10 @@ public class PersonUtil {
         descriptor.getAddress().ifPresent(address -> sb.append(PREFIX_ADDRESS).append(address.value).append(" "));
         if (descriptor.getSubjects().isPresent()) {
             Set<Tag> tags = descriptor.getSubjects().get();
-            if (tags.isEmpty()) {
-                sb.append(PREFIX_TAG);
-            } else {
-                tags.forEach(s -> sb.append(PREFIX_TAG).append(s.tagName).append(" "));
+            if (!tags.isEmpty()) {
+                tags.forEach(s -> sb.append(PREFIX_SUBJECT).append(s.tagName).append(" "));
             }
+            // Don't add empty PREFIX_SUBJECT if tags is empty, as the parser filters out empty subjects
         }
         return sb.toString();
     }
