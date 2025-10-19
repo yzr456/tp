@@ -76,9 +76,9 @@ public class Session implements Comparable<Session> {
         // If this session starts earlier than another session, then this session cannot end after other session start.
         // Otherwise, at the time this session starts, other session should have been ended.
         if (startTime.isBefore(other.startTime)) {
-            return !endTime.isAfter(other.startTime);
+            return endTime.isAfter(other.startTime);
         } else {
-            return !startTime.isBefore(other.endTime);
+            return startTime.isBefore(other.endTime);
         }
     }
 

@@ -5,9 +5,11 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
@@ -35,7 +37,7 @@ public class AddSessionCommand extends Command {
             + PREFIX_START + "0900 "
             + PREFIX_END + "1800\n";
 
-    public static final String MESSAGE_SUCCESS = "Session added successfully\n\n%1$s";
+    public static final String MESSAGE_ADD_SESSION_SUCCESS = "Session added successfully\n\n%1$s";
     public static final String MESSAGE_DUPLICATE_SESSION = "This session already exists in the person's tags";
 
     private final Index targetIndex;
@@ -69,7 +71,6 @@ public class AddSessionCommand extends Command {
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
         newTags.add(sessionTag);
 
-
         Person editedPerson = new Person(
                 personToEdit.getName(),
                 personToEdit.getStudyYear(),
@@ -80,7 +81,8 @@ public class AddSessionCommand extends Command {
         );
 
         model.setPerson(personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(editedPerson)));
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        return new CommandResult(String.format(MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)));
     }
 
     @Override
@@ -90,12 +92,13 @@ public class AddSessionCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof AddCommand)) {
+        if (!(other instanceof AddSessionCommand)) {
             return false;
         }
 
-        AddSessionCommand otherAddCommand = (AddSessionCommand) other;
-        return sessionTag.equals(otherAddCommand.sessionTag);
+        AddSessionCommand otherAddSessionCommand = (AddSessionCommand) other;
+        return Objects.equals(targetIndex, otherAddSessionCommand.targetIndex)
+                && Objects.equals(sessionTag, otherAddSessionCommand.sessionTag);
     }
 
     @Override
