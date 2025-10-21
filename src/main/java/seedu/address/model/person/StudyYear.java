@@ -4,8 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
- *  Represent a Person's year of study in the address book
- *  Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
+ * Represents a Person's year of study in the address book
+ * Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
  */
 public class StudyYear {
     public static final String MESSAGE_CONSTRAINTS =
@@ -19,26 +19,29 @@ public class StudyYear {
             + " UNI                         1 - 5";
 
     public static final String VALIDATION_REGEX = "^(PRI[1-6]|SEC[1-5]|JC[1-2]|POLY[1-3]|UNI[1-5])$";
-    public final String studyYear;
+    public final String value;
 
     /**
      * Constructs a {@code StudyYear}.
      *
-     * @param studyYear A valid year of study
+     * @param studyYear A valid year of study.
      */
     public StudyYear(String studyYear) {
         requireNonNull(studyYear);
         checkArgument(isValidStudyYear(studyYear), MESSAGE_CONSTRAINTS);
-        this.studyYear = studyYear;
+        value = studyYear;
     }
 
+    /**
+     * Returns true if a given string is a valid study year.
+     */
     public static boolean isValidStudyYear(String test) {
         return test.matches(VALIDATION_REGEX);
     }
 
     @Override
     public String toString() {
-        return studyYear;
+        return value;
     }
 
     @Override
@@ -53,12 +56,12 @@ public class StudyYear {
         }
 
         StudyYear otherStudyYear = (StudyYear) other;
-        return studyYear.equals(otherStudyYear.studyYear);
+        return value.equals(otherStudyYear.value);
     }
 
     @Override
     public int hashCode() {
-        return studyYear.hashCode();
+        return value.hashCode();
     }
 
 }
