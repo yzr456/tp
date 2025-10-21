@@ -78,7 +78,7 @@ public class Session implements Comparable<Session> {
         if (startTime.isBefore(other.startTime)) {
             return !endTime.isAfter(other.startTime);
         } else {
-        return !startTime.isBefore(other.endTime);
+            return !startTime.isBefore(other.endTime);
         }
     }
 
