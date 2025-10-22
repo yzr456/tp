@@ -14,4 +14,9 @@ public interface ReadOnlyAddressBook {
      */
     ObservableList<Person> getPersonList();
 
+    /**
+     * Returns the weekly sessions.
+     */
+    WeeklySessions getWeeklySessions();
+
 }
