@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
 import seedu.address.model.person.UniquePersonList;
 
 /**
@@ -16,6 +17,7 @@ import seedu.address.model.person.UniquePersonList;
 public class AddressBook implements ReadOnlyAddressBook {
 
     private final UniquePersonList persons;
+    private final WeeklySessions weeklySessions;
 
     /*
      * The 'unusual' code block below is a non-static initialization block, sometimes used to avoid duplication
@@ -26,6 +28,7 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     {
         persons = new UniquePersonList();
+        weeklySessions = new WeeklySessions();
     }
 
     public AddressBook() {}
@@ -55,6 +58,14 @@ public class AddressBook implements ReadOnlyAddressBook {
         requireNonNull(newData);
 
         setPersons(newData.getPersonList());
+        setWeeklySessions(newData.getWeeklySessions());
+    }
+
+    /**
+     * Replaces the contents of the weekly sessions with {@code weeklySessions}.
+     */
+    public void setWeeklySessions(WeeklySessions weeklySessions) {
+        this.weeklySessions.setWeeklySessions(weeklySessions);
     }
 
     //// person-level operations
@@ -94,18 +105,50 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
+    //// session-level operations
+
+    /**
+     * Returns true if a session overlaps with any existing session in the weekly sessions.
+     */
+    public boolean hasOverlappingSession(Session session) {
+        requireNonNull(session);
+        return weeklySessions.hasOverlap(session);
+    }
+
+    /**
+     * Adds a session to the weekly sessions.
+     * The session must not overlap with any existing session.
+     */
+    public void addSession(Session session) {
+        weeklySessions.add(session);
+    }
+
+    /**
+     * Removes a session from the weekly sessions.
+     * The session must exist in the weekly sessions.
+     */
+    public void removeSession(Session session) {
+        weeklySessions.remove(session);
+    }
+
     //// util methods
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("persons", persons)
+                .add("weeklySessions", weeklySessions)
                 .toString();
     }
 
     @Override
     public ObservableList<Person> getPersonList() {
         return persons.asUnmodifiableObservableList();
+    }
+
+    @Override
+    public WeeklySessions getWeeklySessions() {
+        return weeklySessions;
     }
 
     @Override
@@ -120,11 +163,12 @@ public class AddressBook implements ReadOnlyAddressBook {
         }
 
         AddressBook otherAddressBook = (AddressBook) other;
-        return persons.equals(otherAddressBook.persons);
+        return persons.equals(otherAddressBook.persons)
+                && weeklySessions.equals(otherAddressBook.weeklySessions);
     }
 
     @Override
     public int hashCode() {
-        return persons.hashCode();
+        return persons.hashCode() + weeklySessions.hashCode();
     }
 }
