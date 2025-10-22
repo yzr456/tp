@@ -16,8 +16,11 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -38,7 +41,7 @@ public class AddSessionCommand extends Command {
             + PREFIX_END + "1800\n";
 
     public static final String MESSAGE_ADD_SESSION_SUCCESS = "Session added successfully\n\n%1$s";
-    public static final String MESSAGE_DUPLICATE_SESSION = "This session already exists in the person's tags";
+    public static final String MESSAGE_OVERLAP_SESSION = "This session overlap with existing one: %1$s";
 
     private final Index targetIndex;
     private final Tag sessionTag;
@@ -63,9 +66,27 @@ public class AddSessionCommand extends Command {
 
         Person personToEdit = lastShownList.get(targetIndex.getZeroBased());
 
-        if (personToEdit.getTags().contains(sessionTag)) {
-            throw new CommandException(String.format(
-                    MESSAGE_DUPLICATE_SESSION, sessionTag.tagName, personToEdit.getName().fullName));
+        Session currentSession;
+        Session otherSession;
+
+        try {
+            currentSession = ParserUtil.parseSessionStr(sessionTag.tagName);
+        } catch (ParseException pe) {
+            // Log or rethrow since we cannot continue without a valid session
+            throw new CommandException("Invalid session format: " + sessionTag.tagName, pe);
+        }
+
+        for (Tag tag : personToEdit.getTags()) {
+            try {
+                otherSession = ParserUtil.parseSessionStr(tag.tagName);
+            } catch (Exception ex) {
+                // Ignore non-session tags, but add a comment for clarity
+                // This tag is not a valid session, so we skip it
+                continue;
+            }
+            if (currentSession.isOverlap(otherSession)) {
+                throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION, tag.tagName));
+            }
         }
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
