@@ -47,7 +47,7 @@ public class AddSessionCommandParserTest {
         assertParseFailure(parser, "1 s/1100 e/1200", expectedMessage);
 
         // missing start
-        assertParseFailure(parser, "1 s/1100 e/1200", expectedMessage);
+        assertParseFailure(parser, "1 d/MON e/1200", expectedMessage);
 
         // missing end
         assertParseFailure(parser, "1 d/MON s/1100", expectedMessage);
