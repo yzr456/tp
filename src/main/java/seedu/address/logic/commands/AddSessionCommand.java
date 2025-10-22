@@ -41,7 +41,7 @@ public class AddSessionCommand extends Command {
             + PREFIX_END + "1800\n";
 
     public static final String MESSAGE_ADD_SESSION_SUCCESS = "Session added successfully\n\n%1$s";
-    public static final String MESSAGE_OVERLAP_SESSION = "This session overlap with existing one: %1$s";
+    public static final String MESSAGE_OVERLAP_SESSION = "This session overlap with %1$s: %2$s";
 
     private final Index targetIndex;
     private final Tag sessionTag;
@@ -76,16 +76,26 @@ public class AddSessionCommand extends Command {
             throw new CommandException("Invalid session format: " + sessionTag.tagName, pe);
         }
 
-        for (Tag tag : personToEdit.getTags()) {
-            try {
-                otherSession = ParserUtil.parseSessionStr(tag.tagName);
-            } catch (Exception ex) {
-                // Ignore non-session tags, but add a comment for clarity
-                // This tag is not a valid session, so we skip it
-                continue;
-            }
-            if (currentSession.isOverlap(otherSession)) {
-                throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION, tag.tagName));
+        for (Person person : model.getAddressBook().getPersonList()) {
+            for (Tag tag : person.getTags()) {
+                try {
+                    otherSession = ParserUtil.parseSessionStr(tag.tagName);
+                } catch (Exception ex) {
+                    // Ignore non-session tags, but add a comment for clarity
+                    // This tag is not a valid session, so we skip it
+                    continue;
+                }
+                if (person.isSamePerson(personToEdit)) {
+                    if (currentSession.isOverlap(otherSession)) {
+                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                person.getName(), tag.tagName));
+                    }
+                } else {
+                    if (currentSession.isOverlap(otherSession) && !currentSession.equals(otherSession)) {
+                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                person.getName(), tag.tagName));
+                    }
+                }
             }
         }
 
@@ -103,6 +113,7 @@ public class AddSessionCommand extends Command {
 
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        // model.addSession(currentSession);
         return new CommandResult(String.format(MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)));
     }
 
