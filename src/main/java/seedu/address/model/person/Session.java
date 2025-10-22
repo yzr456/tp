@@ -104,6 +104,10 @@ public class Session implements Comparable<Session> {
         return !(this.startTime.isAfter(startTime) || this.endTime.isBefore(endTime));
     }
 
+    public boolean isHappeningOn(LocalTime start, LocalTime end) {
+        return !(this.startTime.isAfter(start) || this.endTime.isBefore(end));
+    }
+
     /**
      * Returns true if this session is happening at particular time.
      *
@@ -113,6 +117,18 @@ public class Session implements Comparable<Session> {
         LocalTime timeToCheck = LocalTime.parse(time, SESSION_FORMATTER);
 
         return !(startTime.isAfter(timeToCheck) || endTime.isBefore(timeToCheck));
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
     @Override
