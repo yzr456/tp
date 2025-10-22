@@ -8,7 +8,9 @@ import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,9 @@ public class AddressBookParserTest {
                 AddSubjectCommand.COMMAND_WORD + " "
                         + INDEX_FIRST_PERSON.getOneBased()
                         + " sub/MATH");
-        assertEquals(new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag("MATH")), command);
+        Set<Tag> expectedTags = new HashSet<>();
+        expectedTags.add(new Tag("MATH"));
+        assertEquals(new AddSubjectCommand(INDEX_FIRST_PERSON, expectedTags), command);
     }
 
     @Test
