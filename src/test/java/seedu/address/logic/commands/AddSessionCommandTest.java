@@ -35,6 +35,7 @@ public class AddSessionCommandTest {
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     private final String validSessionTag = "MON 1100 - 1200";
+    private final String overlappingTag = "MON 1130 - 1230";
 
     @Test
     public void constructor_null_throwsNullPointerException() {
@@ -91,39 +92,44 @@ public class AddSessionCommandTest {
     }
 
     @Test
-    public void execute_duplicateSessionUnfilteredList_failure() {
+    public void execute_overlapSessionUnfilteredList_failure() {
         Tag tag = new Tag(validSessionTag);
+        Tag otherTag = new Tag(overlappingTag);
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
+        AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, otherTag);
 
         // The success path is already tested elsewhere; this execution only prepares the model for
-        // the duplicate-session check.
+        // the overlap-session check.
         try {
             addSessionCommand.execute(model);
         } catch (Exception e) {
             fail("Unexpected exception thrown during setup: " + e.getMessage());
         }
 
-        assertCommandFailure(addSessionCommand, model, AddSessionCommand.MESSAGE_DUPLICATE_SESSION);
+        assertCommandFailure(addOtherSessionCommand, model,
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, tag.tagName));
     }
 
     @Test
-    public void execute_duplicatePersonFilteredList_failure() {
+    public void execute_overlapSessionFilteredList_failure() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        // edit person in filtered list into a duplicate in address book
-        Person personInList = model.getAddressBook().getPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        // edit person in filtered list to have overlap session tag in address book
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON,
                 new Tag(validSessionTag));
+        AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON,
+                new Tag(overlappingTag));
 
         // The success path is already tested elsewhere; this execution only prepares the model for
-        // the duplicate-session check.
+        // the overlap-session check.
         try {
             addSessionCommand.execute(model);
         } catch (Exception e) {
             fail("Unexpected exception thrown during setup: " + e.getMessage());
         }
 
-        assertCommandFailure(addSessionCommand, model, AddSessionCommand.MESSAGE_DUPLICATE_SESSION);
+        assertCommandFailure(addOtherSessionCommand, model,
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, new Tag(validSessionTag).tagName));
     }
 
     @Test
