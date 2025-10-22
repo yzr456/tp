@@ -126,7 +126,7 @@ public class EditCommand extends Command {
 
         // Handle tags - need to separate subjects and sessions
         Set<Tag> updatedTags = new HashSet<>();
-        
+
         // Separate existing tags into subjects and sessions
         Set<Tag> existingSubjects = new HashSet<>();
         Set<Tag> existingSessions = new HashSet<>();
@@ -137,14 +137,14 @@ public class EditCommand extends Command {
                 existingSubjects.add(tag);
             }
         }
-        
+
         // Handle subjects - replace if provided, otherwise keep existing
         if (editPersonDescriptor.getSubjects().isPresent()) {
             updatedTags.addAll(editPersonDescriptor.getSubjects().get());
         } else {
             updatedTags.addAll(existingSubjects);
         }
-        
+
         // Handle sessions - replace if provided, otherwise keep existing
         if (editPersonDescriptor.getSessions().isPresent()) {
             updatedTags.addAll(editPersonDescriptor.getSessions().get());
@@ -154,7 +154,7 @@ public class EditCommand extends Command {
 
         return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags);
     }
-    
+
     /**
      * Returns true if the tag is a session tag (contains spaces, indicating day and time format).
      */
