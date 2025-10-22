@@ -25,6 +25,7 @@ public class Person {
     // Data fields
     private final Address address;
     private final Set<Tag> tags = new HashSet<>();
+    private final Payment payment;
 
     /**
      * Every field must be present and not null.
@@ -37,6 +38,23 @@ public class Person {
         this.email = email;
         this.address = address;
         this.tags.addAll(tags);
+        this.payment = new Payment("PENDING"); // Default payment status
+    }
+
+    /**
+     * Every field must be present and not null.
+     * This constructor includes payment information.
+     */
+    public Person(Name name, StudyYear studyYear, Phone phone, Email email, Address address,
+                  Set<Tag> tags, Payment payment) {
+        requireAllNonNull(name, studyYear, phone, email, address, tags, payment);
+        this.name = name;
+        this.studyYear = studyYear;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.tags.addAll(tags);
+        this.payment = payment;
     }
 
     public Name getName() {
@@ -65,6 +83,10 @@ public class Person {
      */
     public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
+    }
+
+    public Payment getPayment() {
+        return payment;
     }
 
     /**
@@ -101,13 +123,14 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
-                && tags.equals(otherPerson.tags);
+                && tags.equals(otherPerson.tags)
+                && payment.equals(otherPerson.payment);
     }
 
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, studyYear, phone, email, address, tags);
+        return Objects.hash(name, studyYear, phone, email, address, tags, payment);
     }
 
     @Override
@@ -119,6 +142,7 @@ public class Person {
                 .add("email", email)
                 .add("address", address)
                 .add("tags", tags)
+                .add("payment", payment)
                 .toString();
     }
 
