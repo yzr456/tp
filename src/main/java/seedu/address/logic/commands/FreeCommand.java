@@ -1,7 +1,13 @@
 package seedu.address.logic.commands;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.List;
+
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.WeeklySessions;
+import seedu.address.model.person.Person;
 
 public class FreeCommand extends Command{
     public static final String COMMAND_WORD = "free";
@@ -22,6 +28,10 @@ public class FreeCommand extends Command{
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        return new CommandResult(String.format(MESSAGE_FREE_TIME_FOUND, specifiedDuration));
+        requireNonNull(model);
+        WeeklySessions weeklySessions = model.getWeeklySessions();
+        String earliestTimeFrame = weeklySessions.getEarliestFreeTime(specifiedDuration);
+
+        return new CommandResult(String.format(MESSAGE_FREE_TIME_FOUND, specifiedDuration, earliestTimeFrame));
     }
 }
