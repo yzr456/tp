@@ -18,7 +18,7 @@ public class FreeCommand extends Command{
             + "Command syntax: free [DURATION]\n"
             + "Example: " + COMMAND_WORD + " 1\n";
 
-    public static final String MESSAGE_FREE_TIME_FOUND = "The earliest %dhour time slot is at: $s \n";
+    public static final String MESSAGE_FREE_TIME_FOUND = "The earliest %dhour time slot is at: %s \n";
 
     public final int specifiedDuration;
 
