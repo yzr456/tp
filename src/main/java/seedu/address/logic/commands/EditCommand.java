@@ -2,9 +2,12 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
@@ -40,19 +43,27 @@ public class EditCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Edits the details of the person identified "
             + "by the index number used in the displayed person list. "
             + "Existing values will be overwritten by the input values.\n"
-            + "Parameters: -c INDEX (must be a positive integer) "
+            + "Contact Edit Parameters: -c INDEX (must be a positive integer) "
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_STUDY_YEAR + "STUDY_YEAR] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_SUBJECT + "SUBJECT]...\n"
-            + "Example: " + COMMAND_WORD + " -c 1 "
+            + "Session Edit Parameters: -s INDEX (must be a positive integer) "
+            + "[" + PREFIX_DAY + "DAY] "
+            + "[" + PREFIX_START + "START] "
+            + "[" + PREFIX_END + "END]...\n"
+            + "Example (Contact): " + COMMAND_WORD + " -c 1 "
             + PREFIX_NAME + "John Doe "
             + PREFIX_STUDY_YEAR + "SEC3 "
             + PREFIX_PHONE + "99999999 "
-            + PREFIX_EMAIL + "johndoe@example.com"
-            + PREFIX_ADDRESS + "21 Lower Kent Ridge Road";
+            + PREFIX_EMAIL + "johndoe@example.com "
+            + PREFIX_ADDRESS + "21 Lower Kent Ridge Road\n"
+            + "Example (Session): " + COMMAND_WORD + " -s 1 "
+            + PREFIX_DAY + "MON "
+            + PREFIX_START + "0900 "
+            + PREFIX_END + "1100";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
@@ -113,17 +124,42 @@ public class EditCommand extends Command {
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
 
-        // Handle subjects - replace existing subject tags with new ones if provided
+        // Handle tags - need to separate subjects and sessions
         Set<Tag> updatedTags = new HashSet<>();
+        
+        // Separate existing tags into subjects and sessions
+        Set<Tag> existingSubjects = new HashSet<>();
+        Set<Tag> existingSessions = new HashSet<>();
+        for (Tag tag : personToEdit.getTags()) {
+            if (isSessionTag(tag)) {
+                existingSessions.add(tag);
+            } else {
+                existingSubjects.add(tag);
+            }
+        }
+        
+        // Handle subjects - replace if provided, otherwise keep existing
         if (editPersonDescriptor.getSubjects().isPresent()) {
-            // If subjects are being edited, use only the new subjects
             updatedTags.addAll(editPersonDescriptor.getSubjects().get());
         } else {
-            // If subjects are not being edited, keep existing tags
-            updatedTags.addAll(personToEdit.getTags());
+            updatedTags.addAll(existingSubjects);
+        }
+        
+        // Handle sessions - replace if provided, otherwise keep existing
+        if (editPersonDescriptor.getSessions().isPresent()) {
+            updatedTags.addAll(editPersonDescriptor.getSessions().get());
+        } else {
+            updatedTags.addAll(existingSessions);
         }
 
         return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+    }
+    
+    /**
+     * Returns true if the tag is a session tag (contains spaces, indicating day and time format).
+     */
+    private static boolean isSessionTag(Tag tag) {
+        return tag.tagName.contains(" ");
     }
 
     @Override
@@ -161,6 +197,7 @@ public class EditCommand extends Command {
         private Email email;
         private Address address;
         private Set<Tag> subjects;
+        private Set<Tag> sessions;
 
         public EditPersonDescriptor() {}
 
@@ -175,13 +212,14 @@ public class EditCommand extends Command {
             setEmail(toCopy.email);
             setAddress(toCopy.address);
             setSubjects(toCopy.subjects);
+            setSessions(toCopy.sessions);
         }
 
         /**
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, studyYear, phone, email, address, subjects);
+            return CollectionUtil.isAnyNonNull(name, studyYear, phone, email, address, subjects, sessions);
         }
 
         public void setName(Name name) {
@@ -241,6 +279,23 @@ public class EditCommand extends Command {
             return (subjects != null) ? Optional.of(Collections.unmodifiableSet(subjects)) : Optional.empty();
         }
 
+        /**
+         * Sets {@code sessions} to this object's {@code sessions}.
+         * A defensive copy of {@code sessions} is used internally.
+         */
+        public void setSessions(Set<Tag> sessions) {
+            this.sessions = (sessions != null) ? new HashSet<>(sessions) : null;
+        }
+
+        /**
+         * Returns an unmodifiable session set, which throws {@code UnsupportedOperationException}
+         * if modification is attempted.
+         * Returns {@code Optional#empty()} if {@code sessions} is null.
+         */
+        public Optional<Set<Tag>> getSessions() {
+            return (sessions != null) ? Optional.of(Collections.unmodifiableSet(sessions)) : Optional.empty();
+        }
+
         @Override
         public boolean equals(Object other) {
             if (other == this) {
@@ -258,7 +313,8 @@ public class EditCommand extends Command {
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
-                    && Objects.equals(subjects, otherEditPersonDescriptor.subjects);
+                    && Objects.equals(subjects, otherEditPersonDescriptor.subjects)
+                    && Objects.equals(sessions, otherEditPersonDescriptor.sessions);
         }
 
         @Override
@@ -270,6 +326,7 @@ public class EditCommand extends Command {
                     .add("email", email)
                     .add("address", address)
                     .add("subjects", subjects)
+                    .add("sessions", sessions)
                     .toString();
         }
     }

@@ -3,9 +3,12 @@ package seedu.address.logic.parser;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
@@ -62,14 +65,20 @@ public class EditCommandParser implements Parser<EditCommand> {
             throw new ParseException(EditCommand.MESSAGE_INVALID_FLAG);
         }
 
-        // For now, only -c is supported
-        if (flag.equals("-s")) {
-            throw new ParseException("Session editing is not yet implemented.");
+        // Parse based on flag
+        if (flag.equals("-c")) {
+            return parseContactEdit(remainingArgs);
+        } else {
+            return parseSessionEdit(remainingArgs);
         }
+    }
 
-        // Parse contact edit command
+    /**
+     * Parses contact edit arguments and returns an EditCommand.
+     */
+    private EditCommand parseContactEdit(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(remainingArgs, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT);
 
         Index index;
@@ -109,6 +118,70 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
 
         return new EditCommand(index, editPersonDescriptor);
+    }
+
+    /**
+     * Parses session edit arguments and returns an EditCommand.
+     */
+    private EditCommand parseSessionEdit(String args) throws ParseException {
+        ArgumentMultimap argMultimap =
+                ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
+
+        Index index;
+
+        try {
+            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+        } catch (ParseException pe) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
+        }
+
+        EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
+
+        // Parse sessions - need to group day, start, end triplets
+        parseSessionsForEdit(argMultimap.getAllValues(PREFIX_DAY),
+                argMultimap.getAllValues(PREFIX_START),
+                argMultimap.getAllValues(PREFIX_END)).ifPresent(editPersonDescriptor::setSessions);
+
+        if (!editPersonDescriptor.isAnyFieldEdited()) {
+            throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
+        }
+
+        return new EditCommand(index, editPersonDescriptor);
+    }
+
+    /**
+     * Parses session triplets (day, start, end) into a {@code Set<Tag>} if non-empty.
+     * All three lists must have the same size.
+     */
+    private Optional<Set<Tag>> parseSessionsForEdit(Collection<String> days,
+                                                     Collection<String> starts,
+                                                     Collection<String> ends) throws ParseException {
+        assert days != null && starts != null && ends != null;
+
+        if (days.isEmpty() && starts.isEmpty() && ends.isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Validate that all three have the same count
+        if (days.size() != starts.size() || days.size() != ends.size()) {
+            throw new ParseException("Each session must have a day (d/), start time (s/), and end time (e/).");
+        }
+
+        Set<Tag> sessionTags = new HashSet<>();
+        var dayIter = days.iterator();
+        var startIter = starts.iterator();
+        var endIter = ends.iterator();
+
+        while (dayIter.hasNext()) {
+            String day = dayIter.next();
+            String start = startIter.next();
+            String end = endIter.next();
+
+            Tag sessionTag = ParserUtil.parseSessionTag(day, start, end);
+            sessionTags.add(sessionTag);
+        }
+
+        return sessionTags.isEmpty() ? Optional.empty() : Optional.of(sessionTags);
     }
 
     /**
