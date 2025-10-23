@@ -104,9 +104,6 @@ public class Session implements Comparable<Session> {
         return !(this.startTime.isAfter(startTime) || this.endTime.isBefore(endTime));
     }
 
-    public boolean isHappeningOn(LocalTime start, LocalTime end) {
-        return !(this.startTime.isAfter(start) || this.endTime.isBefore(end));
-    }
 
     /**
      * Returns true if this session is happening on a particular time interval.
