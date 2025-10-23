@@ -105,6 +105,20 @@ public class Session implements Comparable<Session> {
     }
 
     /**
+     * Returns true if this session is happening on a particular time interval.
+     *
+     * @param startTime a valid time
+     * @param endTime a valid time
+     */
+    public boolean isHappeningOn(LocalTime startTime, LocalTime endTime) {
+        if (this.startTime.isBefore(startTime)) {
+            return this.endTime.isAfter(startTime);
+        } else {
+            return this.startTime.isBefore(endTime);
+        }
+    }
+
+    /**
      * Returns true if this session is happening at particular time.
      *
      * @param time a valid time string
