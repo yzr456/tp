@@ -5,17 +5,22 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -35,8 +40,8 @@ public class AddSessionCommand extends Command {
             + PREFIX_START + "0900 "
             + PREFIX_END + "1800\n";
 
-    public static final String MESSAGE_SUCCESS = "Session added successfully\n\n%1$s";
-    public static final String MESSAGE_DUPLICATE_SESSION = "This session already exists in the person's tags";
+    public static final String MESSAGE_ADD_SESSION_SUCCESS = "Session added successfully\n\n%1$s";
+    public static final String MESSAGE_OVERLAP_SESSION = "This session overlap with %1$s: %2$s";
 
     private final Index targetIndex;
     private final Tag sessionTag;
@@ -61,14 +66,40 @@ public class AddSessionCommand extends Command {
 
         Person personToEdit = lastShownList.get(targetIndex.getZeroBased());
 
-        if (personToEdit.getTags().contains(sessionTag)) {
-            throw new CommandException(String.format(
-                    MESSAGE_DUPLICATE_SESSION, sessionTag.tagName, personToEdit.getName().fullName));
+        Session currentSession;
+        Session otherSession;
+
+        try {
+            currentSession = ParserUtil.parseSessionStr(sessionTag.tagName);
+        } catch (ParseException pe) {
+            // Log or rethrow since we cannot continue without a valid session
+            throw new CommandException("Invalid session format: " + sessionTag.tagName, pe);
+        }
+
+        for (Person person : model.getAddressBook().getPersonList()) {
+            for (Tag tag : person.getTags()) {
+                try {
+                    otherSession = ParserUtil.parseSessionStr(tag.tagName);
+                } catch (Exception ex) {
+                    // Ignore non-session tags, but add a comment for clarity
+                    // This tag is not a valid session, so we skip it
+                    continue;
+                }
+                if (person.isSamePerson(personToEdit)) {
+                    if (currentSession.isOverlap(otherSession)) {
+                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                person.getName(), tag.tagName));
+                    }
+                } else {
+                    if (currentSession.isOverlap(otherSession) && !currentSession.equals(otherSession)) {
+                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                person.getName(), tag.tagName));
+                    }
+                }
+            }
         }
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
-        newTags.add(sessionTag);
-
         newTags.add(sessionTag);
 
         Person editedPerson = new Person(
@@ -77,11 +108,13 @@ public class AddSessionCommand extends Command {
                 personToEdit.getPhone(),
                 personToEdit.getEmail(),
                 personToEdit.getAddress(),
-                personToEdit.getTags()
+                newTags
         );
 
         model.setPerson(personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(editedPerson)));
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        // model.addSession(currentSession);
+        return new CommandResult(String.format(MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)));
     }
 
     @Override
@@ -91,12 +124,13 @@ public class AddSessionCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof AddCommand)) {
+        if (!(other instanceof AddSessionCommand)) {
             return false;
         }
 
-        AddSessionCommand otherAddCommand = (AddSessionCommand) other;
-        return sessionTag.equals(otherAddCommand.sessionTag);
+        AddSessionCommand otherAddSessionCommand = (AddSessionCommand) other;
+        return Objects.equals(targetIndex, otherAddSessionCommand.targetIndex)
+                && Objects.equals(sessionTag, otherAddSessionCommand.sessionTag);
     }
 
     @Override
