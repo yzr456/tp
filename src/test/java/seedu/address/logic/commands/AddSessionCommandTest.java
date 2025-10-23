@@ -242,7 +242,8 @@ public class AddSessionCommandTest {
         expectedModel.setPerson(personToEdit, editedPerson);
 
         assertCommandSuccess(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)), expectedModel);
+                String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS,
+                        Messages.format(editedPerson)), expectedModel);
     }
 
     @Test
@@ -272,7 +273,8 @@ public class AddSessionCommandTest {
         expectedModel.setPerson(personToEdit, editedPerson);
 
         assertCommandSuccess(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)), expectedModel);
+                String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS,
+                        Messages.format(editedPerson)), expectedModel);
     }
 
     @Test
