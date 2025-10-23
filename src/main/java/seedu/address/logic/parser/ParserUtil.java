@@ -207,7 +207,7 @@ public class ParserUtil {
 
         return billingDay;
     }
- 
+
     /**
      * Parses a {@code String tagStr} into a {@code Session}.
      * Expected format: "DAY START-END" (e.g., "MON 0900-1100").
