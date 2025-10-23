@@ -206,9 +206,13 @@ public class ParserUtil {
         }
 
         return billingDay;
+    }
  
     /**
-     * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     * Parses a {@code String tagStr} into a {@code Session}.
+     * Expected format: "DAY START-END" (e.g., "MON 0900-1100").
+     *
+     * @throws ParseException if the given {@code tagStr} is invalid.
      */
     public static Session parseSessionStr(String tagStr) throws ParseException {
         requireNonNull(tagStr);
