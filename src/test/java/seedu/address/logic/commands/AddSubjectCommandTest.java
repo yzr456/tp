@@ -12,7 +12,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,9 @@ public class AddSubjectCommandTest {
     public void execute_validIndexUnfilteredList_success() {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Tag subjectTag = new Tag(VALID_SUBJECT_TAG);
-        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTag);
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(subjectTag);
+        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTags);
 
         String expectedMessage = String.format(AddSubjectCommand.MESSAGE_SUCCESS,
                 subjectTag, personToEdit.getName().fullName);
@@ -53,7 +57,9 @@ public class AddSubjectCommandTest {
     @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(outOfBoundIndex, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(new Tag(VALID_SUBJECT_TAG));
+        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(outOfBoundIndex, subjectTags);
 
         assertCommandFailure(addSubjectCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
@@ -64,7 +70,9 @@ public class AddSubjectCommandTest {
 
         Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         Tag subjectTag = new Tag(VALID_SUBJECT_TAG);
-        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTag);
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(subjectTag);
+        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTags);
 
         String expectedMessage = String.format(AddSubjectCommand.MESSAGE_SUCCESS,
                 subjectTag, personInFilteredList.getName().fullName);
@@ -87,7 +95,9 @@ public class AddSubjectCommandTest {
         // ensures that outOfBoundIndex is still in bounds of address book list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 
-        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(outOfBoundIndex, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(new Tag(VALID_SUBJECT_TAG));
+        AddSubjectCommand addSubjectCommand = new AddSubjectCommand(outOfBoundIndex, subjectTags);
 
         assertCommandFailure(addSubjectCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
@@ -99,7 +109,9 @@ public class AddSubjectCommandTest {
         Person withMath = withTag(original, new Tag(VALID_SUBJECT_TAG));
         model.setPerson(original, withMath);
 
-        AddSubjectCommand command = new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(new Tag(VALID_SUBJECT_TAG));
+        AddSubjectCommand command = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTags);
 
         String expected = String.format(AddSubjectCommand.MESSAGE_DUPLICATE_SUBJECT,
                 VALID_SUBJECT_TAG, withMath.getName().fullName);
@@ -112,7 +124,9 @@ public class AddSubjectCommandTest {
         Person shown = model.getFilteredPersonList().get(0);
         model.setPerson(shown, withTag(shown, new Tag(VALID_SUBJECT_TAG)));
 
-        AddSubjectCommand cmd = new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(new Tag(VALID_SUBJECT_TAG));
+        AddSubjectCommand cmd = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTags);
         String expected = String.format(AddSubjectCommand.MESSAGE_DUPLICATE_SUBJECT,
                 VALID_SUBJECT_TAG, shown.getName().fullName);
 
@@ -125,7 +139,9 @@ public class AddSubjectCommandTest {
         model.setPerson(model.getFilteredPersonList().get(0), base);
 
         Tag subjectTag = new Tag(VALID_SUBJECT_TAG);
-        AddSubjectCommand cmd = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTag);
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(subjectTag);
+        AddSubjectCommand cmd = new AddSubjectCommand(INDEX_FIRST_PERSON, subjectTags);
 
         Person expectedEdited = new PersonBuilder(base).withTags("FRIEND", "TEAMMATE", VALID_SUBJECT_TAG).build();
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
@@ -139,14 +155,23 @@ public class AddSubjectCommandTest {
 
     @Test
     public void equals() {
-        AddSubjectCommand addFirstMath = new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag(VALID_SUBJECT_TAG));
-        AddSubjectCommand addSecondMath = new AddSubjectCommand(INDEX_SECOND_PERSON, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> mathTagSet = new HashSet<>();
+        mathTagSet.add(new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> mathTagSet2 = new HashSet<>();
+        mathTagSet2.add(new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> engTagSet = new HashSet<>();
+        engTagSet.add(new Tag("ENG"));
+
+        AddSubjectCommand addFirstMath = new AddSubjectCommand(INDEX_FIRST_PERSON, mathTagSet);
+        AddSubjectCommand addSecondMath = new AddSubjectCommand(INDEX_SECOND_PERSON, mathTagSet2);
 
         // same object -> true
         assertTrue(addFirstMath.equals(addFirstMath));
 
         // same values -> true
-        AddSubjectCommand addFirstMathCopy = new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag(VALID_SUBJECT_TAG));
+        Set<Tag> mathTagSet3 = new HashSet<>();
+        mathTagSet3.add(new Tag(VALID_SUBJECT_TAG));
+        AddSubjectCommand addFirstMathCopy = new AddSubjectCommand(INDEX_FIRST_PERSON, mathTagSet3);
         assertTrue(addFirstMath.equals(addFirstMathCopy));
 
         // different types -> false
@@ -159,7 +184,7 @@ public class AddSubjectCommandTest {
         assertFalse(addFirstMath.equals(addSecondMath));
 
         // different tag -> false
-        AddSubjectCommand addFirstEng = new AddSubjectCommand(INDEX_FIRST_PERSON, new Tag("ENG"));
+        AddSubjectCommand addFirstEng = new AddSubjectCommand(INDEX_FIRST_PERSON, engTagSet);
         assertFalse(addFirstMath.equals(addFirstEng));
     }
 
@@ -167,9 +192,11 @@ public class AddSubjectCommandTest {
     public void toStringMethod() {
         Index targetIndex = Index.fromOneBased(1);
         Tag subjectTag = new Tag(VALID_SUBJECT_TAG);
-        AddSubjectCommand cmd = new AddSubjectCommand(targetIndex, subjectTag);
+        Set<Tag> subjectTags = new HashSet<>();
+        subjectTags.add(subjectTag);
+        AddSubjectCommand cmd = new AddSubjectCommand(targetIndex, subjectTags);
         String expected = AddSubjectCommand.class.getCanonicalName()
-                + "{targetIndex=" + targetIndex + ", subjectTag=" + subjectTag + "}";
+                + "{targetIndex=" + targetIndex + ", subjectTags=" + subjectTags + "}";
         assertEquals(expected, cmd.toString());
     }
 
