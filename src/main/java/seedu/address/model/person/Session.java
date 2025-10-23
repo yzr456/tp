@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a Person's sesssion in the address book.
+ * Represents a Person's session in the address book.
  * Guarantees: immutable; is valid as declared in {@link #isValidSession(String, String, String)}
  */
 public class Session implements Comparable<Session> {
@@ -35,7 +35,7 @@ public class Session implements Comparable<Session> {
     /**
      * Constructs a {@code Session}. Every field must be present and not null. {@code start} must be before {@code end}
      *
-     * @param day A valid day of week.
+     * @param day A valid day of the week.
      * @param start a valid time before {@code end}
      * @param end a valid time after {@code start}
      */
@@ -48,7 +48,7 @@ public class Session implements Comparable<Session> {
     }
 
     /**
-     * Returns true if the given arguments is valid for session construction.
+     * Returns true if the given arguments are valid for session construction.
      */
     public static boolean isValidSession(String day, String start, String end) {
         if (!DAY_OF_WEEKS.contains(day)) {
@@ -73,8 +73,10 @@ public class Session implements Comparable<Session> {
             return false;
         }
 
-        // If this session starts earlier than another session, then this session cannot end after other session start.
-        // Otherwise, at the time this session starts, other session should have been ended.
+        // If this session starts earlier than the other session,
+        // then this session cannot end after the other session starts.
+        // Otherwise, at the time this session starts, the other session should have already ended.
+
         if (startTime.isBefore(other.startTime)) {
             return endTime.isAfter(other.startTime);
         } else {
@@ -83,16 +85,16 @@ public class Session implements Comparable<Session> {
     }
 
     /**
-     * Returns true if this session is happening on particular day of week.
+     * Returns true if this session is happening on a particular day of the week.
      *
-     * @param dayOfWeek a valid day of week
+     * @param dayOfWeek a valid day of the week
      */
     public boolean isHappeningOn(String dayOfWeek) {
         return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek) + 1));
     }
 
     /**
-     * Returns true if this session is happening on a particular time interval.
+     * Returns true if this session is happening within a particular time interval.
      *
      * @param start a valid time string
      * @param end a valid time string
@@ -105,7 +107,7 @@ public class Session implements Comparable<Session> {
     }
 
     /**
-     * Returns true if this session is happening on a particular time interval.
+     * Returns true if this session is happening within a particular time interval.
      *
      * @param startTime a valid time
      * @param endTime a valid time
@@ -119,7 +121,7 @@ public class Session implements Comparable<Session> {
     }
 
     /**
-     * Returns true if this session is happening at particular time.
+     * Returns true if this session is happening at a particular time.
      *
      * @param time a valid time string
      */
