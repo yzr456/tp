@@ -15,6 +15,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Payment;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Session;
 import seedu.address.model.person.StudyYear;
@@ -161,7 +162,57 @@ public class ParserUtil {
     }
 
     /**
-     * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     * Parses a {@code String status} and validates it as a payment status.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code status} is invalid.
+     */
+    public static String parsePaymentStatus(String status) throws ParseException {
+        requireNonNull(status);
+        String trimmedStatus = status.trim();
+        if (trimmedStatus.isEmpty()) {
+            throw new ParseException("ArgumentError: Missing value for status parameter. "
+                    + "Please ensure status has a non-empty value.");
+        }
+        if (!Payment.isValidStatus(trimmedStatus)) {
+            throw new ParseException("InvalidStatusError: " + Payment.MESSAGE_CONSTRAINTS_STATUS);
+        }
+        return trimmedStatus;
+    }
+
+    /**
+     * Parses a {@code String day} into a billing start day integer.
+     * Leading and trailing whitespaces will be trimmed.
+     *
+     * @throws ParseException if the given {@code day} is invalid.
+     */
+    public static int parseBillingDay(String day) throws ParseException {
+        requireNonNull(day);
+        String trimmedDay = day.trim();
+        if (trimmedDay.isEmpty()) {
+            throw new ParseException("ArgumentError: Missing value for start parameter. "
+                    + "Please ensure start has a non-empty value.");
+        }
+
+        int billingDay;
+        try {
+            billingDay = Integer.parseInt(trimmedDay);
+        } catch (NumberFormatException e) {
+            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+        }
+
+        if (!Payment.isValidBillingDay(billingDay)) {
+            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+        }
+
+        return billingDay;
+    }
+
+    /**
+     * Parses a {@code String tagStr} into a {@code Session}.
+     * Expected format: "DAY START-END" (e.g., "MON 0900-1100").
+     *
+     * @throws ParseException if the given {@code tagStr} is invalid.
      */
     public static Session parseSessionStr(String tagStr) throws ParseException {
         requireNonNull(tagStr);
@@ -179,5 +230,6 @@ public class ParserUtil {
             throw new ParseException(Session.MESSAGE_CONSTRAINTS);
         }
         return new Session(dayOfWeek, start, end);
+
     }
 }

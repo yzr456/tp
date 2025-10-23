@@ -50,6 +50,11 @@ public class Messages {
                 .append(person.getEmail())
                 .append("; Address: ")
                 .append(person.getAddress())
+                .append("; Payment Status: ")
+                .append(person.getPayment())
+                .append("; Billing Start: Day ")
+                .append(person.getPayment().getBillingStartDay())
+                .append(" of each month")
                 .append("; Tags: ");
         person.getTags().forEach(builder::append);
         return builder.toString();

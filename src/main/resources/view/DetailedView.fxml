@@ -25,32 +25,44 @@
 
             <!-- Name -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label styleClass="detail-label" text="NAME:" minWidth="100" />
+                <Label styleClass="detail-label" text="NAME:" minWidth="130" />
                 <Label fx:id="nameLabel" styleClass="detail-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
             </HBox>
 
             <!-- Study Year -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label styleClass="detail-label" text="STUDY YEAR:" minWidth="100" />
+                <Label styleClass="detail-label" text="STUDY YEAR:" minWidth="130" />
                 <Label fx:id="studyYearLabel" styleClass="detail-value" text="-" />
             </HBox>
 
             <!-- Phone -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label styleClass="detail-label" text="PHONE:" minWidth="100" />
+                <Label styleClass="detail-label" text="PHONE:" minWidth="130" />
                 <Label fx:id="phoneLabel" styleClass="detail-value" text="-" />
             </HBox>
 
             <!-- Email -->
             <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label styleClass="detail-label" text="EMAIL:" minWidth="100" />
+                <Label styleClass="detail-label" text="EMAIL:" minWidth="130" />
                 <Label fx:id="emailLabel" styleClass="detail-value" text="-" />
             </HBox>
 
             <!-- Address -->
             <HBox spacing="10" alignment="TOP_LEFT">
-                <Label styleClass="detail-label" text="ADDRESS:" minWidth="100" />
+                <Label styleClass="detail-label" text="ADDRESS:" minWidth="130" />
                 <Label fx:id="addressLabel" styleClass="detail-value" text="-" wrapText="true" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Payment Status -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="PAYMENT STATUS:" minWidth="130" />
+                <Label fx:id="paymentStatusLabel" styleClass="detail-value" text="-" />
+            </HBox>
+
+            <!-- Billing Start -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label styleClass="detail-label" text="BILLING START:" minWidth="130" />
+                <Label fx:id="billingStartLabel" styleClass="detail-value" text="-" />
             </HBox>
 
             <!-- Subject Tags -->

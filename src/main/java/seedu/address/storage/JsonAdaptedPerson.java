@@ -13,6 +13,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Payment;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StudyYear;
@@ -31,6 +32,7 @@ class JsonAdaptedPerson {
     private final String email;
     private final String address;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final JsonAdaptedPayment payment;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -38,7 +40,8 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("studyYear") String studyYear,
             @JsonProperty("phone") String phone, @JsonProperty("email") String email,
-            @JsonProperty("address") String address, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+            @JsonProperty("address") String address, @JsonProperty("tags") List<JsonAdaptedTag> tags,
+            @JsonProperty("payment") JsonAdaptedPayment payment) {
         this.name = name;
         this.studyYear = studyYear;
         this.phone = phone;
@@ -47,6 +50,7 @@ class JsonAdaptedPerson {
         if (tags != null) {
             this.tags.addAll(tags);
         }
+        this.payment = payment;
     }
 
     /**
@@ -61,6 +65,7 @@ class JsonAdaptedPerson {
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
+        payment = new JsonAdaptedPayment(source.getPayment());
     }
 
     /**
@@ -116,7 +121,16 @@ class JsonAdaptedPerson {
         final Address modelAddress = new Address(address);
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelStudyYear, modelPhone, modelEmail, modelAddress, modelTags);
+
+        // Handle payment - use default if not present (for backward compatibility)
+        final Payment modelPayment;
+        if (payment == null) {
+            modelPayment = new Payment("PENDING"); // Default payment status
+        } else {
+            modelPayment = payment.toModelType();
+        }
+
+        return new Person(modelName, modelStudyYear, modelPhone, modelEmail, modelAddress, modelTags, modelPayment);
     }
 
 }

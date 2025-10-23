@@ -219,4 +219,91 @@ public class ParserUtilTest {
 
         assertEquals(expectedTagSet, actualTagSet);
     }
+
+    // Tests for parsePaymentStatus
+    @Test
+    public void parsePaymentStatus_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parsePaymentStatus(null));
+    }
+
+    @Test
+    public void parsePaymentStatus_emptyString_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parsePaymentStatus(""));
+        assertThrows(ParseException.class, () -> ParserUtil.parsePaymentStatus("  "));
+    }
+
+    @Test
+    public void parsePaymentStatus_invalidStatus_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parsePaymentStatus("INVALID"));
+        assertThrows(ParseException.class, () -> ParserUtil.parsePaymentStatus("NOT_A_STATUS"));
+    }
+
+    @Test
+    public void parsePaymentStatus_validStatus_returnsStatus() throws Exception {
+        // Valid statuses in uppercase
+        assertEquals("PENDING", ParserUtil.parsePaymentStatus("PENDING"));
+        assertEquals("PAID", ParserUtil.parsePaymentStatus("PAID"));
+        assertEquals("OVERDUE", ParserUtil.parsePaymentStatus("OVERDUE"));
+    }
+
+    @Test
+    public void parsePaymentStatus_validStatusWithWhitespace_returnsTrimmedStatus() throws Exception {
+        assertEquals("PENDING", ParserUtil.parsePaymentStatus("  PENDING  "));
+        assertEquals("PAID", ParserUtil.parsePaymentStatus("\t PAID \n"));
+    }
+
+    @Test
+    public void parsePaymentStatus_validStatusLowercase_returnsStatus() throws Exception {
+        // Case-insensitive validation happens in Payment class
+        assertEquals("pending", ParserUtil.parsePaymentStatus("pending"));
+        assertEquals("paid", ParserUtil.parsePaymentStatus("paid"));
+    }
+
+    // Tests for parseBillingDay
+    @Test
+    public void parseBillingDay_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseBillingDay(null));
+    }
+
+    @Test
+    public void parseBillingDay_emptyString_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay(""));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("  "));
+    }
+
+    @Test
+    public void parseBillingDay_invalidFormat_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("abc"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("12.5"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("1a"));
+    }
+
+    @Test
+    public void parseBillingDay_outOfRange_throwsParseException() {
+        // Day < 1
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("0"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("-1"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("-10"));
+
+        // Day > 31
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("32"));
+        assertThrows(ParseException.class, () -> ParserUtil.parseBillingDay("100"));
+    }
+
+    @Test
+    public void parseBillingDay_validDay_returnsDay() throws Exception {
+        // Boundary values
+        assertEquals(1, ParserUtil.parseBillingDay("1"));
+        assertEquals(31, ParserUtil.parseBillingDay("31"));
+
+        // Common values
+        assertEquals(15, ParserUtil.parseBillingDay("15"));
+        assertEquals(28, ParserUtil.parseBillingDay("28"));
+    }
+
+    @Test
+    public void parseBillingDay_validDayWithWhitespace_returnsTrimmedDay() throws Exception {
+        assertEquals(15, ParserUtil.parseBillingDay("  15  "));
+        assertEquals(1, ParserUtil.parseBillingDay("\t 1 \n"));
+    }
 }
