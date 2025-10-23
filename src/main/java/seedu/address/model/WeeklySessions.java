@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import seedu.address.model.person.Session;
@@ -62,6 +63,12 @@ public class WeeklySessions {
     public boolean hasOverlap(Session sessionToCheck) {
         return weeklySessions.stream()
                 .anyMatch(session -> session.isOverlap(sessionToCheck));
+    }
+
+    public Optional<Session> getOverlap(Session sessionToCheck) {
+        return weeklySessions.stream()
+                .filter(session -> session.isOverlap(sessionToCheck))
+                .findFirst();
     }
 
     /**
