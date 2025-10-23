@@ -15,20 +15,21 @@ import seedu.address.model.person.Person;
 import seedu.address.model.tag.Tag;
 
 /**
- * Attaches a validated subject tag to a student.
+ * Attaches validated subject tags to a student.
  */
 public class AddSubjectCommand extends Command {
 
     public static final String COMMAND_WORD = "addsubject";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add a subject tag to a student.\n"
-            + "Parameters: INDEX sub/SUBJECT\n"
-            + "Command syntax: addsubject [INDEX] sub/[SUBJECT]\n"
-            + "Example: " + COMMAND_WORD + " 1 sub/MATH";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add subject tag(s) to a student.\n"
+            + "Parameters: INDEX sub/SUBJECT...\n"
+            + "Command syntax: addsubject [INDEX] sub/[SUBJECT]...\n"
+            + "Example: " + COMMAND_WORD + " 1 sub/MATH\n"
+            + "Example: " + COMMAND_WORD + " 3 sub/PHY sub/SCI";
 
-    public static final String MESSAGE_SUCCESS = "Added Subject Tag: %s to %s";
+    public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
     public static final String MESSAGE_DUPLICATE_SUBJECT =
-            "DuplicateSubjectError: Subject Tag: %s has already been assigned to %s";
+            "DuplicateSubjectError: Subject Tag(s): %s already assigned to %s";
 
     public static final String SUBJECT_MESSAGE_CONSTRAINTS =
             "Invalid subject provided. The Subject provided must be a valid subject code: "
@@ -36,17 +37,17 @@ public class AddSubjectCommand extends Command {
                     + "POA, ECONS, ART, MUSIC, COMSCI";
 
     private final Index targetIndex;
-    private final Tag subjectTag;
+    private final Set<Tag> subjectTags;
 
     /**
      * @param index the index of the target person in the current list
-     * @param subjectTag the subject tag to attach
+     * @param subjectTags the subject tags to attach
      */
-    public AddSubjectCommand(Index index, Tag subjectTag) {
+    public AddSubjectCommand(Index index, Set<Tag> subjectTags) {
         requireNonNull(index);
-        requireNonNull(subjectTag);
+        requireNonNull(subjectTags);
         this.targetIndex = index;
-        this.subjectTag = subjectTag;
+        this.subjectTags = subjectTags;
     }
 
     @Override
@@ -60,13 +61,24 @@ public class AddSubjectCommand extends Command {
 
         Person personToEdit = lastShownList.get(targetIndex.getZeroBased());
 
-        if (personToEdit.getTags().contains(subjectTag)) {
+        Set<Tag> duplicates = new HashSet<>();
+        for (Tag tag : subjectTags) {
+            if (personToEdit.getTags().contains(tag)) {
+                duplicates.add(tag);
+            }
+        }
+
+        if (!duplicates.isEmpty()) {
+            String duplicateNames = duplicates.stream()
+                    .map(tag -> tag.tagName)
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("");
             throw new CommandException(String.format(
-                    MESSAGE_DUPLICATE_SUBJECT, subjectTag.tagName, personToEdit.getName().fullName));
+                    MESSAGE_DUPLICATE_SUBJECT, duplicateNames, personToEdit.getName().fullName));
         }
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
-        newTags.add(subjectTag);
+        newTags.addAll(subjectTags);
 
         Person editedPerson = new Person(
                 personToEdit.getName(),
@@ -78,7 +90,14 @@ public class AddSubjectCommand extends Command {
         );
 
         model.setPerson(personToEdit, editedPerson);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, subjectTag, editedPerson.getName().fullName));
+
+        String addedSubjects = subjectTags
+                .stream()
+                .map(tag -> tag.toString())
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("");
+
+        return new CommandResult(String.format(MESSAGE_SUCCESS, addedSubjects, editedPerson.getName().fullName));
     }
 
     @Override
@@ -94,14 +113,14 @@ public class AddSubjectCommand extends Command {
 
         AddSubjectCommand otherAddSubjectCommand = (AddSubjectCommand) other;
         return targetIndex.equals(otherAddSubjectCommand.targetIndex)
-                && subjectTag.equals(otherAddSubjectCommand.subjectTag);
+                && subjectTags.equals(otherAddSubjectCommand.subjectTags);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("targetIndex", targetIndex)
-                .add("subjectTag", subjectTag)
+                .add("subjectTags", subjectTags)
                 .toString();
     }
 }

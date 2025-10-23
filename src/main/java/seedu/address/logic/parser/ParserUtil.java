@@ -6,6 +6,8 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
@@ -204,5 +206,26 @@ public class ParserUtil {
         }
 
         return billingDay;
+ 
+    /**
+     * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     */
+    public static Session parseSessionStr(String tagStr) throws ParseException {
+        requireNonNull(tagStr);
+        Pattern sessionTagFormat = Pattern.compile(
+                "(?<dayOfWeek>[A-Z]{3})\\s(?<start>\\d{4})\\s*-\\s*(?<end>\\d{4})");
+        Matcher matcher = sessionTagFormat.matcher(tagStr);
+        if (!matcher.matches()) {
+            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        }
+        String dayOfWeek = matcher.group("dayOfWeek");
+        String start = matcher.group("start");
+        String end = matcher.group("end");
+
+        if (!Session.isValidSession(dayOfWeek, start, end)) {
+            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        }
+        return new Session(dayOfWeek, start, end);
+
     }
 }

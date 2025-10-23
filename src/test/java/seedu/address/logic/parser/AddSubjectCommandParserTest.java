@@ -4,6 +4,9 @@ import static seedu.address.logic.commands.AddSubjectCommand.SUBJECT_MESSAGE_CON
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -17,15 +20,19 @@ public class AddSubjectCommandParserTest {
 
     @Test
     public void parse_validArgs_returnsAddSubjectCommand() {
+        Set<Tag> expectedTags = new HashSet<>();
+        expectedTags.add(new Tag("MATH"));
         AddSubjectCommand expected =
-                new AddSubjectCommand(Index.fromOneBased(1), new Tag("MATH"));
+                new AddSubjectCommand(Index.fromOneBased(1), expectedTags);
         assertParseSuccess(parser, "1 sub/MATH", expected);
     }
 
     @Test
     public void parse_validArgsWhitespaceAndCase_returnsAddSubjectCommand() {
+        Set<Tag> expectedTags = new HashSet<>();
+        expectedTags.add(new Tag("CHEM"));
         AddSubjectCommand expected =
-                new AddSubjectCommand(Index.fromOneBased(2), new Tag("CHEM"));
+                new AddSubjectCommand(Index.fromOneBased(2), expectedTags);
         assertParseSuccess(parser, "   2   sub/   chem   ", expected);
     }
 
