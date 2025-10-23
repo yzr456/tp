@@ -21,6 +21,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Session;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -78,24 +79,23 @@ public class AddSessionCommand extends Command {
 
         for (Person person : model.getAddressBook().getPersonList()) {
             for (Tag tag : person.getTags()) {
-                try {
-                    otherSession = ParserUtil.parseSessionStr(tag.tagName);
-                } catch (Exception ex) {
-                    // Ignore non-session tags, but add a comment for clarity
-                    // This tag is not a valid session, so we skip it
-                    continue;
-                }
-                if (person.isSamePerson(personToEdit)) {
-                    if (currentSession.isOverlap(otherSession)) {
-                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
-                                person.getName(), tag.tagName));
-                    }
-                } else {
-                    if (currentSession.isOverlap(otherSession) && !currentSession.equals(otherSession)) {
-                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
-                                person.getName(), tag.tagName));
+                if (tag.isSessionTag()) {
+                    SessionTag sessionTag = (SessionTag) tag;
+                    otherSession = sessionTag.getSession();
+
+                    if (person.isSamePerson(personToEdit)) {
+                        if (currentSession.isOverlap(otherSession)) {
+                            throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                    person.getName(), tag.tagName));
+                        }
+                    } else {
+                        if (currentSession.isOverlap(otherSession) && !currentSession.equals(otherSession)) {
+                            throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                    person.getName(), tag.tagName));
+                        }
                     }
                 }
+
             }
         }
 

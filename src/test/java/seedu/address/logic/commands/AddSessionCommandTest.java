@@ -19,13 +19,14 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
 import seedu.address.model.tag.Tag;
-import seedu.address.testutil.PersonBuilder;
 
 /**
  * Contains integration tests (interaction with the Model) and unit tests for AddSessionCommand.
@@ -37,10 +38,23 @@ public class AddSessionCommandTest {
     private final String validSessionTag = "MON 1100 - 1200";
     private final String overlappingTag = "MON 1130 - 1230";
 
+    /**
+     * Helper method to create a session tag from day, start, and end time.
+     * Wraps ParserUtil to decouple tests from SessionTag implementation details.
+     */
+    private Tag createSessionTag(String day, String start, String end) {
+        try {
+            return ParserUtil.parseSessionTag(day, start, end);
+        } catch (ParseException e) {
+            throw new AssertionError("Test setup failed: invalid session parameters", e);
+        }
+    }
+
     @Test
     public void constructor_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new AddSessionCommand(Index.fromOneBased(1), null));
-        assertThrows(NullPointerException.class, () -> new AddSessionCommand(null, new Tag("validTag")));
+        assertThrows(NullPointerException.class, () -> new AddSessionCommand(null,
+                createSessionTag("MON", "1100", "1200")));
     }
 
     @Test
@@ -48,14 +62,19 @@ public class AddSessionCommandTest {
         Index indexLastPerson = Index.fromOneBased(model.getFilteredPersonList().size());
         Person lastPerson = model.getFilteredPersonList().get(indexLastPerson.getZeroBased());
 
-        PersonBuilder personInList = new PersonBuilder(lastPerson);
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
 
         Set<Tag> newTags = new HashSet<>(lastPerson.getTags());
         newTags.add(tag);
-        String[] tagStrings = newTags.stream().map(t -> t.tagName).toArray(String[]::new);
 
-        Person editedPerson = personInList.withTags(tagStrings).build();
+        Person editedPerson = new Person(
+                lastPerson.getName(),
+                lastPerson.getStudyYear(),
+                lastPerson.getPhone(),
+                lastPerson.getEmail(),
+                lastPerson.getAddress(),
+                newTags
+        );
 
         AddSessionCommand addSessionCommand = new AddSessionCommand(indexLastPerson, tag);
 
@@ -73,13 +92,19 @@ public class AddSessionCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person personInFilteredList = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
 
         Set<Tag> newTags = new HashSet<>(personInFilteredList.getTags());
         newTags.add(tag);
-        String[] tagStrings = newTags.stream().map(t -> t.tagName).toArray(String[]::new);
 
-        Person editedPerson = new PersonBuilder(personInFilteredList).withTags(tagStrings).build();
+        Person editedPerson = new Person(
+                personInFilteredList.getName(),
+                personInFilteredList.getStudyYear(),
+                personInFilteredList.getPhone(),
+                personInFilteredList.getEmail(),
+                personInFilteredList.getAddress(),
+                newTags
+        );
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
 
         String expectedMessage = String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS,
@@ -94,8 +119,8 @@ public class AddSessionCommandTest {
     @Test
     public void execute_overlapSessionSamePersonUnfilteredList_failure() {
         Person personInConflict = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
-        Tag otherTag = new Tag(overlappingTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
+        Tag otherTag = createSessionTag("MON", "1130", "1230");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, otherTag);
 
@@ -117,8 +142,8 @@ public class AddSessionCommandTest {
 
         // edit person in filtered list to have overlap session tag in address book
         Person personInConflict = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
-        Tag otherTag = new Tag(overlappingTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
+        Tag otherTag = createSessionTag("MON", "1130", "1230");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, otherTag);
 
@@ -137,8 +162,8 @@ public class AddSessionCommandTest {
     @Test
     public void execute_overlapSessionDiffPersonUnfilteredList_failure() {
         Person personInConflict = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
-        Tag otherTag = new Tag(overlappingTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
+        Tag otherTag = createSessionTag("MON", "1130", "1230");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_SECOND_PERSON, otherTag);
 
@@ -158,8 +183,8 @@ public class AddSessionCommandTest {
     public void execute_overlapSessionDiffPersonFilteredList_failure() {
         // edit person in filtered list to have overlap session tag in address book
         Person personInConflict = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
-        Tag otherTag = new Tag(overlappingTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
+        Tag otherTag = createSessionTag("MON", "1130", "1230");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_SECOND_PERSON, otherTag);
 
@@ -179,7 +204,7 @@ public class AddSessionCommandTest {
     @Test
     public void execute_duplicateSessionSamePersonUnfilteredList_failure() {
         Person personInConflict = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
 
@@ -201,7 +226,7 @@ public class AddSessionCommandTest {
 
         // edit person in filtered list to have overlap session tag in address book
         Person personInConflict = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
 
@@ -220,7 +245,7 @@ public class AddSessionCommandTest {
     @Test
     public void execute_sameSessionDiffPersonUnfilteredList_success() {
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_SECOND_PERSON, tag);
 
@@ -234,9 +259,15 @@ public class AddSessionCommandTest {
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
         newTags.add(tag);
-        String[] tagStrings = newTags.stream().map(t -> t.tagName).toArray(String[]::new);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withTags(tagStrings).build();
+        Person editedPerson = new Person(
+                personToEdit.getName(),
+                personToEdit.getStudyYear(),
+                personToEdit.getPhone(),
+                personToEdit.getEmail(),
+                personToEdit.getAddress(),
+                newTags
+        );
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -250,7 +281,7 @@ public class AddSessionCommandTest {
     public void execute_sameSessionDiffPersonFilteredList_success() {
         // edit person in filtered list to have overlap session tag in address book
         Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
         AddSessionCommand addOtherSessionCommand = new AddSessionCommand(INDEX_SECOND_PERSON, tag);
 
@@ -265,9 +296,15 @@ public class AddSessionCommandTest {
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
         newTags.add(tag);
-        String[] tagStrings = newTags.stream().map(t -> t.tagName).toArray(String[]::new);
 
-        Person editedPerson = new PersonBuilder(personToEdit).withTags(tagStrings).build();
+        Person editedPerson = new Person(
+                personToEdit.getName(),
+                personToEdit.getStudyYear(),
+                personToEdit.getPhone(),
+                personToEdit.getEmail(),
+                personToEdit.getAddress(),
+                newTags
+        );
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
@@ -280,7 +317,7 @@ public class AddSessionCommandTest {
     @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(outOfBoundIndex, tag);
 
         assertCommandFailure(addSessionCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
@@ -297,7 +334,7 @@ public class AddSessionCommandTest {
         // ensures that outOfBoundIndex is still in bounds of address book list
         assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(outOfBoundIndex, tag);
 
         assertCommandFailure(addSessionCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
@@ -305,7 +342,7 @@ public class AddSessionCommandTest {
 
     @Test
     public void equals() {
-        final Tag tag = new Tag(validSessionTag);
+        final Tag tag = createSessionTag("MON", "1100", "1200");
         final AddSessionCommand standardCommand = new AddSessionCommand(INDEX_FIRST_PERSON, tag);
 
         // same values -> returns true
@@ -326,13 +363,13 @@ public class AddSessionCommandTest {
 
         // different session tag -> returns false
         assertFalse(standardCommand.equals(new AddSessionCommand(INDEX_FIRST_PERSON,
-                new Tag("TUE 1100 - 1200"))));
+                createSessionTag("TUE", "1100", "1200"))));
     }
 
     @Test
     public void toStringMethod() {
         Index index = Index.fromOneBased(1);
-        Tag tag = new Tag(validSessionTag);
+        Tag tag = createSessionTag("MON", "1100", "1200");
         AddSessionCommand addSessionCommand = new AddSessionCommand(index, tag);
         String expected = AddSessionCommand.class.getCanonicalName() + "{targetIndex=" + index + ", toAdd="
                 + tag + "}";

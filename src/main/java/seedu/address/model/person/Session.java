@@ -17,8 +17,8 @@ import java.util.Objects;
  */
 public class Session implements Comparable<Session> {
 
-    public static final String MESSAGE_CONSTRAINTS = "day must be one of MON TUE WED THU FRI SAT SUN"
-            + "start and end must be in format \"HHmm\" and start must be before end";
+    public static final String MESSAGE_CONSTRAINTS = "DAY must be one of MON TUE WED THU FRI SAT SUN\n"
+            + "START and END must be in format \"HHmm\" and START must be before END";
 
     public static final List<String> DAY_OF_WEEKS = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
 

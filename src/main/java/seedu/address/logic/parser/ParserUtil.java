@@ -19,6 +19,7 @@ import seedu.address.model.person.Payment;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Session;
 import seedu.address.model.person.StudyYear;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -158,7 +159,9 @@ public class ParserUtil {
             throw new ParseException(Session.MESSAGE_CONSTRAINTS);
         }
 
-        return new Tag(new Session(trimmedDay, trimmedStart, trimmedEnd).toString());
+        Session session = new Session(trimmedDay, trimmedStart, trimmedEnd);
+
+        return new SessionTag(session.toString(), session);
     }
 
     /**
