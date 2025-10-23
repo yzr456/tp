@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.logic.parser.ParserUtil;
+import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Session;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -42,7 +46,15 @@ class JsonAdaptedTag {
         if (!Tag.isValidTagName(tagName)) {
             throw new IllegalValueException(Tag.MESSAGE_CONSTRAINTS);
         }
-        return new Tag(tagName);
+
+        // Try to parse as a session tag
+        try {
+            Session session = ParserUtil.parseSessionStr(tagName);
+            return new SessionTag(tagName, session);
+        } catch (ParseException e) {
+            // Not a session tag, create regular tag
+            return new Tag(tagName);
+        }
     }
 
 }
