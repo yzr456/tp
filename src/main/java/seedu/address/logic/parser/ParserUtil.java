@@ -6,6 +6,8 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
@@ -16,6 +18,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.Session;
 import seedu.address.model.person.StudyYear;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -169,6 +172,29 @@ public class ParserUtil {
             throw new ParseException(Session.MESSAGE_CONSTRAINTS);
         }
 
-        return new Tag(new Session(trimmedDay, trimmedStart, trimmedEnd).toString());
+        Session session = new Session(trimmedDay, trimmedStart, trimmedEnd);
+
+        return new SessionTag(session.toString(), session);
+    }
+
+    /**
+     * Parses {@code Collection<String> tags} into a {@code Set<Tag>}.
+     */
+    public static Session parseSessionStr(String tagStr) throws ParseException {
+        requireNonNull(tagStr);
+        Pattern sessionTagFormat = Pattern.compile(
+                "(?<dayOfWeek>[A-Z]{3})\\s(?<start>\\d{4})\\s*-\\s*(?<end>\\d{4})");
+        Matcher matcher = sessionTagFormat.matcher(tagStr);
+        if (!matcher.matches()) {
+            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        }
+        String dayOfWeek = matcher.group("dayOfWeek");
+        String start = matcher.group("start");
+        String end = matcher.group("end");
+
+        if (!Session.isValidSession(dayOfWeek, start, end)) {
+            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        }
+        return new Session(dayOfWeek, start, end);
     }
 }

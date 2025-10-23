@@ -17,8 +17,8 @@ import java.util.Objects;
  */
 public class Session implements Comparable<Session> {
 
-    public static final String MESSAGE_CONSTRAINTS = "day must be one of MON TUE WED THU FRI SAT SUN"
-            + "start and end must be in format \"HHmm\" and start must be before end";
+    public static final String MESSAGE_CONSTRAINTS = "DAY must be one of MON TUE WED THU FRI SAT SUN\n"
+            + "START and END must be in format \"HHmm\" and START must be before END";
 
     public static final List<String> DAY_OF_WEEKS = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
 
@@ -42,7 +42,7 @@ public class Session implements Comparable<Session> {
     public Session(String day, String start, String end) {
         requireAllNonNull(day, start, end);
         checkArgument(isValidSession(day, start, end), MESSAGE_CONSTRAINTS);
-        dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day));
+        dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day) + 1);
         startTime = LocalTime.parse(start, SESSION_FORMATTER);
         endTime = LocalTime.parse(end, SESSION_FORMATTER);
     }
@@ -76,9 +76,9 @@ public class Session implements Comparable<Session> {
         // If this session starts earlier than another session, then this session cannot end after other session start.
         // Otherwise, at the time this session starts, other session should have been ended.
         if (startTime.isBefore(other.startTime)) {
-            return !endTime.isAfter(other.startTime);
+            return endTime.isAfter(other.startTime);
         } else {
-            return !startTime.isBefore(other.endTime);
+            return startTime.isBefore(other.endTime);
         }
     }
 
@@ -88,7 +88,7 @@ public class Session implements Comparable<Session> {
      * @param dayOfWeek a valid day of week
      */
     public boolean isHappeningOn(String dayOfWeek) {
-        return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek)));
+        return this.dayOfWeek.equals(DayOfWeek.of(DAY_OF_WEEKS.indexOf(dayOfWeek) + 1));
     }
 
     /**
@@ -106,6 +106,20 @@ public class Session implements Comparable<Session> {
 
     public boolean isHappeningOn(LocalTime start, LocalTime end) {
         return !(this.startTime.isAfter(start) || this.endTime.isBefore(end));
+    }
+
+    /**
+     * Returns true if this session is happening on a particular time interval.
+     *
+     * @param startTime a valid time
+     * @param endTime a valid time
+     */
+    public boolean isHappeningOn(LocalTime startTime, LocalTime endTime) {
+        if (this.startTime.isBefore(startTime)) {
+            return this.endTime.isAfter(startTime);
+        } else {
+            return this.startTime.isBefore(endTime);
+        }
     }
 
     /**
@@ -133,7 +147,8 @@ public class Session implements Comparable<Session> {
 
     @Override
     public String toString() {
-        return dayOfWeek + " " + startTime + " - " + endTime;
+        return DAY_OF_WEEKS.get(dayOfWeek.getValue() - 1) + " " + startTime.format(SESSION_FORMATTER) + " - "
+                + endTime.format(SESSION_FORMATTER);
     }
 
     @Override

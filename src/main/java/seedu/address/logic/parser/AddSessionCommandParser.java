@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
@@ -26,8 +27,13 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        if (argMultimap.getPreamble().isBlank()) {
-            throw new ParseException(Messages.MESSAGE_ARGUMENT_ERROR);
+        Index index;
+
+        try {
+            index = ParserUtil.parseIndex(argMultimap.getPreamble());
+        } catch (ParseException pe) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    AddSessionCommand.MESSAGE_USAGE), pe);
         }
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
@@ -35,8 +41,9 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
                     AddSessionCommand.MESSAGE_USAGE));
         }
 
+
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DAY, PREFIX_START, PREFIX_END);
-        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+
         Tag sessionTag = ParserUtil.parseSessionTag(argMultimap.getValue(PREFIX_DAY).get(),
                 argMultimap.getValue(PREFIX_START).get(), argMultimap.getValue(PREFIX_END).get());
 

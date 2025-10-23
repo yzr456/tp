@@ -57,7 +57,7 @@ public class PersonCard extends UiPart<Region> {
         this.mainWindow = mainWindow;
         id.setText(displayedIndex + ". ");
         name.setText(person.getName().fullName);
-        studyYear.setText(person.getStudyYear().studyYear);
+        studyYear.setText(person.getStudyYear().value);
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
