@@ -26,6 +26,7 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -83,6 +84,7 @@ public class AddSessionCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(lastPerson, editedPerson);
+        expectedModel.addSession(((SessionTag) tag).getSession());
 
         assertCommandSuccess(addSessionCommand, model, expectedMessage, expectedModel);
     }
@@ -112,6 +114,7 @@ public class AddSessionCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
+        expectedModel.addSession(((SessionTag) tag).getSession());
 
         assertCommandSuccess(addSessionCommand, model, expectedMessage, expectedModel);
     }
@@ -133,7 +136,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), otherTag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, otherTag.tagName));
     }
 
     @Test
@@ -156,7 +159,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), otherTag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, otherTag.tagName));
     }
 
     @Test
@@ -176,7 +179,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), otherTag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, otherTag.tagName));
     }
 
     @Test
@@ -198,7 +201,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), otherTag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, otherTag.tagName));
     }
 
     @Test
@@ -217,7 +220,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), tag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, tag.tagName));
     }
 
     @Test
@@ -239,7 +242,7 @@ public class AddSessionCommandTest {
         }
 
         assertCommandFailure(addSessionCommand, model,
-                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, personInConflict.getName(), tag.tagName));
+                String.format(AddSessionCommand.MESSAGE_OVERLAP_SESSION, tag.tagName));
     }
 
     @Test
@@ -271,6 +274,7 @@ public class AddSessionCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
+        expectedModel.addSession(((SessionTag) tag).getSession());
 
         assertCommandSuccess(addSessionCommand, model,
                 String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS,
@@ -308,6 +312,7 @@ public class AddSessionCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(personToEdit, editedPerson);
+        expectedModel.addSession(((SessionTag) tag).getSession());
 
         assertCommandSuccess(addSessionCommand, model,
                 String.format(AddSessionCommand.MESSAGE_ADD_SESSION_SUCCESS,

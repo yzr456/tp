@@ -12,6 +12,8 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.person.Person;
+import seedu.address.model.tag.SessionTag;
+import seedu.address.model.tag.Tag;
 
 /**
  * An Immutable AddressBook that is serializable to JSON format.
@@ -53,6 +55,14 @@ class JsonSerializableAddressBook {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
             addressBook.addPerson(person);
+
+            // Rebuild WeeklySessions from SessionTags
+            for (Tag tag : person.getTags()) {
+                if (tag.isSessionTag()) {
+                    SessionTag sessionTag = (SessionTag) tag;
+                    addressBook.addSession(sessionTag.getSession());
+                }
+            }
         }
         return addressBook;
     }

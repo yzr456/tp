@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
 
 /**
  * The API of the Model component.
@@ -84,4 +85,28 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    //=========== WeeklySessions Operations ======================================================
+
+    /**
+     * Returns true if a session overlaps with any existing session in the weekly sessions.
+     */
+    boolean hasOverlappingSession(Session session);
+
+    /**
+     * Adds the given session to the weekly sessions.
+     * The session must not overlap with any existing session.
+     */
+    void addSession(Session session);
+
+    /**
+     * Deletes the given session from the weekly sessions.
+     * The session must exist in the weekly sessions.
+     */
+    void deleteSession(Session session);
+
+    /**
+     * Returns the weekly sessions.
+     */
+    WeeklySessions getWeeklySessions();
 }
