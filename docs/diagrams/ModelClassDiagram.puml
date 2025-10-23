@@ -19,6 +19,9 @@ Class Email
 Class Name
 Class Phone
 Class Tag
+Class StudyYear
+Class Session
+Class Payment
 
 Class I #FFFFFF
 }
@@ -42,6 +45,10 @@ Person *--> Phone
 Person *--> Email
 Person *--> Address
 Person *--> "*" Tag
+Person *--> StudyYear
+Person *--> "*" Session
+Person *--> Payment
+
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
