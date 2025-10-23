@@ -7,14 +7,16 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.logic.parser.ParserUtil;
-import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
 import seedu.address.model.WeeklySessions;
 import seedu.address.model.person.Person;
@@ -68,9 +70,24 @@ public class AddSessionCommand extends Command {
 
         Session currentSession = ((SessionTag) sessionTag).getSession();
 
+        // Check for overlaps using WeeklySessions
         Optional<Session> overlappingSession = weeklySessions.getOverlap(currentSession);
         if (overlappingSession.isPresent()) {
-            throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION, overlappingSession.get()));
+            // Reject overlap unless it's an exact duplicate for a different person
+            if (!currentSession.equals(overlappingSession.get())) {
+                throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                        overlappingSession.get().toString()));
+            }
+            // If exact same session, check if current person already has it
+            for (Tag tag : personToEdit.getTags()) {
+                if (tag.isSessionTag()) {
+                    SessionTag existingSessionTag = (SessionTag) tag;
+                    if (currentSession.equals(existingSessionTag.getSession())) {
+                        throw new CommandException(String.format(MESSAGE_OVERLAP_SESSION,
+                                currentSession.toString()));
+                    }
+                }
+            }
         }
 
         Set<Tag> newTags = new HashSet<>(personToEdit.getTags());
@@ -86,9 +103,8 @@ public class AddSessionCommand extends Command {
         );
 
         model.setPerson(personToEdit, editedPerson);
-        weeklySessions.add(currentSession);
+        model.addSession(currentSession);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        // model.addSession(currentSession);
         return new CommandResult(String.format(MESSAGE_ADD_SESSION_SUCCESS, Messages.format(editedPerson)));
     }
 
