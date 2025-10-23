@@ -32,6 +32,10 @@ public class Tag {
         return test.matches(VALIDATION_REGEX);
     }
 
+    public boolean isSessionTag() {
+        return false;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
