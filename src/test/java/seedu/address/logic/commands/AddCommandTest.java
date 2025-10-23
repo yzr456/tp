@@ -22,7 +22,9 @@ import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.ReadOnlyUserPrefs;
+import seedu.address.model.WeeklySessions;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
 import seedu.address.testutil.PersonBuilder;
 
 public class AddCommandTest {
@@ -155,6 +157,26 @@ public class AddCommandTest {
 
         @Override
         public void updateFilteredPersonList(Predicate<Person> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasOverlappingSession(Session session) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void addSession(Session session) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void deleteSession(Session session) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public WeeklySessions getWeeklySessions() {
             throw new AssertionError("This method should not be called.");
         }
     }
