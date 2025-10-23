@@ -27,6 +27,10 @@ public class DetailedView extends UiPart<Region> {
     @FXML
     private Label addressLabel;
     @FXML
+    private Label paymentStatusLabel;
+    @FXML
+    private Label billingStartLabel;
+    @FXML
     private FlowPane subjectTags;
     @FXML
     private VBox sessionsList;
@@ -57,6 +61,8 @@ public class DetailedView extends UiPart<Region> {
         phoneLabel.setText(person.getPhone().value);
         emailLabel.setText(person.getEmail().value);
         addressLabel.setText(person.getAddress().value);
+        paymentStatusLabel.setText(person.getPayment().toString());
+        billingStartLabel.setText("Day " + person.getPayment().getBillingStartDay() + " of each month");
 
         // Clear previous tags
         subjectTags.getChildren().clear();
@@ -88,6 +94,8 @@ public class DetailedView extends UiPart<Region> {
         phoneLabel.setText("-");
         emailLabel.setText("-");
         addressLabel.setText("-");
+        paymentStatusLabel.setText("-");
+        billingStartLabel.setText("-");
         subjectTags.getChildren().clear();
         sessionsList.getChildren().clear();
     }

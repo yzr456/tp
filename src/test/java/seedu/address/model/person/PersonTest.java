@@ -107,7 +107,8 @@ public class PersonTest {
                 + ", studyYear=" + ALICE.getStudyYear() + ", phone=" + ALICE.getPhone()
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress()
                 + ", tags=" + ALICE.getTags()
-                + ", payment=" + ALICE.getPayment() + "}";
+                + ", payment=" + ALICE.getPayment()
+                + ", billingStart=Day " + ALICE.getPayment().getBillingStartDay() + " of each month}";
         assertEquals(expected, ALICE.toString());
     }
 }

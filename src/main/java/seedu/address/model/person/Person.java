@@ -143,6 +143,7 @@ public class Person {
                 .add("address", address)
                 .add("tags", tags)
                 .add("payment", payment)
+                .add("billingStart", "Day " + payment.getBillingStartDay() + " of each month")
                 .toString();
     }
 

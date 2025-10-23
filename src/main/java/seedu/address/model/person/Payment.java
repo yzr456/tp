@@ -12,14 +12,22 @@ import java.util.Objects;
  */
 public class Payment {
 
+    /**
+     * Represents the possible payment statuses.
+     */
+    public enum PaymentStatus {
+        PENDING,
+        PAID,
+        OVERDUE
+    }
+
     public static final String MESSAGE_CONSTRAINTS_STATUS =
             "Payment status must be one of: PENDING, PAID, OVERDUE";
     public static final String MESSAGE_CONSTRAINTS_DAY =
             "Billing start day must be between 1-31";
     public static final int DEFAULT_BILLING_START_DAY = 1;
-    public static final String VALIDATION_REGEX = "^(PENDING|PAID|OVERDUE)$";
 
-    private final String status;
+    private final PaymentStatus status;
     private final int billingStartDay;
     private final LocalDate statusSetDate; // Date when status was last updated
 
@@ -31,9 +39,7 @@ public class Payment {
      */
     public Payment(String status) {
         requireNonNull(status);
-        String normalizedStatus = status.toUpperCase().trim();
-        checkArgument(isValidStatus(normalizedStatus), MESSAGE_CONSTRAINTS_STATUS);
-        this.status = normalizedStatus;
+        this.status = parseStatus(status);
         this.billingStartDay = DEFAULT_BILLING_START_DAY;
         this.statusSetDate = LocalDate.now();
     }
@@ -46,19 +52,35 @@ public class Payment {
      */
     public Payment(String status, int billingStartDay) {
         requireNonNull(status);
-        String normalizedStatus = status.toUpperCase().trim();
-        checkArgument(isValidStatus(normalizedStatus), MESSAGE_CONSTRAINTS_STATUS);
         checkArgument(isValidBillingDay(billingStartDay), MESSAGE_CONSTRAINTS_DAY);
-        this.status = normalizedStatus;
+        this.status = parseStatus(status);
         this.billingStartDay = billingStartDay;
         this.statusSetDate = LocalDate.now();
+    }
+
+    /**
+     * Parses a string to a PaymentStatus enum.
+     * @throws IllegalArgumentException if the string is not a valid payment status.
+     */
+    private static PaymentStatus parseStatus(String status) {
+        String normalizedStatus = status.toUpperCase().trim();
+        try {
+            return PaymentStatus.valueOf(normalizedStatus);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(MESSAGE_CONSTRAINTS_STATUS);
+        }
     }
 
     /**
      * Returns true if a given string is a valid payment status.
      */
     public static boolean isValidStatus(String test) {
-        return test.matches(VALIDATION_REGEX);
+        try {
+            PaymentStatus.valueOf(test.toUpperCase().trim());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     /**
@@ -69,12 +91,19 @@ public class Payment {
     }
 
     /**
+     * Returns the billing start day.
+     */
+    public int getBillingStartDay() {
+        return billingStartDay;
+    }
+
+    /**
      * Returns the number of days overdue if status is OVERDUE.
      * Calculates based on the billing start day and current date.
      * Returns 0 if not overdue.
      */
     public int getDaysOverdue() {
-        if (!status.equals("OVERDUE")) {
+        if (status != PaymentStatus.OVERDUE) {
             return 0;
         }
 
@@ -104,11 +133,11 @@ public class Payment {
 
     @Override
     public String toString() {
-        if (status.equals("OVERDUE")) {
+        if (status == PaymentStatus.OVERDUE) {
             int daysOverdue = getDaysOverdue();
-            return status + " (" + daysOverdue + " days)";
+            return status.name() + " (" + daysOverdue + " days)";
         }
-        return status;
+        return status.name();
     }
 
     @Override
