@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.TreeSet;
 
 import seedu.address.model.person.Session;
-import seedu.address.model.person.exceptions.OverlapSessionException;
 
 /**
  * Represents a weekly schedule that manages sessions across a week.
@@ -73,16 +72,13 @@ public class WeeklySessions {
 
     /**
      * Adds a session to the weekly schedule.
-     * The session must not overlap with any existing session.
+     * Note: Duplicate sessions (same time) are allowed since different people can have sessions at the same time.
+     * Overlap checking should be done at the command level.
      *
      * @param session The session to add.
-     * @throws OverlapSessionException if the session overlaps with an existing session.
      */
     public void add(Session session) {
         requireNonNull(session);
-        if (hasOverlap(session)) {
-            throw new OverlapSessionException();
-        }
         weeklySessions.add(session);
     }
 
@@ -95,43 +91,43 @@ public class WeeklySessions {
      */
     public String getEarliestFreeTime(int duration) {
         DayOfWeek currentDay = START_OF_WEEK;
-        LocalTime candidateStart = EARLIEST_START;
-        LocalTime candidateEnd = candidateStart.plusHours(duration);
 
-        for (Session session : weeklySessions) {
-            // Found free slot before this session
-            if (session.getDayOfWeek().getValue() > currentDay.getValue()) {
-                break;
-            }
+        while (currentDay.getValue() <= END_OF_WEEK.getValue()) {
+            LocalTime candidateStart = EARLIEST_START;
+            LocalTime candidateEnd = candidateStart.plusHours(duration);
 
-            // Conflict - move candidate after this session
-            if (session.isHappeningOn(candidateStart, candidateEnd)) {
-                candidateStart = session.getEndTime();
-                candidateEnd = candidateStart.plusHours(duration);
+            for (Session session : weeklySessions) {
+                // Sessions are sorted - if we hit a later day, we're done with current day
+                if (session.getDayOfWeek().getValue() > currentDay.getValue()) {
+                    break;
+                }
 
-                // Doesn't fit today - try next day
-                while (!fitsInDay(candidateStart, candidateEnd)) {
-                    if (currentDay.equals(END_OF_WEEK)) {
-                        return "No free time";
+                // Only process sessions on the current day
+                if (session.getDayOfWeek().equals(currentDay)) {
+                    // Check if candidate fits before this session
+                    if (!candidateEnd.isAfter(session.getStartTime())) {
+                        break;
                     }
-                    currentDay = currentDay.plus(1);
-                    candidateStart = EARLIEST_START;
+
+                    // Move candidate after this session
+                    candidateStart = session.getEndTime();
                     candidateEnd = candidateStart.plusHours(duration);
                 }
             }
-        }
 
-        // Validate and adjust final candidate
-        while (!fitsInDay(candidateStart, candidateEnd)) {
+            // Check if final candidate fits in the day
+            if (fitsInDay(candidateStart, candidateEnd)) {
+                return formatResult(currentDay, candidateStart);
+            }
+
+            // Try next day
             if (currentDay.equals(END_OF_WEEK)) {
                 return "No free time";
             }
             currentDay = currentDay.plus(1);
-            candidateStart = EARLIEST_START;
-            candidateEnd = candidateStart.plusHours(duration);
         }
 
-        return formatResult(currentDay, candidateStart);
+        return "No free time";
     }
 
     /**
