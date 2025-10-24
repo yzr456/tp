@@ -135,6 +135,11 @@ public class ModelManager implements Model {
         return addressBook.getWeeklySessions();
     }
 
+    @Override
+    public String getEarliestFreeTime(int duration) {
+        return addressBook.getWeeklySessions().getEarliestFreeTime(duration);
+    }
+
     //=========== Filtered Person List Accessors =============================================================
 
     /**

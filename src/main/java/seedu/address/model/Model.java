@@ -109,4 +109,6 @@ public interface Model {
      * Returns the weekly sessions.
      */
     WeeklySessions getWeeklySessions();
+
+    String getEarliestFreeTime(int duration);
 }
