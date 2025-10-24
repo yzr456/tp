@@ -1,0 +1,70 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":FreeCommandParser" as FreeCommandParser LOGIC_COLOR
+participant "d:FreeCommand" as FreeCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("free 1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("free 1")
+activate AddressBookParser
+
+create FreeCommandParser
+AddressBookParser -> FreeCommandParser
+activate FreeCommandParser
+
+FreeCommandParser --> AddressBookParser
+deactivate FreeCommandParser
+
+AddressBookParser -> FreeCommandParser : parse("1")
+activate FreeCommandParser
+
+create FreeCommand
+FreeCommandParser -> FreeCommand
+activate FreeCommand
+
+FreeCommand --> FreeCommandParser :
+deactivate FreeCommand
+
+FreeCommandParser --> AddressBookParser : f
+deactivate FreeCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+FreeCommandParser -[hidden]-> AddressBookParser
+destroy FreeCommandParser
+
+AddressBookParser --> LogicManager : f
+deactivate AddressBookParser
+
+LogicManager -> FreeCommand : execute(m)
+activate FreeCommand
+
+FreeCommand -> Model : getEarliestTimeSlot(1)
+activate Model
+
+Model --> FreeCommand
+deactivate Model
+
+create CommandResult
+FreeCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> FreeCommand
+deactivate CommandResult
+
+FreeCommand --> LogicManager : r
+deactivate FreeCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
