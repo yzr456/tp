@@ -179,6 +179,9 @@ public class AddCommandTest {
         public WeeklySessions getWeeklySessions() {
             throw new AssertionError("This method should not be called.");
         }
+
+        @Override
+        public String getEarliestFreeTime(int duration) { throw new AssertionError("This method should not be called."); }
     }
 
     /**
