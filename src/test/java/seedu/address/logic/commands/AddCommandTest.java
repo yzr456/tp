@@ -181,7 +181,8 @@ public class AddCommandTest {
         }
 
         @Override
-        public String getEarliestFreeTime(int duration) { throw new AssertionError("This method should not be called."); }
+        public String getEarliestFreeTime(int duration) {
+            throw new AssertionError("This method should not be called."); }
     }
 
     /**
