@@ -15,6 +15,9 @@ import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -25,6 +28,9 @@ import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.Session;
+import seedu.address.model.tag.SessionTag;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 
@@ -179,6 +185,167 @@ public class EditCommandTest {
         String expected = EditCommand.class.getCanonicalName() + "{index=" + index + ", editPersonDescriptor="
                 + editPersonDescriptor + "}";
         assertEquals(expected, editCommand.toString());
+    }
+
+    @Test
+    public void execute_editSessionsOnly_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        Set<Tag> newSessions = new HashSet<>();
+        Session session1 = new Session("MON", "1000", "1100");
+        Session session2 = new Session("WED", "1400", "1500");
+        newSessions.add(new SessionTag(session1.toString(), session1));
+        newSessions.add(new SessionTag(session2.toString(), session2));
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSessions(newSessions);
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Merge new sessions with existing subject tags (non-session tags)
+        Set<Tag> mergedTags = new HashSet<>();
+        for (Tag tag : personToEdit.getTags()) {
+            if (!tag.isSessionTag()) {
+                mergedTags.add(tag);
+            }
+        }
+        mergedTags.addAll(newSessions);
+
+        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
+                personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
+                mergedTags, personToEdit.getPayment());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editSubjectsOnly_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        Set<Tag> newSubjects = new HashSet<>();
+        newSubjects.add(new Tag("MATH"));
+        newSubjects.add(new Tag("SCI"));
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSubjects(newSubjects);
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Merge existing sessions with new subjects
+        Set<Tag> mergedTags = new HashSet<>();
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                mergedTags.add(tag);
+            }
+        }
+        mergedTags.addAll(newSubjects);
+
+        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
+                personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
+                mergedTags, personToEdit.getPayment());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editBothSessionsAndSubjects_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        Set<Tag> newSessions = new HashSet<>();
+        Session session = new Session("TUE", "0900", "1000");
+        newSessions.add(new SessionTag(session.toString(), session));
+
+        Set<Tag> newSubjects = new HashSet<>();
+        newSubjects.add(new Tag("ENG"));
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSessions(newSessions);
+        descriptor.setSubjects(newSubjects);
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        Set<Tag> mergedTags = new HashSet<>();
+        mergedTags.addAll(newSessions);
+        mergedTags.addAll(newSubjects);
+
+        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
+                personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
+                mergedTags, personToEdit.getPayment());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editSessionsRemoveAll_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSessions(new HashSet<>());
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Keep only non-session tags (subjects)
+        Set<Tag> nonSessionTags = new HashSet<>();
+        for (Tag tag : personToEdit.getTags()) {
+            if (!tag.isSessionTag()) {
+                nonSessionTags.add(tag);
+            }
+        }
+
+        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
+                personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
+                nonSessionTags, personToEdit.getPayment());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editSubjectsRemoveAll_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSubjects(new HashSet<>());
+
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Keep only session tags
+        Set<Tag> sessionTags = new HashSet<>();
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                sessionTags.add(tag);
+            }
+        }
+
+        Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
+                personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
+                sessionTags, personToEdit.getPayment());
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
     }
 
 }

@@ -12,9 +12,15 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_STUDY_YEAR_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.model.person.Session;
+import seedu.address.model.tag.SessionTag;
+import seedu.address.model.tag.Tag;
 import seedu.address.testutil.EditPersonDescriptorBuilder;
 
 public class EditPersonDescriptorTest {
@@ -74,5 +80,168 @@ public class EditPersonDescriptorTest {
                 + editPersonDescriptor.getSubjects().orElse(null) + ", sessions="
                 + editPersonDescriptor.getSessions().orElse(null) + "}";
         assertEquals(expected, editPersonDescriptor.toString());
+    }
+
+    @Test
+    public void setSubjects_validSubjects_success() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> subjects = new HashSet<>();
+        subjects.add(new Tag("MATH"));
+        subjects.add(new Tag("SCI"));
+
+        descriptor.setSubjects(subjects);
+
+        assertTrue(descriptor.getSubjects().isPresent());
+        assertEquals(subjects, descriptor.getSubjects().get());
+    }
+
+    @Test
+    public void setSessions_validSessions_success() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> sessions = new HashSet<>();
+        Session session1 = new Session("MON", "1000", "1100");
+        Session session2 = new Session("WED", "1400", "1500");
+        sessions.add(new SessionTag(session1.toString(), session1));
+        sessions.add(new SessionTag(session2.toString(), session2));
+
+        descriptor.setSessions(sessions);
+
+        assertTrue(descriptor.getSessions().isPresent());
+        assertEquals(sessions, descriptor.getSessions().get());
+    }
+
+    @Test
+    public void setSubjects_emptySet_success() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> emptySubjects = new HashSet<>();
+
+        descriptor.setSubjects(emptySubjects);
+
+        assertTrue(descriptor.getSubjects().isPresent());
+        assertEquals(emptySubjects, descriptor.getSubjects().get());
+    }
+
+    @Test
+    public void setSessions_emptySet_success() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> emptySessions = new HashSet<>();
+
+        descriptor.setSessions(emptySessions);
+
+        assertTrue(descriptor.getSessions().isPresent());
+        assertEquals(emptySessions, descriptor.getSessions().get());
+    }
+
+    @Test
+    public void copyConstructor_withSubjects_success() {
+        EditPersonDescriptor original = new EditPersonDescriptor();
+        Set<Tag> subjects = new HashSet<>();
+        subjects.add(new Tag("MATH"));
+        original.setSubjects(subjects);
+
+        EditPersonDescriptor copy = new EditPersonDescriptor(original);
+
+        assertTrue(copy.getSubjects().isPresent());
+        assertEquals(original.getSubjects().get(), copy.getSubjects().get());
+    }
+
+    @Test
+    public void copyConstructor_withSessions_success() {
+        EditPersonDescriptor original = new EditPersonDescriptor();
+        Set<Tag> sessions = new HashSet<>();
+        Session session = new Session("TUE", "0900", "1000");
+        sessions.add(new SessionTag(session.toString(), session));
+        original.setSessions(sessions);
+
+        EditPersonDescriptor copy = new EditPersonDescriptor(original);
+
+        assertTrue(copy.getSessions().isPresent());
+        assertEquals(original.getSessions().get(), copy.getSessions().get());
+    }
+
+    @Test
+    public void isAnyFieldEdited_withSubjectsOnly_returnsTrue() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> subjects = new HashSet<>();
+        subjects.add(new Tag("ENGLISH"));
+        descriptor.setSubjects(subjects);
+
+        assertTrue(descriptor.isAnyFieldEdited());
+    }
+
+    @Test
+    public void isAnyFieldEdited_withSessionsOnly_returnsTrue() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> sessions = new HashSet<>();
+        Session session = new Session("FRI", "1600", "1700");
+        sessions.add(new SessionTag(session.toString(), session));
+        descriptor.setSessions(sessions);
+
+        assertTrue(descriptor.isAnyFieldEdited());
+    }
+
+    @Test
+    public void isAnyFieldEdited_withBothSubjectsAndSessions_returnsTrue() {
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        Set<Tag> subjects = new HashSet<>();
+        subjects.add(new Tag("PHYSICS"));
+        Set<Tag> sessions = new HashSet<>();
+        Session session = new Session("THU", "1300", "1400");
+        sessions.add(new SessionTag(session.toString(), session));
+
+        descriptor.setSubjects(subjects);
+        descriptor.setSessions(sessions);
+
+        assertTrue(descriptor.isAnyFieldEdited());
+    }
+
+    @Test
+    public void equals_differentSubjects_returnsFalse() {
+        EditPersonDescriptor descriptor1 = new EditPersonDescriptor();
+        Set<Tag> subjects1 = new HashSet<>();
+        subjects1.add(new Tag("MATH"));
+        descriptor1.setSubjects(subjects1);
+
+        EditPersonDescriptor descriptor2 = new EditPersonDescriptor();
+        Set<Tag> subjects2 = new HashSet<>();
+        subjects2.add(new Tag("SCI"));
+        descriptor2.setSubjects(subjects2);
+
+        assertFalse(descriptor1.equals(descriptor2));
+    }
+
+    @Test
+    public void equals_differentSessions_returnsFalse() {
+        EditPersonDescriptor descriptor1 = new EditPersonDescriptor();
+        Set<Tag> sessions1 = new HashSet<>();
+        Session session1 = new Session("MON", "1000", "1100");
+        sessions1.add(new SessionTag(session1.toString(), session1));
+        descriptor1.setSessions(sessions1);
+
+        EditPersonDescriptor descriptor2 = new EditPersonDescriptor();
+        Set<Tag> sessions2 = new HashSet<>();
+        Session session2 = new Session("TUE", "1000", "1100");
+        sessions2.add(new SessionTag(session2.toString(), session2));
+        descriptor2.setSessions(sessions2);
+
+        assertFalse(descriptor1.equals(descriptor2));
+    }
+
+    @Test
+    public void equals_sameSubjectsAndSessions_returnsTrue() {
+        EditPersonDescriptor descriptor1 = new EditPersonDescriptor();
+        Set<Tag> subjects = new HashSet<>();
+        subjects.add(new Tag("MATH"));
+        Set<Tag> sessions = new HashSet<>();
+        Session session = new Session("WED", "1400", "1500");
+        sessions.add(new SessionTag(session.toString(), session));
+        descriptor1.setSubjects(subjects);
+        descriptor1.setSessions(sessions);
+
+        EditPersonDescriptor descriptor2 = new EditPersonDescriptor();
+        descriptor2.setSubjects(subjects);
+        descriptor2.setSessions(sessions);
+
+        assertTrue(descriptor1.equals(descriptor2));
     }
 }
