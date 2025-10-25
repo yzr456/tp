@@ -11,6 +11,7 @@ Class "<<interface>>\nModel" as Model
 Class AddressBook
 Class ModelManager
 Class UserPrefs
+Class WeeklySessions
 
 Class UniquePersonList
 Class Person
@@ -22,6 +23,7 @@ Class Tag
 Class StudyYear
 Class Session
 Class Payment
+Class SessionTag
 
 Class I #FFFFFF
 }
@@ -39,15 +41,17 @@ ModelManager -right-> "1" UserPrefs
 UserPrefs .up.|> ReadOnlyUserPrefs
 
 AddressBook *--> "1" UniquePersonList
+AddressBook *--> "1" WeeklySessions
 UniquePersonList --> "~* all" Person
+WeeklySessions --> "*" Session
 Person *--> Name
 Person *--> Phone
 Person *--> Email
 Person *--> Address
 Person *--> "*" Tag
 Person *--> StudyYear
-Person *--> "*" Session
 Person *--> Payment
+SessionTag --|> Tag
 
 
 Person -[hidden]up--> I

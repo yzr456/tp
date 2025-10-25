@@ -131,6 +131,10 @@ public class AddressBook implements ReadOnlyAddressBook {
         weeklySessions.remove(session);
     }
 
+    public void getEarliestFreeTime(int duration) {
+        weeklySessions.getEarliestFreeTime(duration);
+    }
+
     //// util methods
 
     @Override
