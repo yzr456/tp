@@ -54,7 +54,6 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
             if (subjectTags.contains(subjectTag)) {
                 throw new ParseException(AddSubjectCommand.MESSAGE_DUPLICATE_SUBJECT_IN_COMMAND);
             }
-            
             subjectTags.add(subjectTag);
         }
 
