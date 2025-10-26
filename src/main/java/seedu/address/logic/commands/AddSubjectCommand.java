@@ -29,10 +29,13 @@ public class AddSubjectCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
     public static final String MESSAGE_DUPLICATE_SUBJECT = "Subject Tag(s): %s already assigned to %s";
+    public static final String MESSAGE_DUPLICATE_SUBJECT_IN_COMMAND =
+            "Duplicate subject tag(s) detected in command. Each subject should only be specified once.";
 
-    public static final String MESSAGE_CONSTRAINTS =
-            "Invalid subject provided. The Subject provided must be a valid subject code and cannot be blank: "
-                    + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
+    public static final String SUBJECT_MESSAGE_CONSTRAINTS =
+            "Invalid subject provided. The Subject provided must be a valid subject code:\n"
+                    + "MATH, ENG, SCI, PHY, CHEM, BIO,\n"
+                    + "HIST, GEOG, LIT, CHI, MALAY, TAMIL,\n"
                     + "POA, ECONS, ART, MUSIC, COMSCI";
 
     private final Index targetIndex;
