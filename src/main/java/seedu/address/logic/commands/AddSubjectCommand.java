@@ -32,8 +32,9 @@ public class AddSubjectCommand extends Command {
             "DuplicateSubjectError: Subject Tag(s): %s already assigned to %s";
 
     public static final String SUBJECT_MESSAGE_CONSTRAINTS =
-            "Invalid subject provided. The Subject provided must be a valid subject code: "
-                    + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
+            "Invalid subject provided. The Subject provided must be a valid subject code:\n"
+                    + "MATH, ENG, SCI, PHY, CHEM, BIO,\n"
+                    + "HIST, GEOG, LIT, CHI, MALAY, TAMIL,\n"
                     + "POA, ECONS, ART, MUSIC, COMSCI";
 
     private final Index targetIndex;
