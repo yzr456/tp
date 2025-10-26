@@ -30,6 +30,9 @@ public class AddSubjectCommand extends Command {
     public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
     public static final String MESSAGE_DUPLICATE_SUBJECT =
             "DuplicateSubjectError: Subject Tag(s): %s already assigned to %s";
+    public static final String MESSAGE_DUPLICATE_SUBJECT_IN_COMMAND =
+            "DuplicateSubjectError: Duplicate subject tag(s) detected in command. "
+                    + "Each subject should only be specified once.";
 
     public static final String SUBJECT_MESSAGE_CONSTRAINTS =
             "Invalid subject provided. The Subject provided must be a valid subject code:\n"
