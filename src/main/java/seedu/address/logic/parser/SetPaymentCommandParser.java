@@ -1,13 +1,14 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_BILLING_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.SetPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Payment;
 
 /**
  * Parses input arguments and creates a new SetPaymentCommand object
@@ -25,20 +26,16 @@ public class SetPaymentCommandParser implements Parser<SetPaymentCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_STATUS, PREFIX_BILLING_START);
 
-        Index index;
-
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    SetPaymentCommand.MESSAGE_USAGE), pe);
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
         }
+
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_STATUS, PREFIX_BILLING_START);
 
         if (argMultimap.getValue(PREFIX_STATUS).isEmpty()) {
-            throw new ParseException("ArgumentError: Missing value for status parameter. "
-                    + "Please ensure status has a non-empty value.");
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_STATUS);
         }
 
         String status = ParserUtil.parsePaymentStatus(argMultimap.getValue(PREFIX_STATUS).get());

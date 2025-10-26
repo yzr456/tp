@@ -14,15 +14,14 @@ public class Messages {
 
     public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command";
     public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format! \n%1$s";
-    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "InvalidIndexError: Invalid index number "
+    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "Invalid index number "
             + "provided. Index must be a single positive integer within the contact list range.\n";
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contact(s) found for search %2$s";
     public static final String MESSAGE_DUPLICATE_FIELDS =
                 "Multiple values specified for the following single-valued field(s): ";
-    public static final String MESSAGE_ARGUMENT_ERROR = "ArgumentError: Missing value for one or more parameters. "
-                + "Please ensure all parameters have non-empty values.";
+    public static final String MESSAGE_MISSING_INDEX = "The index field cannot be blank";
     public static final String MESSAGE_MISSING_PREFIX =
-            "MissingPrefixError: Invalid input provided. Ensure that your input follows this format: \n%1$s";
+            "Ensure that your input follows this format: \n%1$s";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
@@ -52,9 +51,8 @@ public class Messages {
                 .append(person.getAddress())
                 .append("; Payment Status: ")
                 .append(person.getPayment())
-                .append("; Billing Start: Day ")
-                .append(person.getPayment().getBillingStartDay())
-                .append(" of each month")
+                .append("; Billing Start: ")
+                .append(person.getPayment().getBillingStartDayDescription())
                 .append("; Tags: ");
         person.getTags().forEach(builder::append);
         return builder.toString();

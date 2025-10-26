@@ -22,9 +22,9 @@ public class Payment {
     }
 
     public static final String MESSAGE_CONSTRAINTS_STATUS =
-            "Payment status must be one of: PENDING, PAID, OVERDUE";
+            "Payment status cannot be blank and must be one of: PENDING, PAID, OVERDUE";
     public static final String MESSAGE_CONSTRAINTS_DAY =
-            "Billing start day must be between 1-31";
+            "Billing start day must be an integer between 1-31";
     public static final int DEFAULT_BILLING_START_DAY = 1;
 
     private final PaymentStatus status;
@@ -48,7 +48,7 @@ public class Payment {
      * Constructs a {@code Payment} with status and billing start day.
      *
      * @param status A valid payment status.
-     * @param billingStartDay A valid day between 1-31.
+     * @param billingStartDay A valid integer between 1-31.
      */
     public Payment(String status, int billingStartDay) {
         requireNonNull(status);
@@ -95,6 +95,16 @@ public class Payment {
      */
     public int getBillingStartDay() {
         return billingStartDay;
+    }
+
+    /**
+     * Returns a description of the billing start day.
+     */
+    public String getBillingStartDayDescription() {
+        if (billingStartDay >= 29) {
+            return "Day " + billingStartDay + " of each month (or last day of month if unavailable)";
+        }
+        return "Day " + billingStartDay + " of each month";
     }
 
     /**

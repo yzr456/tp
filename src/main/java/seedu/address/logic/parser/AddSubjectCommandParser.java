@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.commands.AddSubjectCommand.SUBJECT_MESSAGE_CONSTRAINTS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
 import java.util.HashSet;
@@ -25,32 +24,29 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
      * @throws ParseException if the user input does not conform to the expected format
      */
     public AddSubjectCommand parse(String args) throws ParseException {
-        ArgumentMultimap map = ArgumentTokenizer.tokenize(args, PREFIX_SUBJECT);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUBJECT);
 
-        if (map.getPreamble().isBlank()) {
-            throw new ParseException(Messages.MESSAGE_ARGUMENT_ERROR);
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
         }
 
-        List<String> subjectValues = map.getAllValues(PREFIX_SUBJECT);
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+
+        List<String> subjectValues = argMultimap.getAllValues(PREFIX_SUBJECT);
         if (subjectValues.isEmpty()) {
             throw new ParseException(
                     String.format(Messages.MESSAGE_MISSING_PREFIX, AddSubjectCommand.MESSAGE_USAGE));
         }
 
-        Index index = ParserUtil.parseIndex(map.getPreamble());
         Set<Tag> subjectTags = new HashSet<>();
         for (String raw : subjectValues) {
-            if (raw.trim().isEmpty()) {
-                throw new ParseException(Messages.MESSAGE_ARGUMENT_ERROR);
-            }
 
             Subject subject = Subject.of(raw);
             if (subject == null) {
-                throw new ParseException(SUBJECT_MESSAGE_CONSTRAINTS);
+                throw new ParseException(AddSubjectCommand.MESSAGE_CONSTRAINTS);
             }
 
             Tag subjectTag = new Tag(subject.name());
-            
             subjectTags.add(subjectTag);
         }
 
