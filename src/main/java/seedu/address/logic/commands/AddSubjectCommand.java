@@ -28,8 +28,7 @@ public class AddSubjectCommand extends Command {
             + "Example: " + COMMAND_WORD + " 3 sub/PHY sub/SCI";
 
     public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
-    public static final String MESSAGE_DUPLICATE_SUBJECT =
-            "Subject Tag(s): %s already assigned to %s";
+    public static final String MESSAGE_DUPLICATE_SUBJECT = "Subject Tag(s): %s already assigned to %s";
 
     public static final String MESSAGE_CONSTRAINTS =
             "Invalid subject provided. The Subject provided must be a valid subject code and cannot be blank: "
