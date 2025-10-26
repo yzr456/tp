@@ -34,7 +34,7 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
         List<String> subjectValues = map.getAllValues(PREFIX_SUBJECT);
         if (subjectValues.isEmpty()) {
             throw new ParseException(
-                    String.format(Messages.MESSAGE_MISSING_PARAMETER, AddSubjectCommand.MESSAGE_USAGE));
+                    String.format(Messages.MESSAGE_MISSING_PREFIX, AddSubjectCommand.MESSAGE_USAGE));
         }
 
         Index index = ParserUtil.parseIndex(map.getPreamble());
@@ -50,6 +50,7 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
             }
 
             Tag subjectTag = new Tag(subject.name());
+            
             subjectTags.add(subjectTag);
         }
 

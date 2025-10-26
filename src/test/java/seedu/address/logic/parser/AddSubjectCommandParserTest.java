@@ -43,7 +43,7 @@ public class AddSubjectCommandParserTest {
 
     @Test
     public void parse_missingSubjectPrefix_throwsParseExceptionWithMissingParameterMessage() {
-        String expected = String.format(Messages.MESSAGE_MISSING_PARAMETER, AddSubjectCommand.MESSAGE_USAGE);
+        String expected = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSubjectCommand.MESSAGE_USAGE);
         assertParseFailure(parser, "1", expected);
     }
 
