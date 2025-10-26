@@ -50,6 +50,11 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
             }
 
             Tag subjectTag = new Tag(subject.name());
+
+            if (subjectTags.contains(subjectTag)) {
+                throw new ParseException(AddSubjectCommand.MESSAGE_DUPLICATE_SUBJECT_IN_COMMAND);
+            }
+            
             subjectTags.add(subjectTag);
         }
 
