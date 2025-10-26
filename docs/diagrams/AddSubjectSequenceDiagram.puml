@@ -1,0 +1,84 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddSubjectCommandParser" as AddSubjectCommandParser LOGIC_COLOR
+participant "c:AddSubjectCommand" as AddSubjectCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+participant ":Person" as Person MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addsubject 1 sub/MATH sub/SCI")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("addsubject 1 sub/MATH sub/SCI")
+activate AddressBookParser
+
+create AddSubjectCommandParser
+AddressBookParser -> AddSubjectCommandParser
+activate AddSubjectCommandParser
+
+AddSubjectCommandParser --> AddressBookParser
+deactivate AddSubjectCommandParser
+
+AddressBookParser -> AddSubjectCommandParser : parse("1 sub/MATH sub/SCI")
+activate AddSubjectCommandParser
+
+create AddSubjectCommand
+AddSubjectCommandParser -> AddSubjectCommand
+activate AddSubjectCommand
+
+AddSubjectCommand --> AddSubjectCommandParser
+deactivate AddSubjectCommand
+
+AddSubjectCommandParser --> AddressBookParser : c
+deactivate AddSubjectCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AddSubjectCommandParser -[hidden]-> AddressBookParser
+destroy AddSubjectCommandParser
+
+AddressBookParser --> LogicManager : c
+deactivate AddressBookParser
+
+LogicManager -> AddSubjectCommand : execute(m)
+activate AddSubjectCommand
+
+AddSubjectCommand -> Model : getFilteredPersonList()
+activate Model
+
+Model --> AddSubjectCommand : personList
+deactivate Model
+
+AddSubjectCommand -> Model : setPerson(personToEdit, editedPerson)
+activate Model
+
+create Person
+Model -> Person : new Person(...)
+activate Person
+
+Person --> Model
+deactivate Person
+
+Model --> AddSubjectCommand
+deactivate Model
+
+create CommandResult
+AddSubjectCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddSubjectCommand
+deactivate CommandResult
+
+AddSubjectCommand --> LogicManager : r
+deactivate AddSubjectCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
