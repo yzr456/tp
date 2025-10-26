@@ -24,7 +24,7 @@ public class Payment {
     public static final String MESSAGE_CONSTRAINTS_STATUS =
             "Payment status cannot be blank and must be one of: PENDING, PAID, OVERDUE";
     public static final String MESSAGE_CONSTRAINTS_DAY =
-            "Billing start day must be an integer between 1-31";
+            "Billing start day cannot be blank and must be an integer between 1-31";
     public static final int DEFAULT_BILLING_START_DAY = 1;
 
     private final PaymentStatus status;
