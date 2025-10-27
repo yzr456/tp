@@ -53,13 +53,13 @@ public class AddSubjectCommandParserTest {
 
     @Test
     public void parse_invalidIndexZeroOrNegative_throwsParseException() {
-        assertParseFailure(parser, "0 sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        assertParseFailure(parser, "-1 sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "0 sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "-1 sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
     }
 
     @Test
     public void parse_invalidIndexNonNumeric_throwsParseException() {
-        assertParseFailure(parser, "abc sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "abc sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
     }
 
     @Test

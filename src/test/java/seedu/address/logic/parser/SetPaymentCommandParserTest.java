@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_BILLING_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
@@ -45,13 +44,13 @@ public class SetPaymentCommandParserTest {
     @Test
     public void parse_invalidIndex_throwsParseException() {
         // Non-numeric index
-        assertParseFailure(parser, "a " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "a " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
 
         // Zero index
-        assertParseFailure(parser, "0 " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "0 " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
 
         // Negative index
-        assertParseFailure(parser, "-1 " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "-1 " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
     }
 
     @Test
