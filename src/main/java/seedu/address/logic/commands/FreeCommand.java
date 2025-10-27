@@ -36,8 +36,7 @@ public class FreeCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        WeeklySessions weeklySessions = model.getWeeklySessions();
-        String earliestTimeFrame = weeklySessions.getEarliestFreeTime(specifiedDuration);
+        String earliestTimeFrame = model.getEarliestFreeTime(specifiedDuration);
 
         return new CommandResult(String.format(MESSAGE_FREE_TIME_FOUND, specifiedDuration, earliestTimeFrame));
     }
