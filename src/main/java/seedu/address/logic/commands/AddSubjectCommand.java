@@ -33,7 +33,7 @@ public class AddSubjectCommand extends Command {
             "Duplicate subject tag(s) detected in command. Each subject should only be specified once.";
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Invalid subject provided. The Subject provided must be a valid subject code:\n"
+            "The Subject provided cannot be blank and must be a valid subject code:\n"
                     + "MATH, ENG, SCI, PHY, CHEM, BIO,\n"
                     + "HIST, GEOG, LIT, CHI, MALAY, TAMIL,\n"
                     + "POA, ECONS, ART, MUSIC, COMSCI";
