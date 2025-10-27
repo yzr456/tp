@@ -125,7 +125,7 @@ public class Payment {
 
         // If we're before the billing day OR (status is OVERDUE and today IS the billing day),
         // the most recent billing was last month
-        if (fromDate.getDayOfMonth() < billingDay 
+        if (fromDate.getDayOfMonth() < billingDay
                 || (status == PaymentStatus.OVERDUE && fromDate.getDayOfMonth() == billingDay)) {
             billingDate = billingDate.minusMonths(1);
             billingDate = billingDate.withDayOfMonth(Math.min(billingDay, billingDate.lengthOfMonth()));
