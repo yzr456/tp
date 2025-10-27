@@ -10,6 +10,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_HUSBAND;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccessWithOrderIndependentComparison;
 import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
@@ -42,29 +43,6 @@ import seedu.address.testutil.PersonBuilder;
 public class EditCommandTest {
 
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-
-    /**
-     * Executes the given {@code command} and verifies that the command executes successfully,
-     * comparing Person objects directly to avoid HashSet ordering issues in string representation.
-     */
-    private void assertCommandSuccessWithOrderIndependentComparison(Command command, Model actualModel,
-            Person expectedPerson, Model expectedModel) {
-        try {
-            CommandResult result = command.execute(actualModel);
-            
-            // Verify the command success message starts correctly (ignoring tag order in string)
-            assertTrue(result.getFeedbackToUser().startsWith("Edited Person:"));
-            
-            // Verify the models match (this compares Person objects using equals(), which is order-independent)
-            assertEquals(expectedModel, actualModel);
-            
-            // Verify the edited person matches exactly
-            Person actualEditedPerson = actualModel.getFilteredPersonList().get(0);
-            assertEquals(expectedPerson, actualEditedPerson);
-        } catch (CommandException ce) {
-            throw new AssertionError("Execution of command should not fail.", ce);
-        }
-    }
 
     @Test
     public void execute_allFieldsSpecifiedUnfilteredList_success() {
