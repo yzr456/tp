@@ -8,7 +8,6 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.SetPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Payment;
 
 /**
  * Parses input arguments and creates a new SetPaymentCommand object
