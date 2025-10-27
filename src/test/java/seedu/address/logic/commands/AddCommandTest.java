@@ -172,7 +172,7 @@ public class AddCommandTest {
         }
 
         @Override
-        public void deleteSession(Session session) {
+        public void removeSession(Session session) {
             throw new AssertionError("This method should not be called.");
         }
 

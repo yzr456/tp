@@ -216,7 +216,24 @@ public class EditCommandTest {
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
                 personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
                 mergedTags, personToEdit.getPayment());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
         expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
@@ -283,7 +300,24 @@ public class EditCommandTest {
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
                 personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
                 mergedTags, personToEdit.getPayment());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
         expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
