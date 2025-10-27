@@ -117,16 +117,20 @@ public class Payment {
 
     /**
      * Calculates the billing date based on the status set date and billing start day.
+     * For OVERDUE status, references the most recent past billing cycle.
+     * Special case: If setting to OVERDUE on the billing day itself, references last month's billing.
      */
     private LocalDate calculateBillingDate(LocalDate fromDate, int billingDay) {
         LocalDate billingDate = fromDate.withDayOfMonth(Math.min(billingDay, fromDate.lengthOfMonth()));
 
-        // If we're past the billing day this month, it refers to this month's billing
-        // Otherwise it refers to last month's billing
-        if (fromDate.getDayOfMonth() < billingDay) {
+        // If we're before the billing day OR (status is OVERDUE and today IS the billing day),
+        // the most recent billing was last month
+        if (fromDate.getDayOfMonth() < billingDay 
+                || (status == PaymentStatus.OVERDUE && fromDate.getDayOfMonth() == billingDay)) {
             billingDate = billingDate.minusMonths(1);
             billingDate = billingDate.withDayOfMonth(Math.min(billingDay, billingDate.lengthOfMonth()));
         }
+        // Otherwise, the most recent billing day is this month (we've already passed it)
 
         return billingDate;
     }
