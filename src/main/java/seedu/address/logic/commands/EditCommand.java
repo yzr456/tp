@@ -75,6 +75,7 @@ public class EditCommand extends Command {
             + "Use -c for contact or -s for session.";
     public static final String MESSAGE_DUPLICATE_SUBJECT = "DuplicateSubjectError: Subject Tag: %s "
             + "has already been assigned to %s";
+    public static final String MESSAGE_DUPLICATE_CONTACT = "This contact already exists in the address book";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -105,6 +106,10 @@ public class EditCommand extends Command {
 
         if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        }
+
+        if (!personToEdit.isSamePerson(editedPerson) && model.hasContact(editedPerson)) {
+            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
         }
 
         //update the relevant session tags
