@@ -57,6 +57,20 @@ public class CommandBox extends UiPart<Region> {
     }
 
     /**
+     * Returns true if the command text field has focus.
+     */
+    public boolean isFocused() {
+        return commandTextField.isFocused();
+    }
+
+    /**
+     * Requests focus on the command text field.
+     */
+    public void requestFocus() {
+        commandTextField.requestFocus();
+    }
+
+    /**
      * Sets the command box style to indicate a failed command.
      */
     private void setStyleToIndicateCommandFailure() {
