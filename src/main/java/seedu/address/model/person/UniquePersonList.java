@@ -42,6 +42,17 @@ public class UniquePersonList implements Iterable<Person> {
         return internalList.stream()
                 .anyMatch(person -> toCheck.hasSameEmail(person) || toCheck.hasSameNumber(person));
     }
+
+    /**
+     * Returns true if the list contains a person with the same contact details (phone or email) as the given argument,
+     * excluding the specified person to exclude.
+     */
+    public boolean contactPresentExcluding(Person toCheck, Person toExclude) {
+        requireAllNonNull(toCheck, toExclude);
+        return internalList.stream()
+                .filter(person -> !person.equals(toExclude))
+                .anyMatch(person -> toCheck.hasSameEmail(person) || toCheck.hasSameNumber(person));
+    }
     /**
      * Adds a person to the list.
      * The person must not already exist in the list.
