@@ -31,6 +31,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StudyYear;
+import seedu.address.model.person.exceptions.DuplicateContactException;
 import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
@@ -108,7 +109,7 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasContact(editedPerson)) {
+        if (model.hasContactExcluding(editedPerson, personToEdit)) {
             throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
         }
 
