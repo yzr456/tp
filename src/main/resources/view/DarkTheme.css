@@ -527,6 +527,45 @@
     -fx-background-color: #63b3ed;
 }
 
+/* Session Tags - Base Style */
+.session-tag {
+    -fx-font-family: 'Telegraf';
+    -fx-background-radius: 12;
+    -fx-padding: 6 14 6 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Day-of-Week Session Tag Colors */
+.session-mon {
+    -fx-background-color: #f56565; /* Red - Monday */
+}
+
+.session-tue {
+    -fx-background-color: #ed8936; /* Orange - Tuesday */
+}
+
+.session-wed {
+    -fx-background-color: #ecc94b; /* Yellow - Wednesday */
+}
+
+.session-thu {
+    -fx-background-color: #48bb78; /* Green - Thursday */
+}
+
+.session-fri {
+    -fx-background-color: #4299e1; /* Blue - Friday */
+}
+
+.session-sat {
+    -fx-background-color: #9f7aea; /* Purple - Saturday */
+}
+
+.session-sun {
+    -fx-background-color: #ed64a6; /* Pink - Sunday */
+}
+
 /* ========== HEADER STYLING ========== */
 
 /* Header Box Styling */
