@@ -73,7 +73,13 @@ public class UniquePersonList implements Iterable<Person> {
         if (!target.isSamePerson(editedPerson) && contains(editedPerson)) {
             throw new DuplicatePersonException();
         }
-        if (!target.isSamePerson(editedPerson) && contactPresent(editedPerson)) {
+
+        // Check for duplicate contacts, but exclude the target person being edited
+        boolean hasDuplicateContact = internalList.stream()
+                .filter(person -> !person.equals(target))
+                .anyMatch(person -> editedPerson.hasSameEmail(person) || editedPerson.hasSameNumber(person));
+
+        if (hasDuplicateContact) {
             throw new DuplicateContactException();
         }
 
