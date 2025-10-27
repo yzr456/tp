@@ -65,8 +65,7 @@ public class AddCommandTest {
                 .withPhone("92345678").withEmail("different@email.com").build();
         AddCommand addCommand = new AddCommand(newPersonSamePhone);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT,
-                () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT, () -> addCommand.execute(modelStub));
     }
 
     @Test
@@ -78,8 +77,7 @@ public class AddCommandTest {
                 .withPhone("87654321").withEmail("test@example.com").build();
         AddCommand addCommand = new AddCommand(newPersonSameEmail);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT,
-                () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT, () -> addCommand.execute(modelStub));
     }
 
     @Test

@@ -6,6 +6,6 @@ package seedu.address.model.person.exceptions;
  */
 public class DuplicateContactException extends RuntimeException {
     public DuplicateContactException() {
-      super("Operation would result in duplicate contacts");
-  }
+        super("Operation would result in duplicate contacts");
+    }
 }

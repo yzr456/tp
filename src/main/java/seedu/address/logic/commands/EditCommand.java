@@ -31,7 +31,6 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StudyYear;
-import seedu.address.model.person.exceptions.DuplicateContactException;
 import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
