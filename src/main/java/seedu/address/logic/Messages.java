@@ -21,7 +21,7 @@ public class Messages {
                 "Multiple values specified for the following single-valued field(s): ";
     public static final String MESSAGE_MISSING_INDEX = "The index field cannot be blank";
     public static final String MESSAGE_MISSING_PREFIX =
-            "Ensure that your input follows this format: \n%1$s";
+            "Missing prefix(s) for parameter(s). Ensure that your input follows this format: \n%1$s";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
