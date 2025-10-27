@@ -4,8 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.WeeklySessions;
-
 /**
  * Finds the earliest available free time slot in the weekly schedule.
  * The command searches for a continuous time slot that can accommodate the specified duration,

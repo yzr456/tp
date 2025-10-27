@@ -64,6 +64,12 @@ public class StringUtil {
         }
     }
 
+    /**
+     * Return true if {@code s} represents an unsigned integer
+     * e.g. 0, 1, 2, 3, ...., {@code Integer.MAX_VALUE}<br>
+     * Will return false for any other non-null string input
+     * @throws NullPointerException if {@code s} is null.
+     */
     public static boolean isUnsignedInteger(String s) {
         requireNonNull(s);
 
