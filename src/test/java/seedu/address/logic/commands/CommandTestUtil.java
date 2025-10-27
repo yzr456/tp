@@ -128,6 +128,34 @@ public class CommandTestUtil {
         assertEquals(expectedAddressBook, actualModel.getAddressBook());
         assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
     }
+
+    /**
+     * Executes the given {@code command} and verifies that the command executes successfully,
+     * comparing Person objects directly to avoid HashSet ordering issues in string representation.
+     * This is useful when the expected Person contains collections (like tags) that may have
+     * non-deterministic ordering in their string representation.
+     *
+     * @param command the command to execute
+     * @param actualModel the model to execute the command on
+     * @param expectedPerson the expected Person after command execution
+     * @param expectedModel the expected model state after command execution
+     */
+    public static void assertCommandSuccessWithOrderIndependentComparison(Command command, Model actualModel,
+            Person expectedPerson, Model expectedModel) {
+        try {
+            CommandResult result = command.execute(actualModel);
+            // Verify the command success message starts correctly (ignoring tag order in string)
+            assertTrue(result.getFeedbackToUser().startsWith("Edited Person:"));
+            // Verify the models match (this compares Person objects using equals(), which is order-independent)
+            assertEquals(expectedModel, actualModel);
+            // Verify the edited person matches exactly
+            Person actualEditedPerson = actualModel.getFilteredPersonList().get(0);
+            assertEquals(expectedPerson, actualEditedPerson);
+        } catch (CommandException ce) {
+            throw new AssertionError("Execution of command should not fail.", ce);
+        }
+    }
+
     /**
      * Updates {@code model}'s filtered list to show only the person at the given {@code targetIndex} in the
      * {@code model}'s address book.
