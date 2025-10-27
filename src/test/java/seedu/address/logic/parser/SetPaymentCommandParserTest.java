@@ -45,13 +45,13 @@ public class SetPaymentCommandParserTest {
     @Test
     public void parse_invalidIndex_throwsParseException() {
         // Non-numeric index
-        assertParseFailure(parser, "a " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "a " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
 
         // Zero index
-        assertParseFailure(parser, "0 " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "0 " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
 
         // Negative index
-        assertParseFailure(parser, "-1 " + PREFIX_STATUS + "PAID", MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "-1 " + PREFIX_STATUS + "PAID", ParserUtil.MESSAGE_INVALID_INDEX);
     }
 
     @Test
