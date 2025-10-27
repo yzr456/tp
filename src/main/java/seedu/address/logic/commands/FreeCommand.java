@@ -21,8 +21,11 @@ public class FreeCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1\n";
 
     public static final String MESSAGE_FREE_TIME_FOUND = "The earliest %dhour time slot is at: %s \n";
-
+    public static final String MESSAGE_INVALID_DURATION = "Enter a valid duration(Integer) between 1 - 14 hours \n";
+    public static final int SMALLEST_DURATION = 1;
+    public static final int LARGEST_DURATION = 14;
     public final int specifiedDuration;
+
 
     /**
      * Creates a FreeCommand to find the earliest free time slot.
@@ -36,6 +39,9 @@ public class FreeCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        if (specifiedDuration < SMALLEST_DURATION || specifiedDuration > LARGEST_DURATION) {
+            throw new CommandException(MESSAGE_INVALID_DURATION);
+        }
         String earliestTimeFrame = model.getEarliestFreeTime(specifiedDuration);
 
         return new CommandResult(String.format(MESSAGE_FREE_TIME_FOUND, specifiedDuration, earliestTimeFrame));
