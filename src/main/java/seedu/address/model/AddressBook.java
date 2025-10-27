@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
@@ -106,21 +107,17 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     //// session-level operations
-
-    /**
-     * Returns true if a session overlaps with any existing session in the weekly sessions.
-     */
-    public boolean hasOverlappingSession(Session session) {
-        requireNonNull(session);
-        return weeklySessions.hasOverlap(session);
-    }
-
     /**
      * Adds a session to the weekly sessions.
      * The session must not overlap with any existing session.
      */
     public void addSession(Session session) {
         weeklySessions.add(session);
+    }
+
+    public Optional<Session> getOverlappingSessions(Session session) {
+        requireNonNull(session);
+        return weeklySessions.getOverlap(session);
     }
 
     /**
