@@ -1,7 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_ARGUMENT_ERROR;
-
 import java.util.Arrays;
 
 import seedu.address.logic.commands.FindCommand;
@@ -21,7 +19,9 @@ public class FindCommandParser implements Parser<FindCommand> {
     public FindCommand parse(String args) throws ParseException {
         String trimmedArgs = args.trim();
         if (trimmedArgs.isEmpty()) {
-            throw new ParseException(MESSAGE_ARGUMENT_ERROR);
+            throw new ParseException(
+                    String.format(FindCommand.MESSAGE_MISSING_KEYWORDS, FindCommand.MESSAGE_USAGE)
+            );
         }
 
         String[] nameKeywords = trimmedArgs.split("\\s+");

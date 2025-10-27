@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.commands.AddSubjectCommand.SUBJECT_MESSAGE_CONSTRAINTS;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
@@ -37,34 +36,34 @@ public class AddSubjectCommandParserTest {
     }
 
     @Test
-    public void parse_missingIndexPreamble_throwsParseExceptionWithArgumentError() {
-        assertParseFailure(parser, " sub/MATH", Messages.MESSAGE_ARGUMENT_ERROR);
+    public void parse_missingIndexPreamble_throwsParseExceptionWithMissingIndexMessage() {
+        assertParseFailure(parser, " sub/MATH", Messages.MESSAGE_MISSING_INDEX);
     }
 
     @Test
-    public void parse_missingSubjectPrefix_throwsParseExceptionWithMissingParameterMessage() {
-        String expected = String.format(Messages.MESSAGE_MISSING_PARAMETER, AddSubjectCommand.MESSAGE_USAGE);
+    public void parse_missingSubjectPrefix_throwsParseExceptionWithMissingPrefixMessage() {
+        String expected = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSubjectCommand.MESSAGE_USAGE);
         assertParseFailure(parser, "1", expected);
     }
 
     @Test
-    public void parse_emptySubjectValue_throwsParseExceptionWithArgumentError() {
-        assertParseFailure(parser, "1 sub/   ", Messages.MESSAGE_ARGUMENT_ERROR);
+    public void parse_emptySubjectValue_throwsParseExceptionWithConstraints() {
+        assertParseFailure(parser, "1 sub/   ", AddSubjectCommand.MESSAGE_CONSTRAINTS);
     }
 
     @Test
     public void parse_invalidIndexZeroOrNegative_throwsParseException() {
-        assertParseFailure(parser, "0 sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
-        assertParseFailure(parser, "-1 sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "0 sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertParseFailure(parser, "-1 sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
     public void parse_invalidIndexNonNumeric_throwsParseException() {
-        assertParseFailure(parser, "abc sub/MATH", ParserUtil.MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "abc sub/MATH", Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
     }
 
     @Test
     public void parse_invalidSubjectCode_throwsParseExceptionWithConstraints() {
-        assertParseFailure(parser, "1 sub/ENGLISH", SUBJECT_MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "1 sub/ENGLISH", AddSubjectCommand.MESSAGE_CONSTRAINTS);
     }
 }

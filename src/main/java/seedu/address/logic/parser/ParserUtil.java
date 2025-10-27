@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
+import seedu.address.logic.Messages;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
@@ -28,7 +29,6 @@ import seedu.address.model.tag.Tag;
 public class ParserUtil {
 
     public static final String MESSAGE_INVALID_DURATION = "Duration is not a non-zero unsigned integer.";
-    public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
 
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
@@ -38,7 +38,7 @@ public class ParserUtil {
     public static Index parseIndex(String oneBasedIndex) throws ParseException {
         String trimmedIndex = oneBasedIndex.trim();
         if (!StringUtil.isNonZeroUnsignedInteger(trimmedIndex)) {
-            throw new ParseException(MESSAGE_INVALID_INDEX);
+            throw new ParseException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
         }
         return Index.fromOneBased(Integer.parseInt(trimmedIndex));
     }
@@ -187,12 +187,8 @@ public class ParserUtil {
     public static String parsePaymentStatus(String status) throws ParseException {
         requireNonNull(status);
         String trimmedStatus = status.trim();
-        if (trimmedStatus.isEmpty()) {
-            throw new ParseException("ArgumentError: Missing value for status parameter. "
-                    + "Please ensure status has a non-empty value.");
-        }
-        if (!Payment.isValidStatus(trimmedStatus)) {
-            throw new ParseException("InvalidStatusError: " + Payment.MESSAGE_CONSTRAINTS_STATUS);
+        if (trimmedStatus.isEmpty() || !Payment.isValidStatus(trimmedStatus)) {
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_STATUS);
         }
         return trimmedStatus;
     }
@@ -207,19 +203,18 @@ public class ParserUtil {
         requireNonNull(day);
         String trimmedDay = day.trim();
         if (trimmedDay.isEmpty()) {
-            throw new ParseException("ArgumentError: Missing value for start parameter. "
-                    + "Please ensure start has a non-empty value.");
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         int billingDay;
         try {
             billingDay = Integer.parseInt(trimmedDay);
         } catch (NumberFormatException e) {
-            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         if (!Payment.isValidBillingDay(billingDay)) {
-            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         return billingDay;
