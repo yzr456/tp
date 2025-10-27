@@ -8,6 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.person.exceptions.DuplicateContactException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
@@ -36,6 +37,11 @@ public class UniquePersonList implements Iterable<Person> {
         return internalList.stream().anyMatch(toCheck::isSamePerson);
     }
 
+    public boolean contactPresent(Person toCheck) {
+        requireNonNull(toCheck);
+        return internalList.stream()
+                .anyMatch(person -> toCheck.hasSameEmail(person) || toCheck.hasSameNumber(person));
+    }
     /**
      * Adds a person to the list.
      * The person must not already exist in the list.
@@ -44,6 +50,9 @@ public class UniquePersonList implements Iterable<Person> {
         requireNonNull(toAdd);
         if (contains(toAdd)) {
             throw new DuplicatePersonException();
+        }
+        if (contactPresent(toAdd)) {
+            throw new DuplicateContactException();
         }
         internalList.add(toAdd);
     }
@@ -63,6 +72,9 @@ public class UniquePersonList implements Iterable<Person> {
 
         if (!target.isSamePerson(editedPerson) && contains(editedPerson)) {
             throw new DuplicatePersonException();
+        }
+        if (!target.isSamePerson(editedPerson) && contactPresent(editedPerson)) {
+            throw new DuplicateContactException();
         }
 
         internalList.set(index, editedPerson);
