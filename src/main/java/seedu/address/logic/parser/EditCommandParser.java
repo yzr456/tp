@@ -22,6 +22,8 @@ import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Session;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.subject.Subject;
 
@@ -52,7 +54,13 @@ public class EditCommandParser implements Parser<EditCommand> {
         if (trimmedArgs.startsWith("-")) {
             int spaceIndex = trimmedArgs.indexOf(' ');
             if (spaceIndex == -1) {
-                throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
+                // Check if what was provided is actually a valid flag
+                String providedFlag = trimmedArgs.trim();
+                if (providedFlag.equals("-c") || providedFlag.equals("-s")) {
+                    throw new ParseException(EditCommand.MESSAGE_MISSING_ARGUMENTS);
+                } else {
+                    throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
+                }
             }
             flag = trimmedArgs.substring(0, spaceIndex).trim();
             remainingArgs = trimmedArgs.substring(spaceIndex).trim();
@@ -83,11 +91,13 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         Index index;
 
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
+        // Check if preamble contains index followed by extra text
+        String preamble = argMultimap.getPreamble();
+        if (preamble.trim().matches("^\\d+\\s+.*")) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         }
+
+        index = ParserUtil.parseIndex(preamble);
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
@@ -129,18 +139,26 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         Index index;
 
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE), pe);
+        // Check if preamble contains index followed by extra text
+        String preamble = argMultimap.getPreamble();
+        if (preamble.trim().matches("^\\d+\\s+.*")) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         }
+
+        index = ParserUtil.parseIndex(preamble);
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
-        // Parse sessions - need to group day, start, end triplets
-        parseSessionsForEdit(argMultimap.getAllValues(PREFIX_DAY),
-                argMultimap.getAllValues(PREFIX_START),
-                argMultimap.getAllValues(PREFIX_END)).ifPresent(editPersonDescriptor::setSessions);
+        // Extract only the session parameters (after the index)
+        String sessionArgs = args.substring(preamble.length()).trim();
+
+        // Check if session parameters are empty - session editing requires at least one complete triplet
+        if (sessionArgs.isEmpty()) {
+            throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+        }
+
+        // Parse sessions - enforce sequential triplet order (d/, s/, e/)
+        parseSessionsForEdit(sessionArgs).ifPresent(editPersonDescriptor::setSessions);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -150,38 +168,84 @@ public class EditCommandParser implements Parser<EditCommand> {
     }
 
     /**
-     * Parses session triplets (day, start, end) into a {@code Set<Tag>} if non-empty.
-     * All three lists must have the same size.
+     * Parses session definitions sequentially (d/, s/, e/ groups) into a {@code Set<Tag>} if non-empty.
+     * Enforces strict triplet ordering for each session.
+     * <p>
+     * Throws:
+     * - ParseException with EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE if prefix order or structure is invalid
+     * - ParseException with Session.MESSAGE_CONSTRAINTS if day/start/end values are invalid
      */
-    private Optional<Set<Tag>> parseSessionsForEdit(Collection<String> days,
-                                                     Collection<String> starts,
-                                                     Collection<String> ends) throws ParseException {
-        assert days != null && starts != null && ends != null;
+    private Optional<Set<Tag>> parseSessionsForEdit(String args) throws ParseException {
+        requireNonNull(args);
+        Set<Tag> sessionTags = new HashSet<>();
 
-        if (days.isEmpty() && starts.isEmpty() && ends.isEmpty()) {
+        // Split into tokens based on whitespace
+        String[] tokens = args.trim().split("\\s+");
+        String currentDay = null;
+        String currentStart = null;
+        String currentEnd = null;
+        String expected = "d/";
+
+        for (String token : tokens) {
+            if (token.startsWith("d/")) {
+                // Out-of-order or duplicate prefix error
+                if (!expected.equals("d/")) {
+                    throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+                }
+                currentDay = token.substring(2).trim();
+                if (currentDay.isEmpty()) {
+                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                }
+                expected = "s/";
+
+            } else if (token.startsWith("s/")) {
+                if (!expected.equals("s/")) {
+                    throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+                }
+                currentStart = token.substring(2).trim();
+                if (currentStart.isEmpty()) {
+                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                }
+                expected = "e/";
+
+            } else if (token.startsWith("e/")) {
+                if (!expected.equals("e/")) {
+                    throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+                }
+                currentEnd = token.substring(2).trim();
+                if (currentEnd.isEmpty()) {
+                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                }
+
+                try {
+                    // Let Session validate the triplet values
+                    Session session = new Session(currentDay, currentStart, currentEnd);
+                    sessionTags.add(new SessionTag(session.toString(), session));
+                } catch (IllegalArgumentException e) {
+                    // Delegate to model constraints
+                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                }
+
+                // Prepare for next possible triplet
+                currentDay = currentStart = currentEnd = null;
+                expected = "d/";
+
+            } else if (!token.isBlank()) {
+                // Unknown prefix or random input: structural violation
+                throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+            }
+        }
+
+        // Detect incomplete triplet
+        if (!expected.equals("d/")) {
+            throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+        }
+
+        if (sessionTags.isEmpty()) {
             return Optional.empty();
         }
 
-        // Validate that all three have the same count
-        if (days.size() != starts.size() || days.size() != ends.size()) {
-            throw new ParseException("Each session must have a day (d/), start time (s/), and end time (e/).");
-        }
-
-        Set<Tag> sessionTags = new HashSet<>();
-        var dayIter = days.iterator();
-        var startIter = starts.iterator();
-        var endIter = ends.iterator();
-
-        while (dayIter.hasNext()) {
-            String day = dayIter.next();
-            String start = startIter.next();
-            String end = endIter.next();
-
-            Tag sessionTag = ParserUtil.parseSessionTag(day, start, end);
-            sessionTags.add(sessionTag);
-        }
-
-        return sessionTags.isEmpty() ? Optional.empty() : Optional.of(sessionTags);
+        return Optional.of(sessionTags);
     }
 
     /**
