@@ -107,7 +107,7 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     public boolean hasContact(Person p) {
         requireNonNull(p);
-        return persons.contains(p);
+        return persons.contactPresent(p);
     }
 
     //// session-level operations
