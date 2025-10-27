@@ -27,7 +27,7 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_DURATION = "Duration is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_DURATION = "Duration is not an unsigned integer";
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
 
     /**
@@ -48,9 +48,9 @@ public class ParserUtil {
      * trimmed.
      * @throws ParseException if the specified duration is invalid (not non-zero unsigned integer).
      */
-    public static Integer parseDuration(String duration) throws ParseException {
+    public static int parseDuration(String duration) throws ParseException {
         String trimmedDuration = duration.trim();
-        if (!StringUtil.isNonZeroUnsignedInteger(trimmedDuration)) {
+        if (!StringUtil.isUnsignedInteger(trimmedDuration)) {
             throw new ParseException(MESSAGE_INVALID_DURATION);
         }
         return Integer.parseInt(trimmedDuration);
