@@ -64,6 +64,17 @@ public class StringUtil {
         }
     }
 
+    public static boolean isUnsignedInteger(String s) {
+        requireNonNull(s);
+
+        try {
+            int value = Integer.parseInt(s);
+            return value >= 0;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
     /**
      * Wraps each keyword with quotes and joins with spaces.
      */
