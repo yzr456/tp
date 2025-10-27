@@ -144,13 +144,10 @@ public class CommandTestUtil {
             Person expectedPerson, Model expectedModel) {
         try {
             CommandResult result = command.execute(actualModel);
-            
             // Verify the command success message starts correctly (ignoring tag order in string)
             assertTrue(result.getFeedbackToUser().startsWith("Edited Person:"));
-            
             // Verify the models match (this compares Person objects using equals(), which is order-independent)
             assertEquals(expectedModel, actualModel);
-            
             // Verify the edited person matches exactly
             Person actualEditedPerson = actualModel.getFilteredPersonList().get(0);
             assertEquals(expectedPerson, actualEditedPerson);
