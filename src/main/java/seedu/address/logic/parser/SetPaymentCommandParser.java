@@ -35,7 +35,7 @@ public class SetPaymentCommandParser implements Parser<SetPaymentCommand> {
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_STATUS, PREFIX_BILLING_START);
 
         if (argMultimap.getValue(PREFIX_STATUS).isEmpty()) {
-            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_STATUS);
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX, SetPaymentCommand.MESSAGE_USAGE));
         }
 
         String status = ParserUtil.parsePaymentStatus(argMultimap.getValue(PREFIX_STATUS).get());
