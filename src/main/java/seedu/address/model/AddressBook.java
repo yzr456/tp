@@ -105,6 +105,11 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
+    public boolean hasContact(Person p) {
+        requireNonNull(p);
+        return persons.contains(p);
+    }
+
     //// session-level operations
     /**
      * Adds a session to the weekly sessions.

@@ -87,6 +87,7 @@ public interface Model {
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
 
+    boolean hasContact(Person p);
     //=========== WeeklySessions Operations ======================================================
 
 
