@@ -320,19 +320,19 @@ public class EditCommandParserTest {
     @Test
     public void parse_sessionEditInvalidDay_failure() {
         assertParseFailure(parser, "-s 1" + INVALID_DAY_DESC + VALID_START_DESC + VALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_DAY_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditInvalidStart_failure() {
         assertParseFailure(parser, "-s 1" + VALID_DAY_DESC + INVALID_START_DESC + VALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditInvalidEnd_failure() {
         assertParseFailure(parser, "-s 1" + VALID_DAY_DESC + VALID_START_DESC + INVALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
@@ -469,19 +469,19 @@ public class EditCommandParserTest {
     @Test
     public void parse_sessionEditEmptyDay_failure() {
         assertParseFailure(parser, "-s 1 d/ s/1000 e/1100",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_DAY_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditEmptyStart_failure() {
         assertParseFailure(parser, "-s 1 d/MON s/ e/1100",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditEmptyEnd_failure() {
         assertParseFailure(parser, "-s 1 d/MON s/1000 e/",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
