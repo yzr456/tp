@@ -166,6 +166,7 @@ public class ParserUtil {
     public static Tag parseSessionTag(String day, String start, String end) throws ParseException {
         requireAllNonNull(day, start, end);
         String trimmedDay = day.trim();
+        trimmedDay = trimmedDay.toUpperCase();
         String trimmedStart = start.trim();
         String trimmedEnd = end.trim();
 
