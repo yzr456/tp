@@ -21,7 +21,7 @@ public class HelpWindowTest {
 
     @Test
     public void constants_validValues() {
-        assertEquals("https://se-education.org/addressbook-level3/UserGuide.html", HelpWindow.USERGUIDE_URL);
+        assertEquals("https://ay2526s1-cs2103-f12-4.github.io/tp/UserGuide.html", HelpWindow.USERGUIDE_URL);
     }
 
     @Test
