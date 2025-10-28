@@ -25,7 +25,7 @@ public class AddSubjectCommand extends Command {
             + "Parameters: INDEX sub/SUBJECT...\n"
             + "Command syntax: addsubject [INDEX] sub/[SUBJECT]...\n"
             + "Example: " + COMMAND_WORD + " 1 sub/MATH\n"
-            + "Example: " + COMMAND_WORD + " 3 sub/PHY sub/SCI";
+            + "Example: " + COMMAND_WORD + " 3 sub/PHY sub/SCI\n";
 
     public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
     public static final String MESSAGE_DUPLICATE_SUBJECT =
