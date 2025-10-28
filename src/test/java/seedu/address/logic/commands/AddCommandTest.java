@@ -91,8 +91,7 @@ public class AddCommandTest {
                 .build();
         AddCommand addCommand = new AddCommand(newPersonSameNameDifferentCase);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PERSON,
-                () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PERSON, () -> addCommand.execute(modelStub));
     }
 
     @Test
