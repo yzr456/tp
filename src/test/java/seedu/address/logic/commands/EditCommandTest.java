@@ -128,6 +128,108 @@ public class EditCommandTest {
     }
 
     @Test
+    public void execute_editPhoneToDuplicate_failure() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withPhone(secondPerson.getPhone().value).build();
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_CONTACT);
+    }
+
+    @Test
+    public void execute_editEmailToDuplicate_failure() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withEmail(secondPerson.getEmail().value).build();
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, EditCommand.MESSAGE_DUPLICATE_CONTACT);
+    }
+
+    @Test
+    public void execute_editKeepingSamePhone_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withName("New Name")
+                .withPhone(personToEdit.getPhone().value)
+                .build();
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withName("New Name").build();
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+                Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_editKeepingSameEmail_success() {
+        Person personToEdit = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
+                .withName("New Name")
+                .withEmail(personToEdit.getEmail().value)
+                .build();
+        EditCommand editCommand = new EditCommand(INDEX_FIRST_PERSON, descriptor);
+
+        Person editedPerson = new PersonBuilder(personToEdit)
+                .withName("New Name").build();
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
+        expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
+                Messages.format(editedPerson));
+
+        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
     public void execute_invalidPersonIndexUnfilteredList_failure() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build();
@@ -217,7 +319,24 @@ public class EditCommandTest {
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
                 personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
                 mergedTags, personToEdit.getPayment());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
         expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
 
         String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
@@ -284,7 +403,26 @@ public class EditCommandTest {
         Person editedPerson = new Person(personToEdit.getName(), personToEdit.getStudyYear(),
                 personToEdit.getPhone(), personToEdit.getEmail(), personToEdit.getAddress(),
                 mergedTags, personToEdit.getPayment());
+
+        // Remove old sessions from expectedModel's WeeklySessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.removeSession(sessionTag.getSession());
+            }
+        }
+
         expectedModel.setPerson(personToEdit, editedPerson);
+
+        // Add new sessions to expectedModel's WeeklySessions
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                expectedModel.addSession(sessionTag.getSession());
+            }
+        }
+
+        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
 
         // Use order-independent comparison to avoid HashSet ordering issues
         assertCommandSuccessWithOrderIndependentComparison(editCommand, model, editedPerson, expectedModel);

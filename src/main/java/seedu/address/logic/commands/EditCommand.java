@@ -31,6 +31,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StudyYear;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -68,12 +69,18 @@ public class EditCommand extends Command {
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
-    public static final String MESSAGE_INVALID_FLAG = "InvalidFlagError: Invalid flag provided. "
+    public static final String MESSAGE_INVALID_FLAG = "Invalid flag provided. "
             + "Use -c for contact or -s for session.";
-    public static final String MESSAGE_MISSING_FLAG = "ArgumentError: A valid flag must be provided. "
+    public static final String MESSAGE_MISSING_FLAG = "A valid flag must be provided. "
             + "Use -c for contact or -s for session.";
     public static final String MESSAGE_DUPLICATE_SUBJECT = "DuplicateSubjectError: Subject Tag: %s "
             + "has already been assigned to %s";
+    public static final String MESSAGE_DUPLICATE_CONTACT = "This contact already exists in the address book";
+    public static final String MESSAGE_MISSING_ARGUMENTS = "Missing arguments after flag. "
+            + "Format: edit -c INDEX [fields...] or edit -s INDEX [fields...]";
+    public static final String MESSAGE_INVALID_SESSION_SEQUENCE =
+            "Invalid session format. Each session must follow order: d/, s/, e/. \n"
+                    + "Example: d/MON s/1100 e/1200 d/TUE s/1300 e/1400";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -106,6 +113,26 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
+        if (model.hasContactExcluding(editedPerson, personToEdit)) {
+            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
+        }
+
+        //update the relevant session tags
+        //1. Remove the old session tags and sessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag currentTag = (SessionTag) tag;
+                model.removeSession(currentTag.getSession());
+            }
+        }
+
+        //2. Add any new session tags
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag currentTag = (SessionTag) tag;
+                model.addSession(currentTag.getSession());
+            }
+        }
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));

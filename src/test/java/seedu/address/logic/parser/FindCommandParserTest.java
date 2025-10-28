@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_ARGUMENT_ERROR;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
@@ -17,7 +16,7 @@ public class FindCommandParserTest {
 
     @Test
     public void parse_emptyArg_throwsParseException() {
-        assertParseFailure(parser, "     ", String.format(MESSAGE_ARGUMENT_ERROR, FindCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "     ", FindCommand.MESSAGE_MISSING_KEYWORDS);
     }
 
     @Test

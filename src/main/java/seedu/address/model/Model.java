@@ -1,6 +1,7 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
@@ -86,12 +87,16 @@ public interface Model {
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
 
-    //=========== WeeklySessions Operations ======================================================
+    boolean hasContact(Person p);
 
     /**
-     * Returns true if a session overlaps with any existing session in the weekly sessions.
+     * Returns true if a person with the same contact details (phone or email) exists in the address book,
+     * excluding the specified person.
      */
-    boolean hasOverlappingSession(Session session);
+    boolean hasContactExcluding(Person person, Person personToExclude);
+
+    //=========== WeeklySessions Operations ======================================================
+
 
     /**
      * Adds the given session to the weekly sessions.
@@ -103,7 +108,11 @@ public interface Model {
      * Deletes the given session from the weekly sessions.
      * The session must exist in the weekly sessions.
      */
-    void deleteSession(Session session);
+    void removeSession(Session session);
+
+    Optional<Session> getOverlappingSession(Session session);
+
+
 
     /**
      * Returns the weekly sessions.

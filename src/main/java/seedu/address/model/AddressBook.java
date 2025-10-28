@@ -3,6 +3,7 @@ package seedu.address.model;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.util.ToStringBuilder;
@@ -56,7 +57,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
-
         setPersons(newData.getPersonList());
         setWeeklySessions(newData.getWeeklySessions());
     }
@@ -105,16 +105,29 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
-    //// session-level operations
-
     /**
-     * Returns true if a session overlaps with any existing session in the weekly sessions.
+     * Returns true if a person with the same contact details (phone or email)
+     * as {@code p} exists in the address book
+     * @param p
+     * @return
      */
-    public boolean hasOverlappingSession(Session session) {
-        requireNonNull(session);
-        return weeklySessions.hasOverlap(session);
+    public boolean hasContact(Person p) {
+        requireNonNull(p);
+        return persons.contactPresent(p);
     }
 
+    /**
+     * Returns true if a person with the same contact details (phone or email)
+     * as {@code person} exists in the address book,
+     * excluding {@code personToExclude}.
+     */
+    public boolean hasContactExcluding(Person person, Person personToExclude) {
+        requireNonNull(person);
+        requireNonNull(personToExclude);
+        return persons.contactPresentExcluding(person, personToExclude);
+    }
+
+    //// session-level operations
     /**
      * Adds a session to the weekly sessions.
      * The session must not overlap with any existing session.
@@ -123,16 +136,17 @@ public class AddressBook implements ReadOnlyAddressBook {
         weeklySessions.add(session);
     }
 
+    public Optional<Session> getOverlappingSessions(Session session) {
+        requireNonNull(session);
+        return weeklySessions.getOverlap(session);
+    }
+
     /**
      * Removes a session from the weekly sessions.
      * The session must exist in the weekly sessions.
      */
     public void removeSession(Session session) {
         weeklySessions.remove(session);
-    }
-
-    public void getEarliestFreeTime(int duration) {
-        weeklySessions.getEarliestFreeTime(duration);
     }
 
     //// util methods

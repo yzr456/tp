@@ -102,6 +102,14 @@ public class Person {
                 && otherPerson.getName().equals(getName());
     }
 
+    public boolean hasSameNumber(Person otherPerson) {
+        return otherPerson.getPhone().equals(getPhone());
+    }
+
+    public boolean hasSameEmail(Person otherPerson) {
+        return otherPerson.getEmail().equals(getEmail());
+    }
+
     /**
      * Returns true if both persons have the same identity and data fields.
      * This defines a stronger notion of equality between two persons.

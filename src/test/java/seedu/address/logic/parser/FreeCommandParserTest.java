@@ -45,9 +45,6 @@ public class FreeCommandParserTest {
         assertParseFailure(parser, "-1",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
 
-        // zero
-        assertParseFailure(parser, "0",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
 
         // decimal number
         assertParseFailure(parser, "1.5",

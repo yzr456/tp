@@ -8,6 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.person.exceptions.DuplicateContactException;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
@@ -37,6 +38,25 @@ public class UniquePersonList implements Iterable<Person> {
     }
 
     /**
+     * Returns true if the list contains a person with the same contact details (phone or email) as {@code toCheck}
+     */
+    public boolean contactPresent(Person toCheck) {
+        requireNonNull(toCheck);
+        return internalList.stream()
+                .anyMatch(person -> toCheck.hasSameEmail(person) || toCheck.hasSameNumber(person));
+    }
+
+    /**
+     * Returns true if the list contains a person with the same contact details (phone or email) as the given argument,
+     * excluding the specified person to exclude.
+     */
+    public boolean contactPresentExcluding(Person toCheck, Person toExclude) {
+        requireAllNonNull(toCheck, toExclude);
+        return internalList.stream()
+                .filter(person -> !person.equals(toExclude))
+                .anyMatch(person -> toCheck.hasSameEmail(person) || toCheck.hasSameNumber(person));
+    }
+    /**
      * Adds a person to the list.
      * The person must not already exist in the list.
      */
@@ -44,6 +64,9 @@ public class UniquePersonList implements Iterable<Person> {
         requireNonNull(toAdd);
         if (contains(toAdd)) {
             throw new DuplicatePersonException();
+        }
+        if (contactPresent(toAdd)) {
+            throw new DuplicateContactException();
         }
         internalList.add(toAdd);
     }
@@ -63,6 +86,15 @@ public class UniquePersonList implements Iterable<Person> {
 
         if (!target.isSamePerson(editedPerson) && contains(editedPerson)) {
             throw new DuplicatePersonException();
+        }
+
+        // Check for duplicate contacts, but exclude the target person being edited
+        boolean hasDuplicateContact = internalList.stream()
+                .filter(person -> !person.equals(target))
+                .anyMatch(person -> editedPerson.hasSameEmail(person) || editedPerson.hasSameNumber(person));
+
+        if (hasDuplicateContact) {
+            throw new DuplicateContactException();
         }
 
         internalList.set(index, editedPerson);

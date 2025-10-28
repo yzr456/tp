@@ -38,7 +38,7 @@ public class AddSessionCommandParserTest {
 
     @Test
     public void parse_fieldMissing_failure() {
-        String expectedMessage = String.format(Messages.MESSAGE_MISSING_PARAMETER, AddSessionCommand.MESSAGE_USAGE);
+        String expectedMessage = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSessionCommand.MESSAGE_USAGE);
 
         // missing index
         assertParseFailure(parser, "d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
@@ -112,22 +113,33 @@ public class ModelManager implements Model {
         addressBook.setPerson(target, editedPerson);
     }
 
-    //=========== WeeklySessions =================================================================================
-
     @Override
-    public boolean hasOverlappingSession(Session session) {
-        requireNonNull(session);
-        return addressBook.hasOverlappingSession(session);
+    public boolean hasContact(Person p) {
+        requireNonNull(p);
+        return addressBook.hasContact(p);
     }
 
+    @Override
+    public boolean hasContactExcluding(Person person, Person personToExclude) {
+        requireNonNull(person);
+        requireNonNull(personToExclude);
+        return addressBook.hasContactExcluding(person, personToExclude);
+    }
+
+    //=========== WeeklySessions =================================================================================
     @Override
     public void addSession(Session session) {
         addressBook.addSession(session);
     }
 
     @Override
-    public void deleteSession(Session session) {
+    public void removeSession(Session session) {
         addressBook.removeSession(session);
+    }
+
+    @Override
+    public Optional<Session> getOverlappingSession(Session session) {
+        return addressBook.getOverlappingSessions(session);
     }
 
     @Override

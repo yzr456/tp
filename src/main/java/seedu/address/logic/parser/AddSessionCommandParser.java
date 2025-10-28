@@ -37,7 +37,7 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         }
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
-            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PARAMETER,
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
                     AddSessionCommand.MESSAGE_USAGE));
         }
 

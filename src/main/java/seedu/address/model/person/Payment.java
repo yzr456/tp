@@ -22,9 +22,9 @@ public class Payment {
     }
 
     public static final String MESSAGE_CONSTRAINTS_STATUS =
-            "Payment status must be one of: PENDING, PAID, OVERDUE";
+            "Payment status cannot be blank and must be one of: PENDING, PAID, OVERDUE";
     public static final String MESSAGE_CONSTRAINTS_DAY =
-            "Billing start day must be between 1-31";
+            "Billing start day cannot be blank and must be an integer between 1-31.";
     public static final int DEFAULT_BILLING_START_DAY = 1;
 
     private final PaymentStatus status;
@@ -48,7 +48,7 @@ public class Payment {
      * Constructs a {@code Payment} with status and billing start day.
      *
      * @param status A valid payment status.
-     * @param billingStartDay A valid day between 1-31.
+     * @param billingStartDay A valid integer between 1-31.
      */
     public Payment(String status, int billingStartDay) {
         requireNonNull(status);
@@ -98,6 +98,16 @@ public class Payment {
     }
 
     /**
+     * Returns a description of the billing start day.
+     */
+    public String getBillingStartDayDescription() {
+        if (billingStartDay >= 29) {
+            return "Day " + billingStartDay + " of each month (or last day of month if unavailable)";
+        }
+        return "Day " + billingStartDay + " of each month";
+    }
+
+    /**
      * Returns the number of days overdue if status is OVERDUE.
      * Calculates based on the billing start day and current date.
      * Returns 0 if not overdue.
@@ -117,16 +127,20 @@ public class Payment {
 
     /**
      * Calculates the billing date based on the status set date and billing start day.
+     * For OVERDUE status, references the most recent past billing cycle.
+     * Special case: If setting to OVERDUE on the billing day itself, references last month's billing.
      */
     private LocalDate calculateBillingDate(LocalDate fromDate, int billingDay) {
         LocalDate billingDate = fromDate.withDayOfMonth(Math.min(billingDay, fromDate.lengthOfMonth()));
 
-        // If we're past the billing day this month, it refers to this month's billing
-        // Otherwise it refers to last month's billing
-        if (fromDate.getDayOfMonth() < billingDay) {
+        // If we're before the billing day OR (status is OVERDUE and today IS the billing day),
+        // the most recent billing was last month
+        if (fromDate.getDayOfMonth() < billingDay
+                || (status == PaymentStatus.OVERDUE && fromDate.getDayOfMonth() == billingDay)) {
             billingDate = billingDate.minusMonths(1);
             billingDate = billingDate.withDayOfMonth(Math.min(billingDay, billingDate.lengthOfMonth()));
         }
+        // Otherwise, the most recent billing day is this month (we've already passed it)
 
         return billingDate;
     }

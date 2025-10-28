@@ -27,7 +27,7 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_DURATION = "Duration is not a non-zero unsigned integer.";
+    public static final String MESSAGE_INVALID_DURATION = "Duration is not an unsigned integer";
     public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
 
     /**
@@ -48,9 +48,9 @@ public class ParserUtil {
      * trimmed.
      * @throws ParseException if the specified duration is invalid (not non-zero unsigned integer).
      */
-    public static Integer parseDuration(String duration) throws ParseException {
+    public static int parseDuration(String duration) throws ParseException {
         String trimmedDuration = duration.trim();
-        if (!StringUtil.isNonZeroUnsignedInteger(trimmedDuration)) {
+        if (!StringUtil.isUnsignedInteger(trimmedDuration)) {
             throw new ParseException(MESSAGE_INVALID_DURATION);
         }
         return Integer.parseInt(trimmedDuration);
@@ -187,12 +187,8 @@ public class ParserUtil {
     public static String parsePaymentStatus(String status) throws ParseException {
         requireNonNull(status);
         String trimmedStatus = status.trim();
-        if (trimmedStatus.isEmpty()) {
-            throw new ParseException("ArgumentError: Missing value for status parameter. "
-                    + "Please ensure status has a non-empty value.");
-        }
-        if (!Payment.isValidStatus(trimmedStatus)) {
-            throw new ParseException("InvalidStatusError: " + Payment.MESSAGE_CONSTRAINTS_STATUS);
+        if (trimmedStatus.isEmpty() || !Payment.isValidStatus(trimmedStatus)) {
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_STATUS);
         }
         return trimmedStatus;
     }
@@ -207,19 +203,18 @@ public class ParserUtil {
         requireNonNull(day);
         String trimmedDay = day.trim();
         if (trimmedDay.isEmpty()) {
-            throw new ParseException("ArgumentError: Missing value for start parameter. "
-                    + "Please ensure start has a non-empty value.");
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         int billingDay;
         try {
             billingDay = Integer.parseInt(trimmedDay);
         } catch (NumberFormatException e) {
-            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         if (!Payment.isValidBillingDay(billingDay)) {
-            throw new ParseException("InvalidDayError: " + Payment.MESSAGE_CONSTRAINTS_DAY);
+            throw new ParseException(Payment.MESSAGE_CONSTRAINTS_DAY);
         }
 
         return billingDay;
