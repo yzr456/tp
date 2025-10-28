@@ -42,6 +42,8 @@ public class DetailedView extends UiPart<Region> {
      */
     public DetailedView() {
         super(FXML);
+        // Make the detailed view focusable so keyboard events work
+        getRoot().setFocusTraversable(true);
         showEmptyState();
     }
 

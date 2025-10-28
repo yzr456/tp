@@ -71,6 +71,46 @@ public class CommandBox extends UiPart<Region> {
     }
 
     /**
+     * Appends text to the command text field at the current caret position.
+     */
+    public void appendText(String text) {
+        int caretPosition = commandTextField.getCaretPosition();
+        String currentText = commandTextField.getText();
+        String newText = currentText.substring(0, caretPosition) + text
+                + currentText.substring(caretPosition);
+        commandTextField.setText(newText);
+        commandTextField.positionCaret(caretPosition + text.length());
+    }
+
+    /**
+     * Handles backspace key by removing character before caret.
+     */
+    public void handleBackspace() {
+        int caretPosition = commandTextField.getCaretPosition();
+        if (caretPosition > 0) {
+            String currentText = commandTextField.getText();
+            String newText = currentText.substring(0, caretPosition - 1)
+                    + currentText.substring(caretPosition);
+            commandTextField.setText(newText);
+            commandTextField.positionCaret(caretPosition - 1);
+        }
+    }
+
+    /**
+     * Handles delete key by removing character after caret.
+     */
+    public void handleDelete() {
+        int caretPosition = commandTextField.getCaretPosition();
+        String currentText = commandTextField.getText();
+        if (caretPosition < currentText.length()) {
+            String newText = currentText.substring(0, caretPosition)
+                    + currentText.substring(caretPosition + 1);
+            commandTextField.setText(newText);
+            commandTextField.positionCaret(caretPosition);
+        }
+    }
+
+    /**
      * Sets the command box style to indicate a failed command.
      */
     private void setStyleToIndicateCommandFailure() {

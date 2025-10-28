@@ -639,6 +639,25 @@
     -fx-background-color: #f0f0f0;
 }
 
+/* Help button styled as menu item */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 0;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-button:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* ========== RIGHT PANEL - DETAILED VIEW ========== */
 
 /* Detailed View Header Bar */

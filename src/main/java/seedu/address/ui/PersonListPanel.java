@@ -67,34 +67,8 @@ public class PersonListPanel extends UiPart<Region> {
                     mainWindow.updateDetailedView(selectedPerson);
                 }
             });
-        } else if (isTypingKey(keyCode)) {
-            mainWindow.focusCommandBox();
-            // Don't consume the event - let it propagate to the command box
         }
-    }
-
-    /**
-     * Checks if the key code represents a typing key (letters, numbers, space, etc.)
-     */
-    private boolean isTypingKey(KeyCode keyCode) {
-        // Letters and digits
-        if (keyCode.isLetterKey() || keyCode.isDigitKey()) {
-            return true;
-        }
-
-        // Common typing keys
-        switch (keyCode) {
-        case SPACE:
-        case SLASH:
-        case MINUS:
-        case PERIOD:
-        case COMMA:
-        case BACK_SPACE:
-        case DELETE:
-            return true;
-        default:
-            return false;
-        }
+        // Typing key handling is now done globally in MainWindow
     }
 
     /**
@@ -102,6 +76,36 @@ public class PersonListPanel extends UiPart<Region> {
      */
     public void requestFocus() {
         personListView.requestFocus();
+    }
+
+    /**
+     * Requests focus on the person list view and selects the first item.
+     */
+    public void requestFocusAndSelectFirst() {
+        personListView.requestFocus();
+        if (!personListView.getItems().isEmpty()) {
+            personListView.getSelectionModel().selectFirst();
+            javafx.application.Platform.runLater(() -> {
+                Person selectedPerson = personListView.getSelectionModel().getSelectedItem();
+                if (selectedPerson != null) {
+                    mainWindow.updateDetailedView(selectedPerson);
+                }
+            });
+        }
+    }
+
+    /**
+     * Checks if the person list view has focus.
+     */
+    public boolean isFocused() {
+        return personListView.isFocused();
+    }
+
+    /**
+     * Checks if a person is currently selected.
+     */
+    public boolean hasSelection() {
+        return personListView.getSelectionModel().getSelectedItem() != null;
     }
 
     /**

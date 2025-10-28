@@ -17,3 +17,8 @@
 #helpMessageContainer {
     -fx-background-color: derive(#1d1d1d, 20%);
 }
+
+/* ========== HELP WINDOW ============ */
+.helpText {
+    -fx-text-fill: #ffffff;
+}
