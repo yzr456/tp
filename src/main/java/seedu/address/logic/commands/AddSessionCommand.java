@@ -18,7 +18,6 @@ import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.WeeklySessions;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Session;
 import seedu.address.model.tag.SessionTag;
@@ -60,7 +59,6 @@ public class AddSessionCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
-        WeeklySessions weeklySessions = model.getWeeklySessions();
 
         if (targetIndex.getZeroBased() >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
@@ -71,7 +69,7 @@ public class AddSessionCommand extends Command {
         Session currentSession = ((SessionTag) sessionTag).getSession();
 
         // Check for overlaps using WeeklySessions
-        Optional<Session> overlappingSession = weeklySessions.getOverlap(currentSession);
+        Optional<Session> overlappingSession = model.getOverlappingSession(currentSession);
         if (overlappingSession.isPresent()) {
             // Reject overlap unless it's an exact duplicate for a different person
             if (!currentSession.equals(overlappingSession.get())) {

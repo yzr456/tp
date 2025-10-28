@@ -4,8 +4,6 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
-import seedu.address.model.WeeklySessions;
-
 /**
  * Finds the earliest available free time slot in the weekly schedule.
  * The command searches for a continuous time slot that can accommodate the specified duration,
@@ -21,8 +19,11 @@ public class FreeCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1\n";
 
     public static final String MESSAGE_FREE_TIME_FOUND = "The earliest %dhour time slot is at: %s \n";
-
+    public static final String MESSAGE_INVALID_DURATION = "Enter a valid duration(Integer) between 1 - 14 hours \n";
+    public static final int SMALLEST_DURATION = 1;
+    public static final int LARGEST_DURATION = 14;
     public final int specifiedDuration;
+
 
     /**
      * Creates a FreeCommand to find the earliest free time slot.
@@ -36,8 +37,10 @@ public class FreeCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        WeeklySessions weeklySessions = model.getWeeklySessions();
-        String earliestTimeFrame = weeklySessions.getEarliestFreeTime(specifiedDuration);
+        if (specifiedDuration < SMALLEST_DURATION || specifiedDuration > LARGEST_DURATION) {
+            throw new CommandException(MESSAGE_INVALID_DURATION);
+        }
+        String earliestTimeFrame = model.getEarliestFreeTime(specifiedDuration);
 
         return new CommandResult(String.format(MESSAGE_FREE_TIME_FOUND, specifiedDuration, earliestTimeFrame));
     }

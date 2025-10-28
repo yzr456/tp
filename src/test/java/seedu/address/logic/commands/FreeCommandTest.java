@@ -7,6 +7,7 @@ import static seedu.address.testutil.Assert.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -57,6 +58,18 @@ public class FreeCommandTest {
 
         String resultMessage = result.getFeedbackToUser();
         assertTrue(resultMessage.contains("5hour time slot is at:"));
+    }
+
+    @Test
+    public void execute_invalidDuration_failure() throws Exception {
+        FreeCommand freeCommand = new FreeCommand(15);
+        assertThrows(CommandException.class, () -> freeCommand.execute(model));
+    }
+
+    @Test
+    public void execute_zeroDuration_failure() throws Exception {
+        FreeCommand freeCommand = new FreeCommand(0);
+        assertThrows(CommandException.class, () -> freeCommand.execute(model));
     }
 
     @Test

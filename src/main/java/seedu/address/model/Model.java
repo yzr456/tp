@@ -1,6 +1,7 @@
 package seedu.address.model;
 
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
@@ -88,16 +89,14 @@ public interface Model {
 
     //=========== WeeklySessions Operations ======================================================
 
-    /**
-     * Returns true if a session overlaps with any existing session in the weekly sessions.
-     */
-    boolean hasOverlappingSession(Session session);
 
     /**
      * Adds the given session to the weekly sessions.
      * The session must not overlap with any existing session.
      */
     void addSession(Session session);
+
+    Optional<Session> getOverlappingSession(Session session);
 
     /**
      * Deletes the given session from the weekly sessions.
