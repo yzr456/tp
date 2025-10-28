@@ -422,8 +422,6 @@ public class EditCommandTest {
             }
         }
 
-        String expectedMessage = String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson));
-
         // Use order-independent comparison to avoid HashSet ordering issues
         assertCommandSuccessWithOrderIndependentComparison(editCommand, model, editedPerson, expectedModel);
     }

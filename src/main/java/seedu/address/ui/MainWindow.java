@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -35,6 +36,7 @@ public class MainWindow extends UiPart<Stage> {
     // Independent Ui parts residing in this Ui container
     private PersonListPanel personListPanel;
     private ResultDisplay resultDisplay;
+    private CommandBox commandBox;
     private HelpWindow helpWindow;
 
     @FXML
@@ -133,8 +135,85 @@ public class MainWindow extends UiPart<Stage> {
         detailedView = new DetailedView();
         detailedViewPlaceholder.getChildren().add(detailedView.getRoot());
 
-        CommandBox commandBox = new CommandBox(this::executeCommand);
+        commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        // Store reference to commandBox
+        commandBox = new CommandBox(this::executeCommand);
+        commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        // Give initial focus to person list for keyboard navigation
+        Platform.runLater(() -> {
+            personListPanel.requestFocus();
+        });
+    }
+
+    /**
+     * Sets up global keyboard shortcuts for the entire window.
+     */
+    private void setupGlobalKeyHandlers() {
+        // Add event filter to catch keys at window level
+        primaryStage.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            // If command box already has focus, do nothing
+            if (commandBox.isFocused()) {
+                return;
+            }
+
+            KeyCode keyCode = event.getCode();
+
+            // Don't intercept navigation keys or Enter
+            if (isNavigationKey(keyCode) || keyCode == KeyCode.ENTER) {
+                return;
+            }
+
+            // For typing keys, focus command box
+            if (isTypingKey(keyCode)) {
+                commandBox.requestFocus();
+                // Event will propagate to command box
+            }
+        });
+    }
+
+    /**
+     * Checks if the key is a navigation key.
+     */
+    private boolean isNavigationKey(KeyCode keyCode) {
+        switch (keyCode) {
+        case UP:
+        case DOWN:
+        case HOME:
+        case END:
+        case PAGE_UP:
+        case PAGE_DOWN:
+        case LEFT:
+        case RIGHT:
+        case TAB:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the key is a typing key.
+     */
+    private boolean isTypingKey(KeyCode keyCode) {
+        return keyCode.isLetterKey()
+                || keyCode.isDigitKey()
+                || keyCode == KeyCode.SPACE
+                || keyCode == KeyCode.SLASH
+                || keyCode == KeyCode.MINUS
+                || keyCode == KeyCode.BACK_SPACE
+                || keyCode == KeyCode.DELETE;
+    }
+
+    /**
+     * Focuses on the command box for user input.
+     */
+    public void focusCommandBox() {
+        if (commandBox != null) {
+            commandBox.requestFocus();
+        }
     }
 
     /**
@@ -214,11 +293,18 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isExit()) {
                 handleExit();
             }
-
+            // Return focus to person list for fast typing
+            Platform.runLater(() -> {
+                personListPanel.requestFocus();
+            });
             return commandResult;
         } catch (CommandException | ParseException e) {
             logger.info("An error occurred while executing command: " + commandText);
             resultDisplay.setFeedbackToUser(e.getMessage());
+            // Return focus to person list even on error
+            Platform.runLater(() -> {
+                personListPanel.requestFocus();
+            });
             throw e;
         }
     }
