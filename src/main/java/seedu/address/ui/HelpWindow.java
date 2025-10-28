@@ -40,10 +40,7 @@ public class HelpWindow extends UiPart<Stage> {
     private Button copyButton;
 
     @FXML
-    private Label userGuideMessage;
-
-    @FXML
-    private Label commandListMessage;
+    private Label helpMessage;
 
     @FXML
     private Label commandUsageMessage;
