@@ -105,6 +105,28 @@ public class AddressBook implements ReadOnlyAddressBook {
         persons.remove(key);
     }
 
+    /**
+     * Returns true if a person with the same contact details (phone or email)
+     * as {@code p} exists in the address book
+     * @param p
+     * @return
+     */
+    public boolean hasContact(Person p) {
+        requireNonNull(p);
+        return persons.contactPresent(p);
+    }
+
+    /**
+     * Returns true if a person with the same contact details (phone or email)
+     * as {@code person} exists in the address book,
+     * excluding {@code personToExclude}.
+     */
+    public boolean hasContactExcluding(Person person, Person personToExclude) {
+        requireNonNull(person);
+        requireNonNull(personToExclude);
+        return persons.contactPresentExcluding(person, personToExclude);
+    }
+
     //// session-level operations
     /**
      * Adds a session to the weekly sessions.

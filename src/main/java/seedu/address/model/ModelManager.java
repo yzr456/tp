@@ -113,6 +113,19 @@ public class ModelManager implements Model {
         addressBook.setPerson(target, editedPerson);
     }
 
+    @Override
+    public boolean hasContact(Person p) {
+        requireNonNull(p);
+        return addressBook.hasContact(p);
+    }
+
+    @Override
+    public boolean hasContactExcluding(Person person, Person personToExclude) {
+        requireNonNull(person);
+        requireNonNull(personToExclude);
+        return addressBook.hasContactExcluding(person, personToExclude);
+    }
+
     //=========== WeeklySessions =================================================================================
     @Override
     public void addSession(Session session) {

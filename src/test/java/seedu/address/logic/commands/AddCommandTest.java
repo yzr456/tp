@@ -57,6 +57,30 @@ public class AddCommandTest {
     }
 
     @Test
+    public void execute_duplicatePhone_throwsCommandException() {
+        Person personWithPhone = new PersonBuilder().withPhone("92345678").build();
+        ModelStubWithPerson modelStub = new ModelStubWithPerson(personWithPhone);
+
+        Person newPersonSamePhone = new PersonBuilder().withName("Different Name")
+                .withPhone("92345678").withEmail("different@email.com").build();
+        AddCommand addCommand = new AddCommand(newPersonSamePhone);
+
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT, () -> addCommand.execute(modelStub));
+    }
+
+    @Test
+    public void execute_duplicateEmail_throwsCommandException() {
+        Person personWithEmail = new PersonBuilder().withEmail("test@example.com").build();
+        ModelStubWithPerson modelStub = new ModelStubWithPerson(personWithEmail);
+
+        Person newPersonSameEmail = new PersonBuilder().withName("Different Name")
+                .withPhone("87654321").withEmail("test@example.com").build();
+        AddCommand addCommand = new AddCommand(newPersonSameEmail);
+
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_CONTACT, () -> addCommand.execute(modelStub));
+    }
+
+    @Test
     public void equals() {
         Person alice = new PersonBuilder().withName("Alice").build();
         Person bob = new PersonBuilder().withName("Bob").build();
@@ -162,6 +186,16 @@ public class AddCommandTest {
         }
 
         @Override
+        public boolean hasContact(Person person) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean hasContactExcluding(Person person, Person personToExclude) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public Optional<Session> getOverlappingSession(Session session) {
             throw new AssertionError("This method should not be called.");
         }
@@ -202,6 +236,12 @@ public class AddCommandTest {
             requireNonNull(person);
             return this.person.isSamePerson(person);
         }
+
+        @Override
+        public boolean hasContact(Person person) {
+            requireNonNull(person);
+            return this.person.hasSameEmail(person) || this.person.hasSameNumber(person);
+        }
     }
 
     /**
@@ -214,6 +254,13 @@ public class AddCommandTest {
         public boolean hasPerson(Person person) {
             requireNonNull(person);
             return personsAdded.stream().anyMatch(person::isSamePerson);
+        }
+
+        @Override
+        public boolean hasContact(Person person) {
+            requireNonNull(person);
+            return personsAdded.stream()
+                    .anyMatch(p -> p.hasSameEmail(person) || p.hasSameNumber(person));
         }
 
         @Override

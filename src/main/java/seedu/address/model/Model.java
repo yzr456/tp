@@ -87,6 +87,14 @@ public interface Model {
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
 
+    boolean hasContact(Person p);
+
+    /**
+     * Returns true if a person with the same contact details (phone or email) exists in the address book,
+     * excluding the specified person.
+     */
+    boolean hasContactExcluding(Person person, Person personToExclude);
+
     //=========== WeeklySessions Operations ======================================================
 
 
