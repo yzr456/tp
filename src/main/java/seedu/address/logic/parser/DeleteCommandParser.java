@@ -20,6 +20,13 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
         if (trimmedArgs.isEmpty()) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX, DeleteCommand.MESSAGE_USAGE));
         }
+
+        // Check if there are multiple arguments (contains spaces)
+        if (trimmedArgs.contains(" ")) {
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+                    DeleteCommand.MESSAGE_USAGE));
+        }
+
         Index index = ParserUtil.parseIndex(args);
         return new DeleteCommand(index);
     }

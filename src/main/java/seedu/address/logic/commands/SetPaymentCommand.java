@@ -29,7 +29,7 @@ public class SetPaymentCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Sets the payment status of the person identified "
             + "by the index number used in the displayed person list.\n"
-            + "Parameters: INDEX "
+            + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_STATUS + "STATUS "
             + PREFIX_BILLING_START + "DAY\n"
             + "Command syntax: " + COMMAND_WORD + " [INDEX] "

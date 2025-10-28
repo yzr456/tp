@@ -23,7 +23,7 @@ public class AddSubjectCommand extends Command {
     public static final String COMMAND_WORD = "addsubject";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add subject tag(s) to a student.\n"
-            + "Parameters: INDEX "
+            + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_SUBJECT + "SUBJECT...\n"
             + "Command syntax: " + COMMAND_WORD + " [INDEX] " + PREFIX_SUBJECT + "[SUBJECT]...\n"
             + "Example: " + COMMAND_WORD + " 1 " + PREFIX_SUBJECT + "MATH\n"

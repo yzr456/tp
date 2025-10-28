@@ -96,22 +96,8 @@ public class EditCommandParser implements Parser<EditCommand> {
                     EditCommand.MESSAGE_USAGE));
         }
 
-        // First prefix check: Ensures at least one prefix is present before attempting to parse the index.
-        // This prioritizes showing MESSAGE_NOT_EDITED over MESSAGE_INVALID_INDEX when no prefixes are found,
-        // which provides clearer feedback to users who forget to specify fields to edit.
-        if (!isAnyPrefixPresent(argMultimap, PREFIX_NAME, PREFIX_STUDY_YEAR,
-                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT)) {
-            throw new ParseException(String.format(EditCommand.MESSAGE_NOT_EDITED));
-        }
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
 
-        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
-
-        // Second prefix check: Verifies at least one prefix is present after successfully parsing the index.
-        // This ensures MESSAGE_MISSING_INDEX is shown for invalid indices (caught during parsing above)
-        // before MESSAGE_NOT_EDITED is shown. The proper error priority is:
-        // 1. MESSAGE_MISSING_INDEX (blank preamble)
-        // 2. MESSAGE_INVALID_INDEX (invalid index format - caught by parseIndex)
-        // 3. MESSAGE_NOT_EDITED (valid index but no fields to edit)
         if (!isAnyPrefixPresent(argMultimap, PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT)) {
             throw new ParseException(String.format(EditCommand.MESSAGE_NOT_EDITED));
@@ -155,36 +141,23 @@ public class EditCommandParser implements Parser<EditCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        String preamble = argMultimap.getPreamble().trim();
-        if (preamble.isEmpty()) {
+        if (argMultimap.getPreamble().isBlank()) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
                     EditCommand.MESSAGE_USAGE));
         }
 
-        // First prefix check: Verify at least one session prefix is present before parsing index
-        // This ensures we show MESSAGE_MISSING_PREFIX instead of MESSAGE_INVALID_INDEX when user provides
-        // something like "edit -s xyz" (no valid session prefixes). It's more helpful to indicate missing
-        // session parameters than to report an invalid index format.
-        if (!isAnyPrefixPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
-            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
-                    EditCommand.MESSAGE_USAGE));
-        }
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
 
-        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
-
-        // Second prefix check: Verify ALL required session prefixes are present after successful index parsing
-        // This catches cases like "edit -s 1 d/MON s/0900" (missing e/).
-        // Error priority: Missing index → Invalid index → Missing/incomplete session parameters.
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
                     EditCommand.MESSAGE_USAGE));
         }
 
-
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
         // Extract only the session parameters (after the index)
-        String sessionArgs = args.substring(preamble.length()).trim();
+        String sessionArgs = args.substring(args.indexOf(index.getOneBased() + "")
+                + String.valueOf(index.getOneBased()).length()).trim();
 
         // Check if session parameters are empty - session editing requires at least one complete triplet
         if (sessionArgs.isEmpty()) {

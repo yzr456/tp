@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_MISSING_INDEX;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DAY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_END_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_START_DESC;
@@ -13,7 +12,6 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
-import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 
 import java.time.LocalTime;
 
@@ -50,9 +48,10 @@ public class AddSessionCommandParserTest {
     @Test
     public void parse_fieldMissing_failure() {
         String expectedMessage = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSessionCommand.MESSAGE_USAGE);
+        String expectedMessage2 = String.format(Messages.MESSAGE_MISSING_INDEX, AddSessionCommand.MESSAGE_USAGE);
 
         // missing index
-        assertParseFailure(parser, PREAMBLE_WHITESPACE + " d/MON s/1100 e/1200", MESSAGE_MISSING_INDEX);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " d/MON s/1100 e/1200", expectedMessage2);
 
         // missing day
         assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 s/1100 e/1200", expectedMessage);
@@ -66,17 +65,20 @@ public class AddSessionCommandParserTest {
 
     @Test
     public void parse_invalidPreamble_failure() {
+        String expectedMessage = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSessionCommand.MESSAGE_USAGE);
         // negative index
-        assertParseFailure(parser, PREAMBLE_WHITESPACE + " -5 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " -5 d/MON s/1100 e/1200",
+                ParserUtil.MESSAGE_INVALID_INDEX);
 
         // zero index
-        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 0 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 0 d/MON s/1100 e/1200",
+                ParserUtil.MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 some random string", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 some random string", expectedMessage);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 i/ string", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 i/ string", expectedMessage);
     }
 
     @Test

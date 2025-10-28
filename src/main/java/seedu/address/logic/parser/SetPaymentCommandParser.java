@@ -1,16 +1,16 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_BILLING_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
+
+import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
 import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.SetPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-
-import java.util.stream.Stream;
 
 /**
  * Parses input arguments and creates a new SetPaymentCommand object
