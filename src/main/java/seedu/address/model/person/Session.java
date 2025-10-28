@@ -1,6 +1,5 @@
 package seedu.address.model.person;
 
-import static seedu.address.commons.util.AppUtil.checkArgument;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.time.DayOfWeek;
@@ -13,14 +12,20 @@ import java.util.Objects;
 
 /**
  * Represents a Person's session in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidSession(String, String, String)}
+ * Guarantees: immutable; is valid as validated in {@link #validateSessionTime(String, String, String)}
  */
 public class Session implements Comparable<Session> {
 
-    public static final String MESSAGE_CONSTRAINTS = "DAY must be one of MON TUE WED THU FRI SAT SUN\n"
-            + "START and END must be in format \"HHmm\" and START must be before END";
-
     public static final List<String> DAY_OF_WEEKS = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
+    public static final int MINIMAL_DURATION = 15;
+
+    public static final String MESSAGE_INVALID_CONSTRAINTS = "SessionStr must be in format <day> <start> - <end>";
+    public static final String MESSAGE_DAY_CONSTRAINTS =
+            "Day cannot be blank and must be one of: MON, TUE, WED, THU, FRI, SAT, SUN";
+    public static final String MESSAGE_TIME_FORMAT_CONSTRAINTS =
+            "Times cannot be blank and must be in HHmm (e.g., 0900, 1730) with digits only.";
+    public static final String MESSAGE_TIME_RANGE_CONSTRAINTS =
+            "Start time must be before end time, with a minimum duration of " + MINIMAL_DURATION + " minutes.";
 
     /*
      * The time must be in the format {@code HHmm}.
@@ -41,27 +46,33 @@ public class Session implements Comparable<Session> {
      */
     public Session(String day, String start, String end) {
         requireAllNonNull(day, start, end);
-        checkArgument(isValidSession(day, start, end), MESSAGE_CONSTRAINTS);
+        validateSessionTime(day, start, end);
         dayOfWeek = DayOfWeek.of(DAY_OF_WEEKS.indexOf(day) + 1);
         startTime = LocalTime.parse(start, SESSION_FORMATTER);
         endTime = LocalTime.parse(end, SESSION_FORMATTER);
     }
 
     /**
-     * Returns true if the given arguments are valid for session construction.
+     * Throws exception if the given arguments are not valid for session construction.
      */
-    public static boolean isValidSession(String day, String start, String end) {
+    public static void validateSessionTime(String day, String start, String end) throws IllegalArgumentException {
         if (!DAY_OF_WEEKS.contains(day)) {
-            return false;
+            throw new IllegalArgumentException(MESSAGE_DAY_CONSTRAINTS);
         }
 
-        try {
-            LocalTime startTime = LocalTime.parse(start, SESSION_FORMATTER);
-            LocalTime endTime = LocalTime.parse(end, SESSION_FORMATTER);
+        LocalTime startTime;
+        LocalTime endTime;
 
-            return !startTime.plusMinutes(15).isAfter(endTime);
+        try {
+            startTime = LocalTime.parse(start, SESSION_FORMATTER);
+            endTime = LocalTime.parse(end, SESSION_FORMATTER);
+
         } catch (DateTimeParseException e) {
-            return false;
+            throw new IllegalArgumentException(MESSAGE_TIME_FORMAT_CONSTRAINTS);
+        }
+
+        if (startTime.plusMinutes(MINIMAL_DURATION).isAfter(endTime)) {
+            throw new IllegalArgumentException(MESSAGE_TIME_RANGE_CONSTRAINTS);
         }
     }
 
