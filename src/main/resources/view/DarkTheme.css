@@ -1,29 +1,21 @@
 @font-face {
-    font-family: 'Telegraf';
+    -fx-font-family: 'Telegraf';
     src: url('/fonts/Telegraf-Regular.otf');
-    font-weight: normal;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Telegraf';
+    -fx-font-family: 'Telegraf';
     src: url('/fonts/Telegraf-UltraBold.otf');
-    font-weight: bold;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garet';
+    -fx-font-family: 'Garet';
     src: url('/fonts/Garet-Regular.ttf');
-    font-weight: normal;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garet';
+    -fx-font-family: 'Garet';
     src: url('/fonts/Garet-Bold.ttf');
-    font-weight: bold;
-    font-style: normal;
 }
 
 .background {
