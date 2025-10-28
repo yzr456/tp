@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,10 +23,11 @@ public class AddSubjectCommand extends Command {
     public static final String COMMAND_WORD = "addsubject";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Add subject tag(s) to a student.\n"
-            + "Parameters: INDEX sub/SUBJECT...\n"
-            + "Command syntax: addsubject [INDEX] sub/[SUBJECT]...\n"
-            + "Example: " + COMMAND_WORD + " 1 sub/MATH\n"
-            + "Example: " + COMMAND_WORD + " 3 sub/PHY sub/SCI\n";
+            + "Parameters: INDEX "
+            + PREFIX_SUBJECT + "SUBJECT...\n"
+            + "Command syntax: " + COMMAND_WORD + " [INDEX] " + PREFIX_SUBJECT + "[SUBJECT]...\n"
+            + "Example: " + COMMAND_WORD + " 1 " + PREFIX_SUBJECT + "MATH\n"
+            + "Example: " + COMMAND_WORD + " 3 " + PREFIX_SUBJECT + "PHY " + PREFIX_SUBJECT + "SCI\n";
 
     public static final String MESSAGE_SUCCESS = "Added Subject Tag(s): %s to %s";
     public static final String MESSAGE_DUPLICATE_SUBJECT = "Subject Tag(s): %s already assigned to %s";

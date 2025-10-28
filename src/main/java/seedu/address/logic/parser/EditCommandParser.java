@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -17,8 +16,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
+import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -44,7 +46,7 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         // Check for flag
         if (trimmedArgs.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         }
 
         // Parse flag
@@ -63,7 +65,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                 }
             }
             flag = trimmedArgs.substring(0, spaceIndex).trim();
-            remainingArgs = trimmedArgs.substring(spaceIndex).trim();
+            remainingArgs = trimmedArgs.substring(spaceIndex);
         } else {
             throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
         }
@@ -89,15 +91,31 @@ public class EditCommandParser implements Parser<EditCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT);
 
-        Index index;
-
-        // Check if preamble contains index followed by extra text
-        String preamble = argMultimap.getPreamble();
-        if (preamble.trim().matches("^\\d+\\s+.*")) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    EditCommand.MESSAGE_USAGE));
         }
 
-        index = ParserUtil.parseIndex(preamble);
+        // First prefix check: Ensures at least one prefix is present before attempting to parse the index.
+        // This prioritizes showing MESSAGE_NOT_EDITED over MESSAGE_INVALID_INDEX when no prefixes are found,
+        // which provides clearer feedback to users who forget to specify fields to edit.
+        if (!isAnyPrefixPresent(argMultimap, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT)) {
+            throw new ParseException(String.format(EditCommand.MESSAGE_NOT_EDITED));
+        }
+
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+
+        // Second prefix check: Verifies at least one prefix is present after successfully parsing the index.
+        // This ensures MESSAGE_MISSING_INDEX is shown for invalid indices (caught during parsing above)
+        // before MESSAGE_NOT_EDITED is shown. The proper error priority is:
+        // 1. MESSAGE_MISSING_INDEX (blank preamble)
+        // 2. MESSAGE_INVALID_INDEX (invalid index format - caught by parseIndex)
+        // 3. MESSAGE_NOT_EDITED (valid index but no fields to edit)
+        if (!isAnyPrefixPresent(argMultimap, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT)) {
+            throw new ParseException(String.format(EditCommand.MESSAGE_NOT_EDITED));
+        }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
@@ -137,15 +155,31 @@ public class EditCommandParser implements Parser<EditCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        Index index;
-
-        // Check if preamble contains index followed by extra text
-        String preamble = argMultimap.getPreamble();
-        if (preamble.trim().matches("^\\d+\\s+.*")) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        String preamble = argMultimap.getPreamble().trim();
+        if (preamble.isEmpty()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    EditCommand.MESSAGE_USAGE));
         }
 
-        index = ParserUtil.parseIndex(preamble);
+        // First prefix check: Verify at least one session prefix is present before parsing index
+        // This ensures we show MESSAGE_MISSING_PREFIX instead of MESSAGE_INVALID_INDEX when user provides
+        // something like "edit -s xyz" (no valid session prefixes). It's more helpful to indicate missing
+        // session parameters than to report an invalid index format.
+        if (!isAnyPrefixPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    EditCommand.MESSAGE_USAGE));
+        }
+
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+
+        // Second prefix check: Verify ALL required session prefixes are present after successful index parsing
+        // This catches cases like "edit -s 1 d/MON s/0900" (missing e/).
+        // Error priority: Missing index → Invalid index → Missing/incomplete session parameters.
+        if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    EditCommand.MESSAGE_USAGE));
+        }
+
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
@@ -267,10 +301,7 @@ public class EditCommandParser implements Parser<EditCommand> {
 
             Subject subject = Subject.of(subjectStr);
             if (subject == null) {
-                throw new ParseException(
-                    "Invalid subject provided. The Subject provided must be a valid subject code: "
-                    + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
-                    + "POA, ECONS, ART, MUSIC, COMSCI");
+                throw new ParseException(AddSubjectCommand.MESSAGE_CONSTRAINTS);
             }
             subjectTags.add(new Tag(subject.name()));
         }
@@ -291,6 +322,22 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
         Collection<String> tagSet = tags.size() == 1 && tags.contains("") ? Collections.emptySet() : tags;
         return Optional.of(ParserUtil.parseTags(tagSet));
+    }
+
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+    }
+
+    /**
+     * Returns true if at least one of the prefixes contains a non-empty {@code Optional} value in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean isAnyPrefixPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).anyMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
 }

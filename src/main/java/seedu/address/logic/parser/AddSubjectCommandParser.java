@@ -3,8 +3,8 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
@@ -27,19 +27,19 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_SUBJECT);
 
         if (argMultimap.getPreamble().isBlank()) {
-            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    AddSubjectCommand.MESSAGE_USAGE));
+        }
+
+        if (!arePrefixesPresent(argMultimap, PREFIX_SUBJECT)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    AddSubjectCommand.MESSAGE_USAGE));
         }
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
 
-        List<String> subjectValues = argMultimap.getAllValues(PREFIX_SUBJECT);
-        if (subjectValues.isEmpty()) {
-            throw new ParseException(
-                    String.format(Messages.MESSAGE_MISSING_PREFIX, AddSubjectCommand.MESSAGE_USAGE));
-        }
-
         Set<Tag> subjectTags = new HashSet<>();
-        for (String raw : subjectValues) {
+        for (String raw : argMultimap.getAllValues(PREFIX_SUBJECT)) {
 
             Subject subject = Subject.of(raw);
             if (subject == null) {
@@ -55,6 +55,14 @@ public class AddSubjectCommandParser implements Parser<AddSubjectCommand> {
         }
 
         return new AddSubjectCommand(index, subjectTags);
+    }
+
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
 }

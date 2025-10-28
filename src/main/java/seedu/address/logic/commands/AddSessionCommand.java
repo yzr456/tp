@@ -31,10 +31,12 @@ public class AddSessionCommand extends Command {
     public static final String COMMAND_WORD = "addsession";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a session to the address book.\n"
-            + "Parameters: INDEX (must be a positive integer) "
+            + "Parameters: INDEX "
             + PREFIX_DAY + "DAY "
             + PREFIX_START + "START "
-            + PREFIX_END + "END"
+            + PREFIX_END + "END\n"
+            + "Command syntax: "
+            + COMMAND_WORD + " [INDEX] " + PREFIX_DAY + "[DAY] " + PREFIX_START + "[START] " + PREFIX_END + "[END]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "

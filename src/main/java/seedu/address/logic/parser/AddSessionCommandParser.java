@@ -1,8 +1,8 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 
 import java.util.stream.Stream;
 
@@ -26,11 +26,29 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        if (argMultimap.getPreamble().trim().isEmpty()) {
-            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    AddSessionCommand.MESSAGE_USAGE));
+        }
+
+        // First prefix check: Verify at least one prefix is present before parsing index
+        // This ensures we show MESSAGE_MISSING_PREFIX instead of MESSAGE_INVALID_INDEX when user provides
+        // something like "addsession xyz" (no valid prefixes). It's more helpful to indicate missing
+        // session parameters than to report an invalid index format.
+        if (!isAnyPrefixPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    AddSessionCommand.MESSAGE_USAGE));
         }
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+
+        // Second prefix check: Verify ALL required prefixes are present after successful index parsing
+        // This catches cases like "addsession 1 d/MON s/0900" (missing e/).
+        // Error priority: Missing index → Invalid index → Missing required session parameters.
+        if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    AddSessionCommand.MESSAGE_USAGE));
+        }
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
@@ -51,6 +69,14 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
      */
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+    }
+
+    /**
+     * Returns true if at least one of the prefixes contains a non-empty {@code Optional} value in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean isAnyPrefixPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).anyMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
 }
