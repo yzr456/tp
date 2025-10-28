@@ -37,7 +37,6 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
                     AddSessionCommand.MESSAGE_USAGE));
         }
 
-
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DAY, PREFIX_START, PREFIX_END);
 
         Tag sessionTag = ParserUtil.parseSessionTag(argMultimap.getValue(PREFIX_DAY).get(),

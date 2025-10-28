@@ -194,7 +194,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                 }
                 currentDay = token.substring(2).trim();
                 if (currentDay.isEmpty()) {
-                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                    throw new ParseException(Session.MESSAGE_DAY_CONSTRAINTS);
                 }
                 expected = "s/";
 
@@ -204,7 +204,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                 }
                 currentStart = token.substring(2).trim();
                 if (currentStart.isEmpty()) {
-                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                    throw new ParseException(Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
                 }
                 expected = "e/";
 
@@ -214,7 +214,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                 }
                 currentEnd = token.substring(2).trim();
                 if (currentEnd.isEmpty()) {
-                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                    throw new ParseException(Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
                 }
 
                 try {
@@ -223,7 +223,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                     sessionTags.add(new SessionTag(session.toString(), session));
                 } catch (IllegalArgumentException e) {
                     // Delegate to model constraints
-                    throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+                    throw new ParseException(e.getMessage());
                 }
 
                 // Prepare for next possible triplet
