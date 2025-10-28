@@ -57,7 +57,7 @@ public class FreeCommandTest {
         CommandResult result = freeCommand.execute(model);
 
         String resultMessage = result.getFeedbackToUser();
-        assertTrue(resultMessage.contains("5hour time slot is at:"));
+        assertTrue(resultMessage.contains("5 hour time slot is at:"));
     }
 
     @Test

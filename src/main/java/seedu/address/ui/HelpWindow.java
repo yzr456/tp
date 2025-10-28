@@ -13,12 +13,16 @@ import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddSessionCommand;
+import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
+import seedu.address.logic.commands.FreeCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.SetPaymentCommand;
 
 /**
  * Controller for a help page
@@ -36,7 +40,10 @@ public class HelpWindow extends UiPart<Stage> {
     private Button copyButton;
 
     @FXML
-    private Label helpMessage;
+    private Label userGuideMessage;
+
+    @FXML
+    private Label commandListMessage;
 
     @FXML
     private Label commandUsageMessage;
@@ -111,11 +118,15 @@ public class HelpWindow extends UiPart<Stage> {
         //mini command registry
         List<Class<? extends Command>> registeredCommands = new ArrayList<>();
         registeredCommands.add(AddCommand.class);
+        registeredCommands.add(AddSessionCommand.class);
+        registeredCommands.add(AddSubjectCommand.class);
         registeredCommands.add(DeleteCommand.class);
         registeredCommands.add(ListCommand.class);
         registeredCommands.add(FindCommand.class);
+        registeredCommands.add(FreeCommand.class);
         registeredCommands.add(HelpCommand.class);
         registeredCommands.add(ExitCommand.class);
+        registeredCommands.add(SetPaymentCommand.class);
 
         return getCommandUsage(registeredCommands);
     }
