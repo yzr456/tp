@@ -3,10 +3,7 @@ package seedu.address.ui;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
@@ -44,7 +41,7 @@ public class MainWindow extends UiPart<Stage> {
 
 
     @FXML
-    private MenuItem helpMenuItem;
+    private javafx.scene.control.Button helpButton;
 
     @FXML
     private StackPane personListPanelPlaceholder;
@@ -86,16 +83,14 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     private void setAccelerators() {
-        setAccelerator(helpMenuItem, KeyCombination.valueOf("F1"));
+        setAcceleratorForButton(helpButton, KeyCombination.valueOf("F1"));
     }
 
     /**
-     * Sets the accelerator of a MenuItem.
+     * Sets the accelerator for a Button.
      * @param keyCombination the KeyCombination value of the accelerator
      */
-    private void setAccelerator(MenuItem menuItem, KeyCombination keyCombination) {
-        menuItem.setAccelerator(keyCombination);
-
+    private void setAcceleratorForButton(javafx.scene.control.Button button, KeyCombination keyCombination) {
         /*
          * TODO: the code below can be removed once the bug reported here
          * https://bugs.openjdk.java.net/browse/JDK-8131666
@@ -112,8 +107,8 @@ public class MainWindow extends UiPart<Stage> {
          * in CommandBox or ResultDisplay.
          */
         getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getTarget() instanceof TextInputControl && keyCombination.match(event)) {
-                menuItem.getOnAction().handle(new ActionEvent());
+            if (keyCombination.match(event)) {
+                button.fire();
                 event.consume();
             }
         });
@@ -138,9 +133,8 @@ public class MainWindow extends UiPart<Stage> {
         commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
 
-        // Store reference to commandBox
-        commandBox = new CommandBox(this::executeCommand);
-        commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+        // Set up global keyboard handlers for the window
+        setupGlobalKeyHandlers();
 
         // Give initial focus to person list for keyboard navigation
         Platform.runLater(() -> {
@@ -154,22 +148,34 @@ public class MainWindow extends UiPart<Stage> {
     private void setupGlobalKeyHandlers() {
         // Add event filter to catch keys at window level
         primaryStage.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            // If command box already has focus, do nothing
+            KeyCode keyCode = event.getCode();
+
+            // Handle UP/DOWN arrows from anywhere
+            if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
+                focusPersonListSmart(keyCode);
+                // Don't consume if already in person list - let it navigate
+                if (!personListPanel.isFocused()) {
+                    event.consume();
+                }
+                return;
+            }
+
+            // If command box already has focus, do nothing for typing keys
             if (commandBox.isFocused()) {
                 return;
             }
 
-            KeyCode keyCode = event.getCode();
-
-            // Don't intercept navigation keys or Enter
+            // Don't intercept other navigation keys or Enter
             if (isNavigationKey(keyCode) || keyCode == KeyCode.ENTER) {
                 return;
             }
 
-            // For typing keys, focus command box
+            // For typing keys, focus command box and insert the character
             if (isTypingKey(keyCode)) {
-                commandBox.requestFocus();
-                // Event will propagate to command box
+                // IMPORTANT: Consume event first to prevent duplicate input
+                event.consume();
+                // Then handle the key insertion asynchronously
+                Platform.runLater(() -> focusCommandBoxWithKey(event));
             }
         });
     }
@@ -213,6 +219,50 @@ public class MainWindow extends UiPart<Stage> {
     public void focusCommandBox() {
         if (commandBox != null) {
             commandBox.requestFocus();
+        }
+    }
+
+    /**
+     * Focuses on the command box and inserts the character from the key event.
+     */
+    public void focusCommandBoxWithKey(KeyEvent event) {
+        if (commandBox != null) {
+            commandBox.requestFocus();
+            // Insert the character that was typed
+            String text = event.getText();
+            if (text != null && !text.isEmpty()) {
+                commandBox.appendText(text);
+            } else if (event.getCode() == KeyCode.BACK_SPACE) {
+                commandBox.handleBackspace();
+            } else if (event.getCode() == KeyCode.DELETE) {
+                commandBox.handleDelete();
+            }
+        }
+    }
+
+    /**
+     * Focuses on the person list panel and selects the first item.
+     */
+    public void focusPersonList() {
+        if (personListPanel != null) {
+            personListPanel.requestFocusAndSelectFirst();
+        }
+    }
+
+    /**
+     * Smart navigation for UP/DOWN arrows.
+     * If a person is already selected, just focus the list (allowing relative navigation).
+     * If no person is selected, focus and select the first person.
+     */
+    public void focusPersonListSmart(KeyCode keyCode) {
+        if (personListPanel != null) {
+            if (personListPanel.hasSelection()) {
+                // There's already a selection, just focus and let normal navigation work
+                personListPanel.requestFocus();
+            } else {
+                // No selection, select first item
+                personListPanel.requestFocusAndSelectFirst();
+            }
         }
     }
 

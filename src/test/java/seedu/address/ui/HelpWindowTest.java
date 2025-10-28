@@ -21,9 +21,7 @@ public class HelpWindowTest {
 
     @Test
     public void constants_validValues() {
-        assertEquals("https://se-education.org/addressbook-level3/UserGuide.html", HelpWindow.USERGUIDE_URL);
-        assertEquals("Refer to the user guide: " + HelpWindow.USERGUIDE_URL + "\n" + HelpWindow.getCommandUsage(),
-                HelpWindow.HELP_MESSAGE);
+        assertEquals("https://ay2526s1-cs2103-f12-4.github.io/tp/UserGuide.html", HelpWindow.USERGUIDE_URL);
     }
 
     @Test
@@ -37,6 +35,9 @@ public class HelpWindowTest {
         assertTrue(commandUsage.contains("find"));
         assertTrue(commandUsage.contains("help"));
         assertTrue(commandUsage.contains("exit"));
+        assertTrue(commandUsage.contains("addsession"));
+        assertTrue(commandUsage.contains("addsubject"));
+        assertTrue(commandUsage.contains("free"));
 
         // Check that it contains usage information (should have multiple lines)
         assertTrue(commandUsage.contains("\n"));

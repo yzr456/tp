@@ -1,29 +1,21 @@
 @font-face {
-    font-family: 'Telegraf';
+    -fx-font-family: 'Telegraf';
     src: url('/fonts/Telegraf-Regular.otf');
-    font-weight: normal;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Telegraf';
+    -fx-font-family: 'Telegraf';
     src: url('/fonts/Telegraf-UltraBold.otf');
-    font-weight: bold;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garet';
+    -fx-font-family: 'Garet';
     src: url('/fonts/Garet-Regular.ttf');
-    font-weight: normal;
-    font-style: normal;
 }
 
 @font-face {
-    font-family: 'Garet';
+    -fx-font-family: 'Garet';
     src: url('/fonts/Garet-Bold.ttf');
-    font-weight: bold;
-    font-style: normal;
 }
 
 .background {
@@ -637,6 +629,25 @@
 
 .header-menu-bar .menu-item:hover {
     -fx-background-color: #f0f0f0;
+}
+
+/* Help button styled as menu item */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 12px;
+    -fx-padding: 5 10 5 10;
+    -fx-border-width: 0;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-button:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* ========== RIGHT PANEL - DETAILED VIEW ========== */

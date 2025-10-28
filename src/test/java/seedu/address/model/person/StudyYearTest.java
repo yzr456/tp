@@ -28,7 +28,6 @@ public class StudyYearTest {
         assertFalse(StudyYear.isValidStudyYear("")); // empty string
         assertFalse(StudyYear.isValidStudyYear(" ")); // spaces only
         assertFalse(StudyYear.isValidStudyYear("SENIOR1")); // invalid academic level
-        assertFalse(StudyYear.isValidStudyYear("pri1")); // lower case
         assertFalse(StudyYear.isValidStudyYear("SEC")); // no number provided
         assertFalse(StudyYear.isValidStudyYear("JC 2")); // spaces in between
         assertFalse(StudyYear.isValidStudyYear("POLY7")); // number out of range
@@ -37,6 +36,7 @@ public class StudyYearTest {
         assertTrue(StudyYear.isValidStudyYear("PRI6"));
         assertTrue(StudyYear.isValidStudyYear("JC2"));
         assertTrue(StudyYear.isValidStudyYear("UNI1"));
+        assertTrue(StudyYear.isValidStudyYear("pri1"));
     }
 
     @Test
