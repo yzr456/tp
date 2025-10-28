@@ -29,8 +29,9 @@ import seedu.address.logic.commands.SetPaymentCommand;
  */
 public class HelpWindow extends UiPart<Stage> {
 
-    public static final String USERGUIDE_URL = "https://se-education.org/addressbook-level3/UserGuide.html";
-    public static final String USERGUIDE_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String USERGUIDE_URL = "https://ay2526s1-cs2103-f12-4.github.io/tp/UserGuide.html";
+    public static final String HELP_MESSAGE_PREFIX = "Refer to the user guide: ";
+    public static final String HELP_MESSAGE = HELP_MESSAGE_PREFIX + USERGUIDE_URL + "\n" + getCommandUsage();
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -39,10 +40,10 @@ public class HelpWindow extends UiPart<Stage> {
     private Button copyButton;
 
     @FXML
-    private Label userGuideMessage;
+    private Label helpMessage;
 
     @FXML
-    private Label commandListMessage;
+    private Label commandUsageMessage;
 
     /**
      * Creates a new HelpWindow.
@@ -51,8 +52,8 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public HelpWindow(Stage root) {
         super(FXML, root);
-        userGuideMessage.setText(USERGUIDE_MESSAGE);
-        commandListMessage.setText(getCommandUsage());
+        helpMessage.setText(HELP_MESSAGE_PREFIX + USERGUIDE_URL);
+        commandUsageMessage.setText(getCommandUsage());
     }
 
     /**
