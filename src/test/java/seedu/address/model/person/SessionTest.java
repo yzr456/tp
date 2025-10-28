@@ -1,5 +1,6 @@
 package seedu.address.model.person;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,20 +35,24 @@ public class SessionTest {
     @Test
     public void isValidSession() {
         // null session number
-        assertThrows(NullPointerException.class, () -> Session.isValidSession(null, null, null));
+        assertThrows(NullPointerException.class, () -> Session.validateSessionTime(null, null, null));
 
-        // invalid session numbers
-        assertFalse(Session.isValidSession("Mon", "1100", "1200")); // invalid day of week
-        assertFalse(Session.isValidSession("Monday", "1100", "1200")); // invalid day of week
-        assertFalse(Session.isValidSession("MON", "11:00", "12:00")); // wrong time format
-        assertFalse(Session.isValidSession("MON", "1170", "2400")); // invalid time
-        assertFalse(Session.isValidSession("MON", "1100", "1101")); // session too short
-        assertFalse(Session.isValidSession("MON", "1100", "0900")); // end time after start time
+        // invalid session
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("Monday", "1100", "1200")); // invalid day of week
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "11:00", "12:00")); // wrong time format
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "1170", "2400")); // invalid time
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "1100", "1101")); // session too short
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "1100", "0900")); // end time after start time
 
-        // valid session numbers
-        assertTrue(Session.isValidSession("MON", "1100", "1200"));
-        assertTrue(Session.isValidSession("SAT", "1500", "1600"));
-        assertTrue(Session.isValidSession("SUN", "0000", "2359"));
+        // valid session
+        assertDoesNotThrow(() -> Session.validateSessionTime("MON", "1100", "1200"));
+        assertDoesNotThrow(() -> Session.validateSessionTime("SAT", "1500", "1600"));
+        assertDoesNotThrow(() -> Session.validateSessionTime("SUN", "0000", "2359"));
     }
 
     @Test

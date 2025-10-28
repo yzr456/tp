@@ -1,9 +1,10 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.MESSAGE_MISSING_INDEX;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DAY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_END_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_START_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DAY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_END_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_START_DESC;
@@ -12,6 +13,9 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
+
+import java.time.LocalTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +26,7 @@ import seedu.address.model.person.Session;
 import seedu.address.model.tag.Tag;
 
 public class AddSessionCommandParserTest {
-
-    private static final String MESSAGE_INVALID_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddSessionCommand.MESSAGE_USAGE);
-
+    private final LocalTime validTime = LocalTime.of(11, 0);
     private AddSessionCommandParser parser = new AddSessionCommandParser();
 
     @Test
@@ -34,6 +35,16 @@ public class AddSessionCommandParserTest {
 
         assertParseSuccess(parser, "1 d/MON s/1100 e/1200",
                 new AddSessionCommand(Index.fromOneBased(1), expectedTag));
+
+        // session with is at minimal allowed duration
+        expectedTag = new Tag(new Session("MON",
+                validTime.format(Session.SESSION_FORMATTER),
+                validTime.plusMinutes(Session.MINIMAL_DURATION).format(Session.SESSION_FORMATTER)).toString());
+
+        assertParseSuccess(parser, "1" + VALID_DAY_DESC + " "
+                        + PREFIX_START + validTime.format(Session.SESSION_FORMATTER) + " " + PREFIX_END
+                        + validTime.plusMinutes(Session.MINIMAL_DURATION).format(Session.SESSION_FORMATTER),
+                new AddSessionCommand(Index.fromOneBased(1), expectedTag));
     }
 
     @Test
@@ -41,46 +52,64 @@ public class AddSessionCommandParserTest {
         String expectedMessage = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSessionCommand.MESSAGE_USAGE);
 
         // missing index
-        assertParseFailure(parser, "d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " d/MON s/1100 e/1200", MESSAGE_MISSING_INDEX);
 
         // missing day
-        assertParseFailure(parser, "1 s/1100 e/1200", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 s/1100 e/1200", expectedMessage);
 
         // missing start
-        assertParseFailure(parser, "1 d/MON e/1200", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 d/MON e/1200", expectedMessage);
 
         // missing end
-        assertParseFailure(parser, "1 d/MON s/1100", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 d/MON s/1100", expectedMessage);
     }
 
     @Test
     public void parse_invalidPreamble_failure() {
         // negative index
-        assertParseFailure(parser, "-5 d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " -5 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
 
         // zero index
-        assertParseFailure(parser, "0 d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 0 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 some random string", MESSAGE_INVALID_INDEX);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 i/ string", MESSAGE_INVALID_INDEX);
     }
 
     @Test
     public void parse_invalidValue_failure() {
         // invalid day
         assertParseFailure(parser, "1" + INVALID_DAY_DESC + VALID_START_DESC
-                + VALID_END_DESC, Session.MESSAGE_CONSTRAINTS);
+                + VALID_END_DESC, Session.MESSAGE_DAY_CONSTRAINTS);
 
         // invalid start
         assertParseFailure(parser, "1" + VALID_DAY_DESC + INVALID_START_DESC
-                + VALID_END_DESC, Session.MESSAGE_CONSTRAINTS);
+                + VALID_END_DESC, Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
 
         // invalid end
         assertParseFailure(parser, "1" + VALID_DAY_DESC + VALID_START_DESC
-                + INVALID_END_DESC, Session.MESSAGE_CONSTRAINTS);
+                + INVALID_END_DESC, Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
+
+        // start is after end
+        assertParseFailure(parser, "1" + VALID_DAY_DESC + " " + PREFIX_START
+                        + validTime.plusMinutes(Session.MINIMAL_DURATION).format(Session.SESSION_FORMATTER) + " "
+                        + PREFIX_END + validTime.format(Session.SESSION_FORMATTER),
+                Session.MESSAGE_TIME_RANGE_CONSTRAINTS);
+
+        // start is equals to end
+        assertParseFailure(parser, "1" + VALID_DAY_DESC + " "
+                        + PREFIX_START + validTime.format(Session.SESSION_FORMATTER) + " "
+                        + PREFIX_END + validTime.format(Session.SESSION_FORMATTER),
+                Session.MESSAGE_TIME_RANGE_CONSTRAINTS);
+
+        // start and end is less than 15 minutes apart
+        assertParseFailure(parser, "1" + VALID_DAY_DESC + " "
+                        + PREFIX_START + validTime.format(Session.SESSION_FORMATTER) + " " + PREFIX_END
+                        + validTime.plusMinutes(Session.MINIMAL_DURATION - 1).format(Session.SESSION_FORMATTER),
+                Session.MESSAGE_TIME_RANGE_CONSTRAINTS);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
@@ -27,20 +26,16 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        Index index;
-
-        try {
-            index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    AddSessionCommand.MESSAGE_USAGE), pe);
+        if (argMultimap.getPreamble().trim().isEmpty()) {
+            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
         }
+
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
                     AddSessionCommand.MESSAGE_USAGE));
         }
-
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_DAY, PREFIX_START, PREFIX_END);
 
