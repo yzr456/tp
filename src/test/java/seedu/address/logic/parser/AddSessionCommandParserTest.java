@@ -1,9 +1,11 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.MESSAGE_MISSING_INDEX;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DAY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_END_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_START_DESC;
+import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DAY_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_END_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_START_DESC;
@@ -12,6 +14,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,31 +44,31 @@ public class AddSessionCommandParserTest {
         String expectedMessage = String.format(Messages.MESSAGE_MISSING_PREFIX, AddSessionCommand.MESSAGE_USAGE);
 
         // missing index
-        assertParseFailure(parser, "d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " d/MON s/1100 e/1200", MESSAGE_MISSING_INDEX);
 
         // missing day
-        assertParseFailure(parser, "1 s/1100 e/1200", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 s/1100 e/1200", expectedMessage);
 
         // missing start
-        assertParseFailure(parser, "1 d/MON e/1200", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 d/MON e/1200", expectedMessage);
 
         // missing end
-        assertParseFailure(parser, "1 d/MON s/1100", expectedMessage);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 d/MON s/1100", expectedMessage);
     }
 
     @Test
     public void parse_invalidPreamble_failure() {
         // negative index
-        assertParseFailure(parser, "-5 d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " -5 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
 
         // zero index
-        assertParseFailure(parser, "0 d/MON s/1100 e/1200", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 0 d/MON s/1100 e/1200", MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 some random string", MESSAGE_INVALID_INDEX);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, PREAMBLE_WHITESPACE + " 1 i/ string", MESSAGE_INVALID_INDEX);
     }
 
     @Test
