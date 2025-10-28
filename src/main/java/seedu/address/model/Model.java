@@ -96,13 +96,15 @@ public interface Model {
      */
     void addSession(Session session);
 
-    Optional<Session> getOverlappingSession(Session session);
-
     /**
      * Deletes the given session from the weekly sessions.
      * The session must exist in the weekly sessions.
      */
-    void deleteSession(Session session);
+    void removeSession(Session session);
+
+    Optional<Session> getOverlappingSession(Session session);
+
+
 
     /**
      * Returns the weekly sessions.

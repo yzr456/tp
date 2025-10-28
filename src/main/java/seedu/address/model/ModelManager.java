@@ -120,13 +120,13 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public Optional<Session> getOverlappingSession(Session session) {
-        return addressBook.getOverlappingSessions(session);
+    public void removeSession(Session session) {
+        addressBook.removeSession(session);
     }
 
     @Override
-    public void deleteSession(Session session) {
-        addressBook.removeSession(session);
+    public Optional<Session> getOverlappingSession(Session session) {
+        return addressBook.getOverlappingSessions(session);
     }
 
     @Override

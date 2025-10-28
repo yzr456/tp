@@ -31,6 +31,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.StudyYear;
+import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -109,6 +110,22 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
+        //update the relevant session tags
+        //1. Remove the old session tags and sessions
+        for (Tag tag : personToEdit.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag currentTag = (SessionTag) tag;
+                model.removeSession(currentTag.getSession());
+            }
+        }
+
+        //2. Add any new session tags
+        for (Tag tag : editedPerson.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag currentTag = (SessionTag) tag;
+                model.addSession(currentTag.getSession());
+            }
+        }
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));

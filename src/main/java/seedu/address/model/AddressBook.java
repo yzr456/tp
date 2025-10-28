@@ -57,7 +57,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void resetData(ReadOnlyAddressBook newData) {
         requireNonNull(newData);
-
         setPersons(newData.getPersonList());
         setWeeklySessions(newData.getWeeklySessions());
     }
@@ -126,10 +125,6 @@ public class AddressBook implements ReadOnlyAddressBook {
      */
     public void removeSession(Session session) {
         weeklySessions.remove(session);
-    }
-
-    public void getEarliestFreeTime(int duration) {
-        weeklySessions.getEarliestFreeTime(duration);
     }
 
     //// util methods

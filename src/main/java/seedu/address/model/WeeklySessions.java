@@ -6,6 +6,8 @@ import static java.util.Objects.requireNonNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
 
@@ -30,6 +32,7 @@ public class WeeklySessions {
     private static final DayOfWeek END_OF_WEEK = DayOfWeek.SUNDAY;
 
     private TreeSet<Session> weeklySessions;
+    private Map<Session, Integer> sessionCounts;
 
     /**
      * Comparator for ordering sessions by day of week and time.
@@ -51,6 +54,7 @@ public class WeeklySessions {
      */
     public WeeklySessions() {
         weeklySessions = new TreeSet<>(new SessionComparator());
+        sessionCounts = new HashMap<>();
     }
 
     /**
@@ -80,6 +84,11 @@ public class WeeklySessions {
     public void add(Session session) {
         requireNonNull(session);
         weeklySessions.add(session);
+        if (!sessionCounts.containsKey(session)) {
+            sessionCounts.put(session, 1);
+        } else {
+            sessionCounts.put(session, sessionCounts.get(session) + 1);
+        }
     }
 
     /**
@@ -162,6 +171,8 @@ public class WeeklySessions {
         requireNonNull(replacement);
         weeklySessions.clear();
         weeklySessions.addAll(replacement.weeklySessions);
+        sessionCounts.clear();
+        sessionCounts.putAll(replacement.sessionCounts);
     }
 
     /**
@@ -173,9 +184,17 @@ public class WeeklySessions {
      */
     public void remove(Session session) {
         requireNonNull(session);
-        if (!weeklySessions.remove(session)) {
+        if (!sessionCounts.containsKey(session)) {
             throw new IllegalArgumentException("Session does not exist in weekly sessions");
+        } else {
+            int participantCount = sessionCounts.get(session);
+            if (participantCount - 1 == 0) {
+                weeklySessions.remove(session);
+            } else {
+                sessionCounts.put(session, sessionCounts.get(session) - 1);
+            }
         }
+
     }
 
     /**

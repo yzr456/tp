@@ -68,7 +68,7 @@ public class AddSessionCommand extends Command {
 
         Session currentSession = ((SessionTag) sessionTag).getSession();
 
-        // Check for overlaps using WeeklySessions
+        // Get overlaps using WeeklySessions
         Optional<Session> overlappingSession = model.getOverlappingSession(currentSession);
         if (overlappingSession.isPresent()) {
             // Reject overlap unless it's an exact duplicate for a different person
