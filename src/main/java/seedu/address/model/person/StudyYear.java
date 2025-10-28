@@ -28,6 +28,7 @@ public class StudyYear {
      */
     public StudyYear(String studyYear) {
         requireNonNull(studyYear);
+        studyYear = studyYear.toUpperCase();
         checkArgument(isValidStudyYear(studyYear), MESSAGE_CONSTRAINTS);
         value = studyYear;
     }
@@ -36,6 +37,7 @@ public class StudyYear {
      * Returns true if a given string is a valid study year.
      */
     public static boolean isValidStudyYear(String test) {
+        test = test.toUpperCase();
         return test.matches(VALIDATION_REGEX);
     }
 
