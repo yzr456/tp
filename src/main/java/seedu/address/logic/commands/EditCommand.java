@@ -12,6 +12,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_SUBJECT;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Session;
 import seedu.address.model.person.StudyYear;
 import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
@@ -81,6 +83,7 @@ public class EditCommand extends Command {
     public static final String MESSAGE_INVALID_SESSION_SEQUENCE =
             "Invalid session format. Each session must follow order: d/, s/, e/. \n"
                     + "Example: d/MON s/1100 e/1200 d/TUE s/1300 e/1400";
+    public static final String MESSAGE_OVERLAPPING_SESSION = "The sessions overlap with these: %s session(s).\n";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -118,7 +121,7 @@ public class EditCommand extends Command {
         }
 
         //update the relevant session tags
-        //1. Remove the old session tags and sessions
+        //Remove the old session tags and sessions
         for (Tag tag : personToEdit.getTags()) {
             if (tag.isSessionTag()) {
                 SessionTag currentTag = (SessionTag) tag;
@@ -126,13 +129,45 @@ public class EditCommand extends Command {
             }
         }
 
-        //2. Add any new session tags
+        //Collect all new sessions and check for overlaps
+        List<Session> newSessions = new ArrayList<>();
         for (Tag tag : editedPerson.getTags()) {
             if (tag.isSessionTag()) {
-                SessionTag currentTag = (SessionTag) tag;
-                model.addSession(currentTag.getSession());
+                SessionTag sessionTag = (SessionTag) tag;
+                newSessions.add(sessionTag.getSession());
             }
         }
+
+        //Check for overlaps within the new sessions themselves
+        for (int i = 0; i < newSessions.size(); i++) {
+            for (int j = i + 1; j < newSessions.size(); j++) {
+                Session session1 = newSessions.get(i);
+                Session session2 = newSessions.get(j);
+
+                if (session1.isOverlap(session2)) {
+                    throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
+                            session2));
+                }
+            }
+        }
+
+        //Check for overlaps with existing global sessions
+        for (Session currentSession : newSessions) {
+            Optional<Session> overlappingSession = model.getOverlappingSession(currentSession);
+            if (overlappingSession.isPresent()) {
+                // Reject overlap unless it's an exact duplicate for a different person
+                if (!currentSession.equals(overlappingSession.get())) {
+                    throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
+                            overlappingSession.get()));
+                }
+            }
+        }
+
+        //Add all validated sessions
+        for (Session session : newSessions) {
+            model.addSession(session);
+        }
+
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));

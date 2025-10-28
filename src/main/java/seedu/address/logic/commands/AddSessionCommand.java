@@ -34,7 +34,7 @@ public class AddSessionCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_DAY + "DAY "
             + PREFIX_START + "START "
-            + PREFIX_END + "END "
+            + PREFIX_END + "END"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
