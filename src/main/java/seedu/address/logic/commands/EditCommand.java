@@ -69,12 +69,15 @@ public class EditCommand extends Command {
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
-    public static final String MESSAGE_INVALID_FLAG = "InvalidFlagError: Invalid flag provided. "
+    public static final String MESSAGE_INVALID_FLAG = "Invalid flag provided. "
             + "Use -c for contact or -s for session.";
-    public static final String MESSAGE_MISSING_FLAG = "ArgumentError: A valid flag must be provided. "
+    public static final String MESSAGE_MISSING_FLAG = "A valid flag must be provided. "
             + "Use -c for contact or -s for session.";
-    public static final String MESSAGE_DUPLICATE_SUBJECT = "DuplicateSubjectError: Subject Tag: %s "
-            + "has already been assigned to %s";
+    public static final String MESSAGE_MISSING_ARGUMENTS = "Missing arguments after flag. "
+            + "Format: edit -c INDEX [fields...] or edit -s INDEX [fields...]";
+    public static final String MESSAGE_INVALID_SESSION_SEQUENCE =
+            "Invalid session format. Each session must follow order: d/, s/, e/. \n"
+                    + "Example: d/MON s/1100 e/1200 d/TUE s/1300 e/1400";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;

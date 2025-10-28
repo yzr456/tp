@@ -74,7 +74,8 @@
             <!-- Sessions -->
             <VBox spacing="8">
                 <Label styleClass="detail-label" text="SESSIONS:" />
-                <VBox fx:id="sessionsList" spacing="5" styleClass="sessions-list" />
+                <!--<VBox fx:id="sessionsList" spacing="5" styleClass="sessions-list" />-->
+                <FlowPane fx:id="sessionsList" hgap="8" vgap="8" styleClass="sessions-list" />
             </VBox>
         </VBox>
     </VBox>

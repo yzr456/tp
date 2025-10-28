@@ -38,6 +38,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STUDY_YEAR;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -73,8 +74,11 @@ public class EditCommandParserTest {
         // no flag specified
         assertParseFailure(parser, VALID_NAME_AMY, EditCommand.MESSAGE_MISSING_FLAG);
 
-        // no index specified
-        assertParseFailure(parser, "-c " + VALID_NAME_AMY, MESSAGE_INVALID_FORMAT);
+        // no index specified - valid flag with no arguments
+        assertParseFailure(parser, "-c", EditCommand.MESSAGE_MISSING_ARGUMENTS);
+
+        // no index specified - valid flag with name but no index
+        assertParseFailure(parser, "-c " + VALID_NAME_AMY, MESSAGE_INVALID_INDEX);
 
         // no field specified
         assertParseFailure(parser, "-c 1", EditCommand.MESSAGE_NOT_EDITED);
@@ -86,10 +90,10 @@ public class EditCommandParserTest {
     @Test
     public void parse_invalidPreamble_failure() {
         // negative index
-        assertParseFailure(parser, "-c -5" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-c -5" + NAME_DESC_AMY, MESSAGE_INVALID_INDEX);
 
         // zero index
-        assertParseFailure(parser, "-c 0" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-c 0" + NAME_DESC_AMY, MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
         assertParseFailure(parser, "-c 1 some random string", MESSAGE_INVALID_FORMAT);
@@ -253,7 +257,7 @@ public class EditCommandParserTest {
     public void parse_sessionEditMultipleSessions_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = "-s " + targetIndex.getOneBased()
-                + " d/MON d/WED s/1100 s/1400 e/1200 e/1500";
+                + " d/MON s/1100 e/1200 d/WED s/1400 e/1500";
 
         EditPersonDescriptor descriptor = new EditPersonDescriptor();
         Set<Tag> sessions = new HashSet<>();
@@ -269,47 +273,48 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_sessionEditMismatchedParameters_failure() {
-        String expectedMessage = "Each session must have a day (d/), start time (s/), and end time (e/).";
+        // expected messages for different invalid patterns
+        String expectedMessage = EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE;
 
-        // More days than starts
+        // Out of order prefixes — multiple days before starts
         String userInput = "-s 1 d/MON d/TUE s/1000 e/1100";
         assertParseFailure(parser, userInput, expectedMessage);
 
-        // More starts than days
+        // Starts repeated before end — also invalid sequence
         userInput = "-s 1 d/MON s/1000 s/1100 e/1100";
         assertParseFailure(parser, userInput, expectedMessage);
 
-        // More ends than days
+        // Ends repeated before next day — invalid sequence again
         userInput = "-s 1 d/MON s/1000 e/1100 e/1200";
         assertParseFailure(parser, userInput, expectedMessage);
 
-        // Missing start time
+        // Missing start → incomplete triplet
         userInput = "-s 1 d/MON e/1100";
         assertParseFailure(parser, userInput, expectedMessage);
 
-        // Missing end time
+        // Missing end → incomplete triplet
         userInput = "-s 1 d/MON s/1000";
         assertParseFailure(parser, userInput, expectedMessage);
 
-        // Missing day
+        // Missing day → invalid sequence (cannot start with s/)
         userInput = "-s 1 s/1000 e/1100";
         assertParseFailure(parser, userInput, expectedMessage);
     }
 
     @Test
     public void parse_sessionEditNoFieldSpecified_failure() {
-        assertParseFailure(parser, "-s 1", EditCommand.MESSAGE_NOT_EDITED);
+        assertParseFailure(parser, "-s 1", EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
     }
 
     @Test
     public void parse_sessionEditInvalidIndex_failure() {
         // negative index
         assertParseFailure(parser, "-s -1" + VALID_DAY_DESC + VALID_START_DESC + VALID_END_DESC,
-                MESSAGE_INVALID_FORMAT);
+                MESSAGE_INVALID_INDEX);
 
         // zero index
         assertParseFailure(parser, "-s 0" + VALID_DAY_DESC + VALID_START_DESC + VALID_END_DESC,
-                MESSAGE_INVALID_FORMAT);
+                MESSAGE_INVALID_INDEX);
     }
 
     @Test
@@ -518,7 +523,7 @@ public class EditCommandParserTest {
     public void parse_sessionEditMultipleSessionsWithDifferentDays_success() {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = "-s " + targetIndex.getOneBased()
-                + " d/TUE d/THU d/FRI s/0900 s/1300 s/1500 e/1000 e/1400 e/1600";
+                + " d/TUE s/0900 e/1000 d/THU s/1300 e/1400 d/FRI s/1500 e/1600";
 
         EditPersonDescriptor descriptor = new EditPersonDescriptor();
         Set<Tag> sessions = new HashSet<>();
