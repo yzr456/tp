@@ -100,78 +100,34 @@ public class EditCommand extends Command {
         this.editPersonDescriptor = new EditPersonDescriptor(editPersonDescriptor);
     }
 
+    /**
+     * Executes the edit command to modify a person's details in the address book.
+     * This method handles session management, validates for duplicates and overlapping sessions,
+     * and updates the person in the model.
+     *
+     * @param model The model which the command should operate on.
+     * @return The result of the command execution.
+     * @throws CommandException If the person index is invalid, duplicate person exists,
+     *                          or sessions overlap.
+     */
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Person> lastShownList = model.getFilteredPersonList();
 
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        Person personToEdit = lastShownList.get(index.getZeroBased());
+        Person personToEdit = getPersonToEdit(model);
         Person editedPerson = createEditedPerson(personToEdit, editPersonDescriptor);
 
-        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
-        }
+        validateNoDuplicatePerson(model, personToEdit, editedPerson);
 
-        if (model.hasContactExcluding(editedPerson, personToEdit)) {
-            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
-        }
+        List<Session> removedSessions = removeOldSessions(model, personToEdit);
 
-        //update the relevant session tags
-        //Remove the old session tags and sessions but keep track of those that were removed
-        List<Session> removedSession = new ArrayList<>();
-        for (Tag tag : personToEdit.getTags()) {
-            if (tag.isSessionTag()) {
-                SessionTag currentTag = (SessionTag) tag;
-                model.removeSession(currentTag.getSession());
-                removedSession.add(currentTag.getSession());
-            }
-        }
-
-        //Collect all new sessions and check for overlaps
-        List<Session> newSessions = new ArrayList<>();
-        for (Tag tag : editedPerson.getTags()) {
-            if (tag.isSessionTag()) {
-                SessionTag sessionTag = (SessionTag) tag;
-                newSessions.add(sessionTag.getSession());
-            }
-        }
-
-        //Check for overlaps within the new sessions themselves
-        for (int i = 0; i < newSessions.size(); i++) {
-            for (int j = i + 1; j < newSessions.size(); j++) {
-                Session session1 = newSessions.get(i);
-                Session session2 = newSessions.get(j);
-
-                if (session1.isOverlap(session2)) {
-                    //Add back the sessions that were temporarily removed
-                    reinstateSessions(model, removedSession);
-                    throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
-                            session2));
-                }
-            }
-        }
-
-        //Check for overlaps with existing global sessions
-        for (Session currentSession : newSessions) {
-            Optional<Session> overlappingSession = model.getOverlappingSession(currentSession);
-            if (overlappingSession.isPresent()) {
-                // Reject overlap unless it's an exact duplicate for a different person
-                if (!currentSession.equals(overlappingSession.get())) {
-                    //Add back the sessions that were temoporarily removed
-                    reinstateSessions(model, removedSession);
-                    throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
-                            overlappingSession.get()));
-                }
-            }
-        }
-
-        //Add all validated sessions
-        for (Session session : newSessions) {
-            model.addSession(session);
+        try {
+            List<Session> newSessions = extractSessions(editedPerson);
+            validateNoOverlappingSessions(newSessions, model);
+            addNewSessions(model, newSessions);
+        } catch (CommandException e) {
+            reinstateSessions(model, removedSessions);
+            throw e;
         }
 
         model.setPerson(personToEdit, editedPerson);
@@ -179,6 +135,142 @@ public class EditCommand extends Command {
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
     }
 
+    /**
+     * Retrieves the person to edit from the filtered person list.
+     *
+     * @param model The model containing the person list.
+     * @return The person at the specified index.
+     * @throws CommandException If the index is out of bounds.
+     */
+    private Person getPersonToEdit(Model model) throws CommandException {
+        List<Person> lastShownList = model.getFilteredPersonList();
+        if (index.getZeroBased() >= lastShownList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        }
+        return lastShownList.get(index.getZeroBased());
+    }
+
+    /**
+     * Validates that the edited person does not create a duplicate in the address book.
+     *
+     * @param model The model to check for duplicates.
+     * @param personToEdit The original person being edited.
+     * @param editedPerson The person with edited details.
+     * @throws CommandException If a duplicate person or contact exists.
+     */
+    private void validateNoDuplicatePerson(Model model, Person personToEdit, Person editedPerson)
+            throws CommandException {
+        if (!personToEdit.isSamePerson(editedPerson) && model.hasPerson(editedPerson)) {
+            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+        }
+        if (model.hasContactExcluding(editedPerson, personToEdit)) {
+            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
+        }
+    }
+
+    /**
+     * Removes all sessions associated with the person from the model.
+     * This is done before applying the edits to ensure clean session management.
+     *
+     * @param model The model from which to remove sessions.
+     * @param person The person whose sessions should be removed.
+     * @return A list of removed sessions for potential reinstatement if validation fails.
+     */
+    private List<Session> removeOldSessions(Model model, Person person) {
+        List<Session> removedSessions = new ArrayList<>();
+        for (Tag tag : person.getTags()) {
+            if (tag.isSessionTag()) {
+                SessionTag sessionTag = (SessionTag) tag;
+                Session session = sessionTag.getSession();
+                model.removeSession(session);
+                removedSessions.add(session);
+            }
+        }
+        return removedSessions;
+    }
+
+    /**
+     * Extracts all sessions from a person's tags.
+     *
+     * @param person The person from whom to extract sessions.
+     * @return A list of all sessions associated with the person.
+     */
+    private List<Session> extractSessions(Person person) {
+        List<Session> sessions = new ArrayList<>();
+        for (Tag tag : person.getTags()) {
+            if (tag.isSessionTag()) {
+                sessions.add(((SessionTag) tag).getSession());
+            }
+        }
+        return sessions;
+    }
+
+    /**
+     * Validates that none of the new sessions overlap with each other or with existing sessions.
+     *
+     * @param newSessions The list of new sessions to validate.
+     * @param model The model to check against existing sessions.
+     * @throws CommandException If any overlapping sessions are detected.
+     */
+    private void validateNoOverlappingSessions(List<Session> newSessions, Model model)
+            throws CommandException {
+        checkInternalOverlaps(newSessions);
+        checkExternalOverlaps(newSessions, model);
+    }
+
+    /**
+     * Checks for overlaps within the list of new sessions.
+     *
+     * @param sessions The list of sessions to check for internal overlaps.
+     * @throws CommandException If any two sessions in the list overlap.
+     */
+    private void checkInternalOverlaps(List<Session> sessions) throws CommandException {
+        for (int i = 0; i < sessions.size(); i++) {
+            for (int j = i + 1; j < sessions.size(); j++) {
+                if (sessions.get(i).isOverlap(sessions.get(j))) {
+                    throw new CommandException(
+                            String.format(MESSAGE_OVERLAPPING_SESSION, sessions.get(j)));
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks for overlaps between new sessions and existing sessions in the model.
+     *
+     * @param newSessions The list of new sessions to validate.
+     * @param model The model containing existing sessions.
+     * @throws CommandException If any new session overlaps with an existing session
+     *                          (unless they are exact duplicates).
+     */
+    private void checkExternalOverlaps(List<Session> newSessions, Model model)
+            throws CommandException {
+        for (Session session : newSessions) {
+            Optional<Session> overlapping = model.getOverlappingSession(session);
+            if (overlapping.isPresent() && !session.equals(overlapping.get())) {
+                throw new CommandException(
+                        String.format(MESSAGE_OVERLAPPING_SESSION, overlapping.get()));
+            }
+        }
+    }
+
+    /**
+     * Adds all validated sessions to the model.
+     *
+     * @param model The model to which sessions should be added.
+     * @param sessions The list of sessions to add.
+     */
+    private void addNewSessions(Model model, List<Session> sessions) {
+        sessions.forEach(model::addSession);
+    }
+
+    /**
+     * Reinstates previously removed sessions to the model.
+     * This is called when validation fails to restore the model to its previous state.
+     *
+     * @param model The model to which sessions should be reinstated.
+     * @param removedSessions The list of sessions to reinstate.
+     */
     private void reinstateSessions(Model model, List<Session> removedSessions) {
         for (Session session : removedSessions) {
             model.addSession(session);
