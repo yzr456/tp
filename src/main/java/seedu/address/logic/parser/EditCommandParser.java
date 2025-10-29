@@ -193,6 +193,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                     throw new ParseException(EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
                 }
                 currentDay = token.substring(2).trim();
+                currentDay = currentDay.toUpperCase();
                 if (currentDay.isEmpty()) {
                     throw new ParseException(Session.MESSAGE_DAY_CONSTRAINTS);
                 }
