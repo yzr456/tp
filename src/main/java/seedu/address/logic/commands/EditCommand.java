@@ -121,11 +121,13 @@ public class EditCommand extends Command {
         }
 
         //update the relevant session tags
-        //Remove the old session tags and sessions
+        //Remove the old session tags and sessions but keep track of those that were removed
+        List<Session> removedSession = new ArrayList<>();
         for (Tag tag : personToEdit.getTags()) {
             if (tag.isSessionTag()) {
                 SessionTag currentTag = (SessionTag) tag;
                 model.removeSession(currentTag.getSession());
+                removedSession.add(currentTag.getSession());
             }
         }
 
@@ -145,6 +147,8 @@ public class EditCommand extends Command {
                 Session session2 = newSessions.get(j);
 
                 if (session1.isOverlap(session2)) {
+                    //Add back the sessions that were temporarily removed
+                    reinstateSessions(model, removedSession);
                     throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
                             session2));
                 }
@@ -157,6 +161,8 @@ public class EditCommand extends Command {
             if (overlappingSession.isPresent()) {
                 // Reject overlap unless it's an exact duplicate for a different person
                 if (!currentSession.equals(overlappingSession.get())) {
+                    //Add back the sessions that were temoporarily removed
+                    reinstateSessions(model, removedSession);
                     throw new CommandException(String.format(MESSAGE_OVERLAPPING_SESSION,
                             overlappingSession.get()));
                 }
@@ -171,6 +177,12 @@ public class EditCommand extends Command {
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(editedPerson)));
+    }
+
+    private void reinstateSessions(Model model, List<Session> removedSessions) {
+        for (Session session : removedSessions) {
+            model.addSession(session);
+        }
     }
 
     /**
