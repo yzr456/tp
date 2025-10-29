@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -17,8 +16,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
+import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -44,7 +46,7 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         // Check for flag
         if (trimmedArgs.isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         }
 
         // Parse flag
@@ -63,7 +65,7 @@ public class EditCommandParser implements Parser<EditCommand> {
                 }
             }
             flag = trimmedArgs.substring(0, spaceIndex).trim();
-            remainingArgs = trimmedArgs.substring(spaceIndex).trim();
+            remainingArgs = trimmedArgs.substring(spaceIndex);
         } else {
             throw new ParseException(EditCommand.MESSAGE_MISSING_FLAG);
         }
@@ -89,15 +91,17 @@ public class EditCommandParser implements Parser<EditCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT);
 
-        Index index;
-
-        // Check if preamble contains index followed by extra text
-        String preamble = argMultimap.getPreamble();
-        if (preamble.trim().matches("^\\d+\\s+.*")) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    EditCommand.MESSAGE_USAGE));
         }
 
-        index = ParserUtil.parseIndex(preamble);
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
+
+        if (!isAnyPrefixPresent(argMultimap, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT)) {
+            throw new ParseException(String.format(EditCommand.MESSAGE_NOT_EDITED));
+        }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
@@ -137,20 +141,23 @@ public class EditCommandParser implements Parser<EditCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        Index index;
-
-        // Check if preamble contains index followed by extra text
-        String preamble = argMultimap.getPreamble();
-        if (preamble.trim().matches("^\\d+\\s+.*")) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    EditCommand.MESSAGE_USAGE));
         }
 
-        index = ParserUtil.parseIndex(preamble);
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
+
+        if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    EditCommand.MESSAGE_USAGE));
+        }
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
         // Extract only the session parameters (after the index)
-        String sessionArgs = args.substring(preamble.length()).trim();
+        String sessionArgs = args.substring(args.indexOf(index.getOneBased() + "")
+                + String.valueOf(index.getOneBased()).length()).trim();
 
         // Check if session parameters are empty - session editing requires at least one complete triplet
         if (sessionArgs.isEmpty()) {
@@ -268,10 +275,7 @@ public class EditCommandParser implements Parser<EditCommand> {
 
             Subject subject = Subject.of(subjectStr);
             if (subject == null) {
-                throw new ParseException(
-                    "Invalid subject provided. The Subject provided must be a valid subject code: "
-                    + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
-                    + "POA, ECONS, ART, MUSIC, COMSCI");
+                throw new ParseException(AddSubjectCommand.MESSAGE_CONSTRAINTS);
             }
             subjectTags.add(new Tag(subject.name()));
         }
@@ -292,6 +296,22 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
         Collection<String> tagSet = tags.size() == 1 && tags.contains("") ? Collections.emptySet() : tags;
         return Optional.of(ParserUtil.parseTags(tagSet));
+    }
+
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+    }
+
+    /**
+     * Returns true if at least one of the prefixes contains a non-empty {@code Optional} value in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean isAnyPrefixPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).anyMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 
 }

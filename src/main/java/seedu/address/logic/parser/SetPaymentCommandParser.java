@@ -4,8 +4,11 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_BILLING_START;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_STATUS;
 
+import java.util.stream.Stream;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.SetPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -26,16 +29,18 @@ public class SetPaymentCommandParser implements Parser<SetPaymentCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_STATUS, PREFIX_BILLING_START);
 
         if (argMultimap.getPreamble().isBlank()) {
-            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    SetPaymentCommand.MESSAGE_USAGE));
+        }
+
+        if (!arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    AddSubjectCommand.MESSAGE_USAGE));
         }
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_STATUS, PREFIX_BILLING_START);
-
-        if (argMultimap.getValue(PREFIX_STATUS).isEmpty()) {
-            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX, SetPaymentCommand.MESSAGE_USAGE));
-        }
 
         String status = ParserUtil.parsePaymentStatus(argMultimap.getValue(PREFIX_STATUS).get());
 
@@ -46,4 +51,13 @@ public class SetPaymentCommandParser implements Parser<SetPaymentCommand> {
 
         return new SetPaymentCommand(index, status);
     }
+
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
+    }
+
 }

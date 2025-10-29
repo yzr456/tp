@@ -26,11 +26,12 @@ public class AddSessionCommandParser implements Parser<AddSessionCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
 
-        if (argMultimap.getPreamble().trim().isEmpty()) {
-            throw new ParseException(Messages.MESSAGE_MISSING_INDEX);
+        if (argMultimap.getPreamble().isBlank()) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
+                    AddSessionCommand.MESSAGE_USAGE));
         }
 
-        Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
+        Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,

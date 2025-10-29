@@ -37,7 +37,8 @@ public class AddSubjectCommandParserTest {
 
     @Test
     public void parse_missingIndexPreamble_throwsParseExceptionWithMissingIndexMessage() {
-        assertParseFailure(parser, " sub/MATH", Messages.MESSAGE_MISSING_INDEX);
+        String expected = String.format(Messages.MESSAGE_MISSING_INDEX, AddSubjectCommand.MESSAGE_USAGE);
+        assertParseFailure(parser, " sub/MATH", expected);
     }
 
     @Test

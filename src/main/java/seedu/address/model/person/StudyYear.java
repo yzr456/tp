@@ -9,7 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class StudyYear {
     public static final String MESSAGE_CONSTRAINTS =
-            "Study year should be of format [ACAD_LEVEL][NUMBER]\n"
+            "Study year cannot be blank, should be of format [ACAD_LEVEL][NUMBER]\n"
                     + "and adhere to the following constraints:\n"
                     + String.format("%-15s %s\n", "ACAD_LEVEL", "NUMBER(range)")
                     + String.format("%-15s %s\n", "PRI", "1 - 6")
