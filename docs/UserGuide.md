@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+Zenith is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, Zenith can get your contact management tasks done faster than traditional GUI apps.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -15,23 +15,67 @@ AddressBook Level 3 (AB3) is a **desktop app for managing contacts, optimized fo
 
 ## Quick start
 
-1. Ensure you have Java `17` or above installed in your Computer.<br>
-   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+### 1. Ensure Java is Installed
 
-1. Download the latest `.jar` file from [here](https://github.com/se-edu/addressbook-level3/releases).
+Zenith requires **Java 17 or above**. Follow these steps to verify:
 
-1. Copy the file to the folder you want to use as the _home folder_ for your AddressBook.
+#### Windows:
+1. Open Command Prompt (Press `Win + R`, type `cmd`, press Enter)
+2. Type `java -version` and press Enter
+3. If you see Java version 17 or higher, you're ready! ✓
+4. If not installed, download from [Oracle](https://www.oracle.com/java/technologies/downloads/) and run the installer
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar addressbook.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/Ui.png)
+#### macOS:
+1. Open Terminal (Press `Cmd + Space`, type `terminal`, press Enter)
+2. Type `java -version` and press Enter
+3. If you see Java version 17 or higher, you're ready! ✓
+4. If not installed, follow the [detailed Mac installation guide](https://se-education.org/guides/tutorials/javaInstallationMac.html)
+
+#### Linux:
+1. Open Terminal
+2. Type `java -version` and press Enter
+3. If installed with version 17+, you're ready! ✓
+4. If not, run: `sudo apt-get install openjdk-17-jdk` (Ubuntu/Debian) or equivalent for your distribution
+
+### 2. Download Zenith
+
+1. Download the latest `zenith.jar` file from [GitHub Releases](https://github.com/AY2526S1-CS2103-F12-4/tp/releases/)
+   
+    _**Note:** The file will typically be saved to your Downloads folder._
+
+2. Create a folder where you want to store Zenith (e.g., `C:\Zenith` or `~/Zenith`)
+
+3. Move the downloaded `zenith.jar` file into this folder
+
+### 3. Run Zenith
+
+#### Windows:
+1. Navigate to the folder containing `zenith.jar` in File Explorer
+2. Click on the address bar, type `cmd`, and press Enter (this opens Command Prompt in that folder)
+3. Type `java -jar zenith.jar` and press Enter
+
+#### macOS:
+1. Open Terminal (Press `Cmd + Space`, type `terminal`, press Enter)
+2. Type `cd ` (with a space after cd)
+3. Drag the folder containing `zenith.jar` into the Terminal window, then press Enter
+4. Type `java -jar zenith.jar` and press Enter
+
+#### Linux:
+1. Open Terminal
+2. Navigate to your Zenith folder: `cd ~/path/to/zenith/folder`
+3. Type `java -jar zenith.jar` and press Enter
+
+A GUI similar to the below should appear in a few seconds. The app contains sample student data to help you get started.<br>
+![Ui](images/Ui.png)
+
+### 4. Try Your First Commands
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/311, Clementi Ave 2, #02-25` : Adds a contact named `John Doe` to the Address Book.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
