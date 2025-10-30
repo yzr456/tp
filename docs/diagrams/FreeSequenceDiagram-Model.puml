@@ -1,0 +1,30 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant ":AddressBook" as AddressBook MODEL_COLOR
+participant ":WeeklySessions" as WeeklySessions MODEL_COLOR
+end box
+
+[-> Model : getEarliestFreeTime(1)
+activate Model
+
+Model -> AddressBook : getEarliestFreeTime(1)
+activate AddressBook
+
+AddressBook -> WeeklySessions : getEarliestFreeTime(1)
+activate WeeklySessions
+
+WeeklySessions -> WeeklySessions : fitsInDay
+WeeklySessions --> AddressBook
+deactivate WeeklySessions
+
+AddressBook --> Model
+deactivate AddressBook
+
+[<-- Model
+deactivate Model
+
+@enduml

@@ -167,7 +167,7 @@ public class WeeklySessions {
      *
      * @param replacement The WeeklySessions to copy from.
      */
-    public void setWeeklySessions(WeeklySessions replacement) {
+    public void set(WeeklySessions replacement) {
         requireNonNull(replacement);
         weeklySessions.clear();
         weeklySessions.addAll(replacement.weeklySessions);

@@ -124,8 +124,9 @@ How the parsing works:
 The `Model` component,
 
 * stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores a centralized view of all scheduled sessions (which are managed by a `WeeklySessions` object). See the [WeeklySessions Component](#weeklysessions-component) section for implementation details.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
+* stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <box type="info" seamless>
@@ -241,19 +242,146 @@ The following activity diagram summarizes what happens when a user executes a ne
 **Aspect: How undo & redo executes:**
 
 * **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
+    * Pros: Easy to implement.
+    * Cons: May have performance issues in terms of memory usage.
 
 * **Alternative 2:** Individual command knows how to undo/redo by
   itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+    * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
+    * Cons: We must ensure that the implementation of each individual command are correct.
 
 _{more aspects and alternatives to be added}_
 
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
+
+### WeeklySessions Component
+
+The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the address book. It augments the `AddressBook` with efficient time-based query capabilities.
+
+#### Purpose
+- Maintains a global schedule view of all sessions
+- Enables efficient overlap detection
+- Supports free time gap-finding algorithms
+- Provides sorted session iteration
+
+#### Architecture
+
+`WeeklySessions` implements a dual-storage pattern within `AddressBook`:
+
+1. **Person-centric view**: Sessions stored as `SessionTag` objects within each `Person`'s tags collection
+2. **Time-centric view**: Sessions stored in a sorted `TreeSet<Session>` within `WeeklySessions`
+
+
+#### Key Data Structures
+
+**TreeSet Ordering**: Sessions are automatically sorted using `Session.compareTo()`:
+1. By `DayOfWeek` (MON → SUN)
+2. Then by `startTime`
+3. Then by `endTime`
+
+This ordering enables efficient linear scanning for free time queries.
+
+**Reference Counting**: The `sessionCounts` map tracks how many persons share each session. A session is only removed from the TreeSet when its count reaches zero, preventing premature deletion when multiple students attend the same session time.
+
+#### Core Operations
+
+**Adding Sessions** `add(Session session)`:
+- If session already exists: increment reference count
+- If new session: add to TreeSet and initialize count to 1
+
+**Removing Sessions** `remove(Session session)`:
+- Decrements reference count
+- Only removes from TreeSet when count reaches 0
+
+**Overlap Detection** `getOverlap(Session sessionToCheck)`:
+- Returns `Optional<Session>` of first overlapping session
+
+**Free Time Search** `getEarliestFreeTime(int duration)`:
+- Linear scan from Monday 08:00 to Sunday 22:00
+- Finds first gap that fits requested duration
+- Returns formatted time string or "No free time available"
+
+**Algorithm Details:**
+
+The algorithm searches for the earliest available time slot by performing a chronological scan through the week:
+
+1. **Search Space Definition:**
+   - Days: Monday through Sunday (in order)
+   - Time window per day: 08:00 to 22:00 (representing typical working hours)
+   - Minimum duration: Specified by user (in minutes)
+
+2. **Day-by-Day Iteration:**
+   - For each day of the week (starting from Monday):
+     - Initialize current time to 08:00 (earliest possible start time)
+     - Filter all sessions for the current day from the sorted TreeSet
+     - Sessions are already sorted by start time due to TreeSet ordering
+
+3. **Gap Detection Within Each Day:**
+   - For each session on the current day:
+     - Calculate gap duration: time between current time and session start time
+     - If gap duration ≥ requested duration:
+       - A suitable slot is found → return formatted result (e.g., "MON 08:00")
+     - Otherwise:
+       - Move current time to session end time (skip past this occupied slot)
+       - Continue to next session
+
+4. **Final Gap Check:**
+   - After processing all sessions for the day:
+     - Calculate gap duration: time between current time and 22:00 (end of working hours)
+     - If gap duration ≥ requested duration:
+       - A suitable slot is found → return formatted result
+     - Otherwise:
+       - Move to next day and repeat from step 2
+
+5. **No Availability:**
+   - If all days are scanned without finding a suitable gap:
+     - Return "No free time available for the specified duration."
+
+_Refer to the user guide for example usages_
+
+
+#### Data Persistence
+
+**Storage Strategy**: Only `Person` objects (with their `SessionTag`s) are serialized to JSON. The `WeeklySessions` TreeSet is not directly persisted.
+
+**Reconstruction on Load** :
+When deserializing, `WeeklySessions` is rebuilt from person tags:
+
+This ensures:
+- Single source of truth (Person tags in JSON)
+- Automatic reference counting during reconstruction
+- No data duplication in storage
+
+#### Design Rationale
+
+**Why dual storage?**
+- **Person tags**: Efficient person-to-session lookups ("Which sessions does Alice have?")
+- **TreeSet**: Efficient time-based queries ("What's the earliest free slot?")
+
+**Why reference counting?**
+Multiple students can share the same session time (e.g., group tutoring). Reference counting prevents deletion conflicts.
+
+### Free Feature
+The `free` feature is facilitated by `WeeklySessions`. It augments `Addressbook` by providing a centralised time sorted view of all scheduled sessions across all persons. It is stored internally as `weeklySessions` which gives `AddressBooks` two complementary views of session data
+
+The functionality of `WeeklySessions` are exposed to `Addressbook` and the `Model` interface with similar function names:
+* `WeeklySessions#add` -> `AddressBook/Model#addSession`
+* `WeeklySessions#remove` -> `AddressBook/Model#removeSession`
+* `WeeklySessions#set` -> `AddressBook/Model#setWeeklySessions`
+* `WeeklySessions#getOverlap` -> `AddressBook/Model#getOverlappingSessions`
+* `WeeklySessions#getEarliestFreeTime` -> no change
+
+The sequence diagram for free is similar to `delete` sequence diagram we see in [Logic component](#logic-component), with some key differences:
+* Command will be `free DURATION` instead of `delete INDEX`
+* Command and its parser will be `Free` instead of `Delete`
+* `FreeCommand` will call `Model#getEarliestFreeTime(1)`
+
+The free operation will go through the `Model` component as such:
+<puml src="diagrams/FreeSequenceDiagram-Model.puml" />
+
+
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -593,16 +721,26 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+   2. CD into the JAR file directory and run java -jar zenith.jar Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum
+   3. (Alternative) Double-click the JAR file Expected: Similar behaviour to running it through command line
 
 1. Saving window preferences
 
    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
+   1. Re-launch the app by running it through command line.<br>
        Expected: The most recent window size and location is retained.
 
 1. _{ more test cases …​ }_
+
+### Adding a person
+1. Adding a person
+   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty. 
+   2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
+   3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> Expected: New contact named bill is added to the list
+   4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
+   5. Test case 2(b): `add n/bill s/PRI5 p/83451234 e/billbo@gmail.com a/yishun street 12` <br> Expected: No new person is added to the list due to duplicate contacts. Error details shown in the status message.
+   6. Test case 3: `add n/bill s/PRI4 e/bill@gmail.com a/yishun street 10` <br> Expected: No new person is added to the list due to missing parameter. Error details shown in status message
 
 ### Deleting a person
 

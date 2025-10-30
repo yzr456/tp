@@ -149,7 +149,7 @@ public class ModelManager implements Model {
 
     @Override
     public String getEarliestFreeTime(int duration) {
-        return addressBook.getWeeklySessions().getEarliestFreeTime(duration);
+        return addressBook.getEarliestFreeTime(duration);
     }
 
     //=========== Filtered Person List Accessors =============================================================
