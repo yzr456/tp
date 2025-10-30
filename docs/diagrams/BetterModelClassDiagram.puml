@@ -18,6 +18,31 @@ Person *--> Name
 Person *--> Phone
 Person *--> Email
 Person *--> Address
-Person *--> "*" Session
 Person *--> Payment
+Person *--> StudyYear
+
+Tag <|-- SessionTag
+SessionTag *--> Session
+
+enum Subject {
+    MATH
+    ENG
+    SCI
+    PHY
+    CHEM
+    BIO
+    HIST
+    GEOG
+    LIT
+    CHI
+    MALAY
+    TAMIL
+    POA
+    ECONS
+    ART
+    MUSIC
+    COMSCI
+}
+
+Tag ..> Subject : "subject tags\nuse values from"
 @enduml
