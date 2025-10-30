@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
-import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.SetPaymentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -35,7 +34,7 @@ public class SetPaymentCommandParser implements Parser<SetPaymentCommand> {
 
         if (!arePrefixesPresent(argMultimap, PREFIX_STATUS)) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
-                    AddSubjectCommand.MESSAGE_USAGE));
+                    SetPaymentCommand.MESSAGE_USAGE));
         }
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble());
