@@ -296,8 +296,8 @@ Format: `addsession INDEX d/DAY s/START_TIME e/END_TIME`
 
 * Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * The session to be added must not overlap with any existing sessions under the same person. For all other persons, the new session must either be exactly the same or not overlap with their existing sessions.
-* `DAY` cannot be blank and must be one of: MON, TUE, WED, THU, FRI, SAT, SUN(case-insensitive).
-* `START_TIME` and `END_TIME` cannot be blank and must be in HHmm (e.g., 0900, 1730) with digits only.
+* `DAY` must be one of: `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`(case-insensitive).
+* `START_TIME` and `END_TIME` must be in `HHmm` (e.g., 0900, 1730) with digits only.
 * `START_TIME` and `END_TIME` must be between `0800` and `2200` on the same day, `START_TIME` must earlier than `END_TIME`, with a minimum duration of 15 minutes.
 
 Examples:
