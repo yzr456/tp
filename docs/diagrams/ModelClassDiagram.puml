@@ -25,6 +25,26 @@ Class Session
 Class Payment
 Class SessionTag
 
+enum Subject {
+    MATH
+    ENG
+    SCI
+    PHY
+    CHEM
+    BIO
+    HIST
+    GEOG
+    LIT
+    CHI
+    MALAY
+    TAMIL
+    POA
+    ECONS
+    ART
+    MUSIC
+    COMSCI
+}
+
 Class I #FFFFFF
 }
 
@@ -52,7 +72,9 @@ Person *--> "*" Tag
 Person *--> StudyYear
 Person *--> Payment
 SessionTag --|> Tag
+SessionTag *--> Session
 
+Tag ..> Subject : "subject tags\nuse values from"
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I

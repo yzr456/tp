@@ -48,11 +48,15 @@ public class SessionTest {
                 Session.validateSessionTime("MON", "1100", "1101")); // session too short
         assertThrows(IllegalArgumentException.class, () ->
                 Session.validateSessionTime("MON", "1100", "0900")); // end time after start time
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "0600", "0900")); //start time before earliest start time
+        assertThrows(IllegalArgumentException.class, () ->
+                Session.validateSessionTime("MON", "0800", "2300")); //end time after latest end time
 
         // valid session
         assertDoesNotThrow(() -> Session.validateSessionTime("MON", "1100", "1200"));
         assertDoesNotThrow(() -> Session.validateSessionTime("SAT", "1500", "1600"));
-        assertDoesNotThrow(() -> Session.validateSessionTime("SUN", "0000", "2359"));
+
     }
 
     @Test
@@ -62,7 +66,6 @@ public class SessionTest {
         assertFalse(session.isOverlap(new Session("MON", "0900", "1030")));
 
         assertTrue(session.isOverlap(new Session("MON", "1130", "1230")));
-        assertTrue(session.isOverlap(new Session("MON", "0000", "2359")));
         assertTrue(session.isOverlap(new Session("MON", "0900", "1130")));
         assertTrue(session.isOverlap(new Session("MON", "1159", "1215")));
     }
