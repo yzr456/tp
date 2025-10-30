@@ -173,7 +173,7 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Implementation**
-    
+
 ### WeeklySessions Component
 
 The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the address book. It augments the `AddressBook` with efficient time-based query capabilities.
@@ -684,7 +684,7 @@ testers are expected to do more *exploratory* testing.
 
 ### Adding a person
 1. Adding a person
-   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty. 
+   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty.
    2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
    3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> Expected: New contact named bill is added to the list
    4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
