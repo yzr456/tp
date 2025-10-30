@@ -32,8 +32,11 @@ public class AddCommandParser implements Parser<AddCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public AddCommand parse(String args) throws ParseException {
+        // Preprocess to protect "s/o" pattern in names from being confused with study year prefix
+        String processedArgs = preprocessSonOf(args);
+
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                ArgumentTokenizer.tokenize(processedArgs, PREFIX_NAME, PREFIX_STUDY_YEAR,
                         PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
 
         if (!argMultimap.getPreamble().isEmpty()) {
@@ -47,7 +50,10 @@ public class AddCommandParser implements Parser<AddCommand> {
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS);
-        Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+
+        // Restore "s/o" pattern in the name value
+        String nameValue = restoreSonOf(argMultimap.getValue(PREFIX_NAME).get());
+        Name name = ParserUtil.parseName(nameValue);
         StudyYear studyYear = ParserUtil.parseStudyYear(argMultimap.getValue(PREFIX_STUDY_YEAR).get());
         Phone phone = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
         Email email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
@@ -57,6 +63,29 @@ public class AddCommandParser implements Parser<AddCommand> {
         Person person = new Person(name, studyYear, phone, email, address, tagList);
 
         return new AddCommand(person);
+    }
+
+    /**
+     * Preprocesses the arguments string to protect "s/o" pattern from being
+     * mistaken as the study year prefix. Replaces it with temporary placeholders
+     * that preserve the original case.
+     */
+    private String preprocessSonOf(String args) {
+        // Replace different case variants with unique placeholders to preserve case
+        String processed = args.replace(" s/o ", " __SO_LOWER__ ");
+        processed = processed.replace(" S/O ", " __SO_UPPER__ ");
+        processed = processed.replace(" S/o ", " __SO_TITLE__ ");
+        return processed;
+    }
+
+    /**
+     * Restores the original "s/o" pattern from placeholders, preserving case.
+     */
+    private String restoreSonOf(String value) {
+        String restored = value.replace("__SO_LOWER__", "s/o");
+        restored = restored.replace("__SO_UPPER__", "S/O");
+        restored = restored.replace("__SO_TITLE__", "S/o");
+        return restored;
     }
 
     /**
