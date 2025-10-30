@@ -76,7 +76,7 @@ public class Session implements Comparable<Session> {
 
         if (startTime.plusMinutes(MINIMAL_DURATION).isAfter(endTime)) {
             throw new IllegalArgumentException(MESSAGE_TIME_RANGE_CONSTRAINTS);
-        } else if(startTime.isBefore(EARLIEST_START_TIME) || endTime.isAfter(LATEST_END_TIME)) {
+        } else if (startTime.isBefore(EARLIEST_START_TIME) || endTime.isAfter(LATEST_END_TIME)) {
             throw new IllegalArgumentException(MESSAGE_TIME_RANGE_CONSTRAINTS);
         }
     }
