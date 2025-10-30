@@ -31,6 +31,8 @@ public class Email {
     private static final String DOMAIN_REGEX = "(" + DOMAIN_PART_REGEX + "\\.)*" + DOMAIN_LAST_PART_REGEX;
     public static final String VALIDATION_REGEX = LOCAL_PART_REGEX + "@" + DOMAIN_REGEX;
 
+    private static final int MAXIMUM_LENGTH_EMAIL = 100;
+
     public final String value;
 
     /**
@@ -48,7 +50,7 @@ public class Email {
      * Returns if a given string is a valid email.
      */
     public static boolean isValidEmail(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return test.length() <= MAXIMUM_LENGTH_EMAIL && test.matches(VALIDATION_REGEX);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class Email {
         }
 
         Email otherEmail = (Email) other;
-        return value.equals(otherEmail.value);
+        return value.toLowerCase().equals(otherEmail.value.toLowerCase());
     }
 
     @Override

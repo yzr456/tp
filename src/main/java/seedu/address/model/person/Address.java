@@ -16,6 +16,7 @@ public class Address {
      * otherwise " " (a blank string) becomes a valid input.
      */
     public static final String VALIDATION_REGEX = "[^\\s].*";
+    public static final int MAXIMUM_LENGTH_ADDRESS = 70;
 
     public final String value;
 
@@ -34,7 +35,7 @@ public class Address {
      * Returns true if a given string is a valid email.
      */
     public static boolean isValidAddress(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return test.length() <= MAXIMUM_LENGTH_ADDRESS && test.matches(VALIDATION_REGEX);
     }
 
     @Override

@@ -99,7 +99,7 @@ public class Person {
         }
 
         return otherPerson != null
-                && otherPerson.getName().equals(getName());
+                && (hasSameEmail(otherPerson) || hasSameNumber(otherPerson));
     }
 
     public boolean hasSameNumber(Person otherPerson) {
