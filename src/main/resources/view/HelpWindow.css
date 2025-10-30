@@ -1,4 +1,4 @@
-#userGuideMessage, #commandListMessage {
+#helpMessage, #commandUsageMessage {
     -fx-text-fill: white;
 }
 

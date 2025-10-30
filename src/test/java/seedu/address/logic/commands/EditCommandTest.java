@@ -256,6 +256,55 @@ public class EditCommandTest {
     }
 
     @Test
+    public void execute_editSessionOverlapping_failure() {
+        // First person has a session MON 1000-1200
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Session existingSession = new Session("MON", "1000", "1200");
+        SessionTag existingSessionTag = new SessionTag(existingSession.toString(), existingSession);
+
+        Set<Tag> tagsWithSession = new HashSet<>(firstPerson.getTags());
+        tagsWithSession.add(existingSessionTag);
+
+        Person personWithSession = new Person(firstPerson.getName(), firstPerson.getStudyYear(),
+                firstPerson.getPhone(), firstPerson.getEmail(), firstPerson.getAddress(),
+                tagsWithSession, firstPerson.getPayment());
+
+        model.setPerson(firstPerson, personWithSession);
+        model.addSession(existingSession);
+
+        // Second person initially has a non-overlapping session TUE 1000-1200
+        Person secondPerson = model.getFilteredPersonList().get(INDEX_SECOND_PERSON.getZeroBased());
+        Session nonOverlappingSession = new Session("TUE", "1000", "1200");
+        SessionTag nonOverlappingSessionTag = new SessionTag(nonOverlappingSession.toString(),
+                nonOverlappingSession);
+
+        Set<Tag> secondPersonTags = new HashSet<>(secondPerson.getTags());
+        secondPersonTags.add(nonOverlappingSessionTag);
+
+        Person secondPersonWithSession = new Person(secondPerson.getName(), secondPerson.getStudyYear(),
+                secondPerson.getPhone(), secondPerson.getEmail(), secondPerson.getAddress(),
+                secondPersonTags, secondPerson.getPayment());
+
+        model.setPerson(secondPerson, secondPersonWithSession);
+        model.addSession(nonOverlappingSession);
+
+        // Now try to edit second person to have an overlapping session MON 1100-1300
+        Session overlappingSession = new Session("MON", "1100", "1300"); // Overlaps with MON 1000-1200
+        SessionTag overlappingSessionTag = new SessionTag(overlappingSession.toString(), overlappingSession);
+
+        Set<Tag> newSessions = new HashSet<>();
+        newSessions.add(overlappingSessionTag);
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSessions(newSessions);
+
+        EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
+
+        assertCommandFailure(editCommand, model, String.format(EditCommand.MESSAGE_OVERLAPPING_SESSION,
+                existingSession));
+    }
+
+    @Test
     public void equals() {
         final EditCommand standardCommand = new EditCommand(INDEX_FIRST_PERSON, DESC_AMY);
 

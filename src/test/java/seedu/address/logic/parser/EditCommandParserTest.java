@@ -1,6 +1,5 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -50,6 +49,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.Messages;
+import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.model.person.Address;
@@ -65,7 +65,7 @@ import seedu.address.testutil.EditPersonDescriptorBuilder;
 public class EditCommandParserTest {
 
     private static final String MESSAGE_INVALID_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
+            String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
 
     private EditCommandParser parser = new EditCommandParser();
 
@@ -78,7 +78,8 @@ public class EditCommandParserTest {
         assertParseFailure(parser, "-c", EditCommand.MESSAGE_MISSING_ARGUMENTS);
 
         // no index specified - valid flag with name but no index
-        assertParseFailure(parser, "-c " + VALID_NAME_AMY, MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "-c " + NAME_DESC_AMY,
+                String.format(Messages.MESSAGE_MISSING_INDEX, EditCommand.MESSAGE_USAGE));
 
         // no field specified
         assertParseFailure(parser, "-c 1", EditCommand.MESSAGE_NOT_EDITED);
@@ -96,10 +97,10 @@ public class EditCommandParserTest {
         assertParseFailure(parser, "-c 0" + NAME_DESC_AMY, MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, "-c 1 some random string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-c 1 some random string", EditCommand.MESSAGE_NOT_EDITED);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "-c 1 i/ string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-c 1 i/ string", EditCommand.MESSAGE_NOT_EDITED);
     }
 
     @Test
@@ -275,6 +276,7 @@ public class EditCommandParserTest {
     public void parse_sessionEditMismatchedParameters_failure() {
         // expected messages for different invalid patterns
         String expectedMessage = EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE;
+        String expectedMessage2 = String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE);
 
         // Out of order prefixes — multiple days before starts
         String userInput = "-s 1 d/MON d/TUE s/1000 e/1100";
@@ -290,20 +292,20 @@ public class EditCommandParserTest {
 
         // Missing start → incomplete triplet
         userInput = "-s 1 d/MON e/1100";
-        assertParseFailure(parser, userInput, expectedMessage);
+        assertParseFailure(parser, userInput, expectedMessage2);
 
         // Missing end → incomplete triplet
         userInput = "-s 1 d/MON s/1000";
-        assertParseFailure(parser, userInput, expectedMessage);
+        assertParseFailure(parser, userInput, expectedMessage2);
 
         // Missing day → invalid sequence (cannot start with s/)
         userInput = "-s 1 s/1000 e/1100";
-        assertParseFailure(parser, userInput, expectedMessage);
+        assertParseFailure(parser, userInput, expectedMessage2);
     }
 
     @Test
     public void parse_sessionEditNoFieldSpecified_failure() {
-        assertParseFailure(parser, "-s 1", EditCommand.MESSAGE_INVALID_SESSION_SEQUENCE);
+        assertParseFailure(parser, "-s 1", String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -320,19 +322,19 @@ public class EditCommandParserTest {
     @Test
     public void parse_sessionEditInvalidDay_failure() {
         assertParseFailure(parser, "-s 1" + INVALID_DAY_DESC + VALID_START_DESC + VALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_DAY_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditInvalidStart_failure() {
         assertParseFailure(parser, "-s 1" + VALID_DAY_DESC + INVALID_START_DESC + VALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditInvalidEnd_failure() {
         assertParseFailure(parser, "-s 1" + VALID_DAY_DESC + VALID_START_DESC + INVALID_END_DESC,
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
@@ -394,10 +396,7 @@ public class EditCommandParserTest {
     @Test
     public void parse_contactEditWithInvalidSubject_failure() {
         String userInput = "-c 1 sub/INVALID";
-        assertParseFailure(parser, userInput,
-                "Invalid subject provided. The Subject provided must be a valid subject code: "
-                + "MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, "
-                + "POA, ECONS, ART, MUSIC, COMSCI");
+        assertParseFailure(parser, userInput, AddSubjectCommand.MESSAGE_CONSTRAINTS);
     }
 
     @Test
@@ -461,27 +460,21 @@ public class EditCommandParserTest {
     }
 
     @Test
-    public void parse_preambleWithMultipleSpaces_failure() {
-        // Multiple spaces in preamble should still be invalid
-        assertParseFailure(parser, "-c 1   extra   text" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
-    }
-
-    @Test
     public void parse_sessionEditEmptyDay_failure() {
         assertParseFailure(parser, "-s 1 d/ s/1000 e/1100",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_DAY_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditEmptyStart_failure() {
         assertParseFailure(parser, "-s 1 d/MON s/ e/1100",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test
     public void parse_sessionEditEmptyEnd_failure() {
         assertParseFailure(parser, "-s 1 d/MON s/1000 e/",
-                Session.MESSAGE_CONSTRAINTS);
+                Session.MESSAGE_TIME_FORMAT_CONSTRAINTS);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.FreeCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -19,12 +18,19 @@ public class FreeCommandParser implements Parser<FreeCommand> {
      *                        or if the duration is not a positive integer.
      */
     public FreeCommand parse(String args) throws ParseException {
-        try {
-            Integer duration = ParserUtil.parseDuration(args);
-            return new FreeCommand(duration);
-        } catch (ParseException pe) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE), pe);
+        String trimmedArgs = args.trim();
+        if (trimmedArgs.isEmpty()) {
+            throw new ParseException(String.format(FreeCommand.MESSAGE_MISSING_DURATION, FreeCommand.MESSAGE_USAGE));
         }
+
+        // Check if there are multiple arguments (contains spaces)
+        if (trimmedArgs.contains(" ")) {
+            throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+                    FreeCommand.MESSAGE_USAGE));
+        }
+
+        int duration = ParserUtil.parseDuration(args);
+        return new FreeCommand(duration);
     }
+
 }

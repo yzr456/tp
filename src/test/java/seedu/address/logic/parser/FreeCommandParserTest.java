@@ -1,11 +1,11 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.FreeCommand;
 
 /**
@@ -31,31 +31,30 @@ public class FreeCommandParserTest {
     public void parse_invalidArgs_throwsParseException() {
         // empty string
         assertParseFailure(parser, "",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(FreeCommand.MESSAGE_MISSING_DURATION, FreeCommand.MESSAGE_USAGE));
 
         // whitespace only
         assertParseFailure(parser, "   ",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(FreeCommand.MESSAGE_MISSING_DURATION, FreeCommand.MESSAGE_USAGE));
 
         // non-numeric
         assertParseFailure(parser, "abc",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(ParserUtil.MESSAGE_INVALID_DURATION));
 
         // negative number
         assertParseFailure(parser, "-1",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
-
+                String.format(ParserUtil.MESSAGE_INVALID_DURATION));
 
         // decimal number
         assertParseFailure(parser, "1.5",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(ParserUtil.MESSAGE_INVALID_DURATION));
 
         // multiple arguments
         assertParseFailure(parser, "1 2",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
 
         // with extra text
         assertParseFailure(parser, "1 hours",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, FreeCommand.MESSAGE_USAGE));
     }
 }

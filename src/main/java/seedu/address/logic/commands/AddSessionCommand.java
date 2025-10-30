@@ -34,14 +34,17 @@ public class AddSessionCommand extends Command {
             + "Parameters: INDEX (must be a positive integer) "
             + PREFIX_DAY + "DAY "
             + PREFIX_START + "START "
-            + PREFIX_END + "END"
+            + PREFIX_END + "END\n"
+            + "Command syntax: "
+            + COMMAND_WORD + " [INDEX] " + PREFIX_DAY + "[DAY] " + PREFIX_START + "[START] " + PREFIX_END + "[END]\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
             + PREFIX_END + "1800\n";
 
     public static final String MESSAGE_ADD_SESSION_SUCCESS = "Session added successfully\n\n%1$s";
-    public static final String MESSAGE_OVERLAP_SESSION = "This session overlaps with %s";
+    public static final String MESSAGE_OVERLAP_SESSION =
+            "Session conflict detected. This slot overlaps an existing session: \n%s\nPlease choose a different time.";
 
     private final Index targetIndex;
     private final Tag sessionTag;

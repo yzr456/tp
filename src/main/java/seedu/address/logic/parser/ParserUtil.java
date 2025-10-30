@@ -170,8 +170,10 @@ public class ParserUtil {
         String trimmedStart = start.trim();
         String trimmedEnd = end.trim();
 
-        if (!Session.isValidSession(trimmedDay, trimmedStart, trimmedEnd)) {
-            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        try {
+            Session.validateSessionTime(trimmedDay, trimmedStart, trimmedEnd);
+        } catch (IllegalArgumentException e) {
+            throw new ParseException(e.getMessage());
         }
 
         Session session = new Session(trimmedDay, trimmedStart, trimmedEnd);
@@ -233,14 +235,16 @@ public class ParserUtil {
                 "(?<dayOfWeek>[A-Z]{3})\\s(?<start>\\d{4})\\s*-\\s*(?<end>\\d{4})");
         Matcher matcher = sessionTagFormat.matcher(tagStr);
         if (!matcher.matches()) {
-            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+            throw new ParseException(Session.MESSAGE_INVALID_CONSTRAINTS);
         }
         String dayOfWeek = matcher.group("dayOfWeek");
         String start = matcher.group("start");
         String end = matcher.group("end");
 
-        if (!Session.isValidSession(dayOfWeek, start, end)) {
-            throw new ParseException(Session.MESSAGE_CONSTRAINTS);
+        try {
+            Session.validateSessionTime(dayOfWeek, start, end);
+        } catch (IllegalArgumentException e) {
+            throw new ParseException(e.getMessage());
         }
         return new Session(dayOfWeek, start, end);
 
