@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.stage.Stage?>
+<?import javafx.scene.control.ScrollPane?>
 
 <fx:root resizable="false" title="Help" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <icons>
@@ -50,11 +51,18 @@
                 </Separator>
 
                 <!-- Bottom section: Command list -->
-                <Label fx:id="commandUsageMessage" text="Commands" wrapText="true">
+                <ScrollPane fitToWidth="true" maxHeight="600" prefHeight="500">
                     <VBox.margin>
                         <Insets top="5.0" />
                     </VBox.margin>
-                </Label>
+                    <content>
+                        <Label fx:id="commandUsageMessage" text="Commands" wrapText="true">
+                            <padding>
+                                <Insets right="10.0" />
+                            </padding>
+                        </Label>
+                    </content>
+                </ScrollPane>
             </VBox>
         </Scene>
     </scene>

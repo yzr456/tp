@@ -66,7 +66,7 @@ public class EditCommand extends Command {
             + "Example (Session): " + COMMAND_WORD + " -s 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
-            + PREFIX_END + "1100";
+            + PREFIX_END + "1100\n";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one valid prefix to edit a field must be provided.";
