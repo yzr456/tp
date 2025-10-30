@@ -40,7 +40,7 @@ Zenith requires **Java 17 or above**. Follow these steps to verify:
 ### 2. Download Zenith
 
 1. Download the latest `zenith.jar` file from [GitHub Releases](https://github.com/AY2526S1-CS2103-F12-4/tp/releases/)
-   
+
     _**Note:** The file will typically be saved to your Downloads folder._
 
 2. Create a folder where you want to store Zenith (e.g., `C:\Zenith` or `~/Zenith`)
