@@ -207,14 +207,17 @@ Examples:
 
 Adds a session under an existing person in the address book.
 
-* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* The session to be added must not overlap with any existing sessions under the same person. For all other persons, the new session must either be exactly the same or not overlap with their existing sessions.
-
 Format: `addsession INDEX d/DAY s/START_TIME e/END_TIME`
 
+* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
+* The session to be added must not overlap with any existing sessions under the same person. For all other persons, the new session must either be exactly the same or not overlap with their existing sessions.
+* `DAY` cannot be blank and must be one of: MON, TUE, WED, THU, FRI, SAT, SUN(can be in lower case also).
+* `START_TIME` and `END_TIME` cannot be blank and must be in HHmm (e.g., 0900, 1730) with digits only.
+* `START_TIME` and `END_TIME` must be within the same day, `START_TIME` must be before `END_TIME`, with a minimum duration of 15 minutes.
+
 Examples:
-* `addsession 1 d/MON s/1100 e/1200`
-* `addsession 2 d/sun s/1745 e/1800`
+* `addsession 1 d/MON s/1100 e/1200` Adds a weekly session on Monday 1100 - 1200 under the 1st person in the list.
+* `addsession 2 d/sun s/1745 e/1800`Adds a weekly session on Sunday 1745 - 1800 under the 2nd person in the list.
 
 ### Finding a free session : `free`
 
