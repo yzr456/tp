@@ -87,8 +87,11 @@ public class EditCommandParser implements Parser<EditCommand> {
      * Parses contact edit arguments and returns an EditCommand.
      */
     private EditCommand parseContactEdit(String args) throws ParseException {
+        // Preprocess to protect "s/o" pattern in names from being confused with study year prefix
+        String processedArgs = preprocessSonOf(args);
+
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_STUDY_YEAR,
+                ArgumentTokenizer.tokenize(processedArgs, PREFIX_NAME, PREFIX_STUDY_YEAR,
                 PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_SUBJECT);
 
         if (argMultimap.getPreamble().isBlank()) {
@@ -109,7 +112,9 @@ public class EditCommandParser implements Parser<EditCommand> {
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
         if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            editPersonDescriptor.setName(ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()));
+            // Restore "s/o" pattern in the name value
+            String nameValue = restoreSonOf(argMultimap.getValue(PREFIX_NAME).get());
+            editPersonDescriptor.setName(ParserUtil.parseName(nameValue));
         }
         if (argMultimap.getValue(PREFIX_STUDY_YEAR).isPresent()) {
             editPersonDescriptor.setStudyYear(ParserUtil.parseStudyYear(argMultimap.getValue(PREFIX_STUDY_YEAR).get()));
@@ -132,6 +137,29 @@ public class EditCommandParser implements Parser<EditCommand> {
         }
 
         return new EditCommand(index, editPersonDescriptor);
+    }
+
+    /**
+     * Preprocesses the arguments string to protect "s/o" pattern from being
+     * mistaken as the study year prefix. Replaces it with temporary placeholders
+     * that preserve the original case.
+     */
+    private String preprocessSonOf(String args) {
+        // Replace different case variants with unique placeholders to preserve case
+        String processed = args.replace(" s/o ", " __SO_LOWER__ ");
+        processed = processed.replace(" S/O ", " __SO_UPPER__ ");
+        processed = processed.replace(" S/o ", " __SO_TITLE__ ");
+        return processed;
+    }
+
+    /**
+     * Restores the original "s/o" pattern from placeholders, preserving case.
+     */
+    private String restoreSonOf(String value) {
+        String restored = value.replace("__SO_LOWER__", "s/o");
+        restored = restored.replace("__SO_UPPER__", "S/O");
+        restored = restored.replace("__SO_TITLE__", "S/o");
+        return restored;
     }
 
     /**
