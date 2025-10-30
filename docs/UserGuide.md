@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-Zenith is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+Zenith is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, Zenith can get your contact management tasks done faster than traditional GUI apps.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -15,23 +15,67 @@ Zenith is a **desktop app for managing contacts, optimized for use via a  Line I
 
 ## Quick start
 
-1. Ensure you have Java `17` or above installed in your Computer.<br>
-   **Mac users:** Ensure you have the precise JDK version prescribed [here](https://se-education.org/guides/tutorials/javaInstallationMac.html).
+### 1. Ensure Java is Installed
 
-1. Download the latest `.jar` file from [here](https://github.com/AY2526S1-CS2103-F12-4/tp/releases).
+Zenith requires **Java 17 or above**. Follow these steps to verify:
 
-1. Copy the file to the folder you want to use as the _home folder_ for Zenith.
+#### Windows:
+1. Open Command Prompt (Press `Win + R`, type `cmd`, press Enter)
+2. Type `java -version` and press Enter
+3. If you see Java version 17 or higher, you're ready! ✓
+4. If not installed, download from [Oracle](https://www.oracle.com/java/technologies/downloads/) and run the installer
 
-1. Open a command terminal, `cd` into the folder you put the jar file in, and use the `java -jar zenith.jar` command to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/Ui.png)
+#### macOS:
+1. Open Terminal (Press `Cmd + Space`, type `terminal`, press Enter)
+2. Type `java -version` and press Enter
+3. If you see Java version 17 or higher, you're ready! ✓
+4. If not installed, follow the [detailed Mac installation guide](https://se-education.org/guides/tutorials/javaInstallationMac.html)
+
+#### Linux:
+1. Open Terminal
+2. Type `java -version` and press Enter
+3. If installed with version 17+, you're ready! ✓
+4. If not, run: `sudo apt-get install openjdk-17-jdk` (Ubuntu/Debian) or equivalent for your distribution
+
+### 2. Download Zenith
+
+1. Download the latest `zenith.jar` file from [GitHub Releases](https://github.com/AY2526S1-CS2103-F12-4/tp/releases/)
+   
+    _**Note:** The file will typically be saved to your Downloads folder._
+
+2. Create a folder where you want to store Zenith (e.g., `C:\Zenith` or `~/Zenith`)
+
+3. Move the downloaded `zenith.jar` file into this folder
+
+### 3. Run Zenith
+
+#### Windows:
+1. Navigate to the folder containing `zenith.jar` in File Explorer
+2. Click on the address bar, type `cmd`, and press Enter (this opens Command Prompt in that folder)
+3. Type `java -jar zenith.jar` and press Enter
+
+#### macOS:
+1. Open Terminal (Press `Cmd + Space`, type `terminal`, press Enter)
+2. Type `cd ` (with a space after cd)
+3. Drag the folder containing `zenith.jar` into the Terminal window, then press Enter
+4. Type `java -jar zenith.jar` and press Enter
+
+#### Linux:
+1. Open Terminal
+2. Navigate to your Zenith folder: `cd ~/path/to/zenith/folder`
+3. Type `java -jar zenith.jar` and press Enter
+
+A GUI similar to the below should appear in a few seconds. The app contains sample student data to help you get started.<br>
+![Ui](images/Ui.png)
+
+### 4. Try Your First Commands
 
 1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/311, Clementi Ave 2, #02-25` : Adds a contact named `John Doe` to the Address Book.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -130,20 +174,61 @@ Format: `list`
 
 ### Editing a person : `edit`
 
-Edits an existing person in the address book.
+Edits an existing student's details or sessions in the address book. This command has two modes: contact editing and session editing.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+#### Edit Contact Details: `edit -c`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
+Edits the contact information and subjects of a student.
+
+Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
+
+**Parameters:**
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `[n/NAME]`: New name for the student (optional)
+* `[s/STUDY_YEAR]`: New study year (optional) - Valid values: SEC1, SEC2, SEC3, JC1, JC2
+* `[p/PHONE]`: New phone number (optional)
+* `[e/EMAIL]`: New email address (optional)
+* `[a/ADDRESS]`: New address (optional)
+* `[sub/SUBJECT]…​`: New subjects (optional) - Can specify multiple subjects
+
+**Notes:**
+* At least one optional field must be provided
+* Existing values will be updated to the input values
+* When editing subjects, the existing subjects will be **replaced** (not added to)
+* Valid subjects: MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `edit -c 1 p/91234567 e/johndoe@example.com`
+    - Edits the phone number and email of the 1st student to `91234567` and `johndoe@example.com`
+* `edit -c 2 n/Betsy Crower s/JC2`
+   - Edits the name to `Betsy Crower` and study year to JC2
+* `edit -c 1 sub/MATH sub/PHY`
+  - Replaces all existing subjects with Math and Physics only
+
+#### Edit Sessions: `edit -s`
+
+Edits the tutoring sessions of a student.
+
+Format: `edit -s INDEX [d/DAY] [s/START] [e/END]…​`
+
+**Parameters:**
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `[d/DAY]`: Day of the week (MON, TUE, WED, THU, FRI, SAT, SUN)
+* `[s/START]`: Start time in 24-hour format (e.g., 0900, 1430)
+* `[e/END]`: End time in 24-hour format (e.g., 1100, 1630)
+
+**Notes:**
+* Sessions must follow the order: `d/` then `s/` then `e/`
+* You can edit multiple sessions at once by repeating the pattern
+* When editing sessions, **all existing sessions are replaced** with the new ones
+* Sessions cannot overlap with existing sessions for other students
+* Sessions cannot overlap with each other for the same student
+
+**Examples:**
+* `edit -s 1 d/MON s/0900 e/1100`
+    - Replaces all sessions for student 1 with a Monday 9am-11am session
+* `edit -s 2 d/TUE s/1400 e/1600 d/THU s/1500 e/1700`
+    - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm
 
 ### Locating persons by name: `find`
 
