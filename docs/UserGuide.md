@@ -146,6 +146,21 @@ Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
+### Finding a free session : `free`
+
+Finds the earliest free session from the address book
+
+Format: `free DURATION`
+
+* Finds the **earliest** free session of the specified `DURATION`.
+* `DURATION` refers to any integer between 1 - 14 hours
+
+Examples:
+_These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the address book_
+* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 4` returns `MONDAY 11:00`
+* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 12` returns `WEDNESDAY 08:00`
+
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
