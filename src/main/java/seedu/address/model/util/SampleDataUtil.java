@@ -32,8 +32,8 @@ public class SampleDataUtil {
                     getTagSetFromTags(
                             new Tag("ENG"),
                             new Tag("SCI"),
-                            new SessionTag("TUE 1400 1530", new Session("TUE", "1400", "1530")),
-                            new SessionTag("THU 1600 1730", new Session("THU", "1600", "1730"))
+                            new SessionTag("TUE 1400 - 1530", new Session("TUE", "1400", "1530")),
+                            new SessionTag("THU 1600 - 1730", new Session("THU", "1600", "1730"))
                     )),
             new Person(new Name("Charlotte Oliveiro"), new StudyYear("SEC5"),
                     new Phone("93210283"), new Email("charlotte@example.com"),
@@ -41,8 +41,8 @@ public class SampleDataUtil {
                     getTagSetFromTags(
                             new Tag("PHY"),
                             new Tag("CHEM"),
-                            new SessionTag("WED 0900 1030", new Session("WED", "0900", "1030")),
-                            new SessionTag("FRI 1000 1130", new Session("FRI", "1000", "1130"))
+                            new SessionTag("WED 0900 - 1030", new Session("WED", "0900", "1030")),
+                            new SessionTag("FRI 1000 - 1130", new Session("FRI", "1000", "1130"))
                     )),
             new Person(new Name("David Li"), new StudyYear("JC2"),
                     new Phone("91031282"), new Email("lidavid@example.com"),
@@ -50,8 +50,8 @@ public class SampleDataUtil {
                     getTagSetFromTags(
                             new Tag("MATH"),
                             new Tag("PHY"),
-                            new SessionTag("MON 1400 1530", new Session("MON", "1400", "1530")),
-                            new SessionTag("WED 1400 1530", new Session("WED", "1400", "1530"))
+                            new SessionTag("MON 1400 - 1530", new Session("MON", "1400", "1530")),
+                            new SessionTag("WED 1400 - 1530", new Session("WED", "1400", "1530"))
                     )),
             new Person(new Name("Irfan Ibrahim"), new StudyYear("POLY3"),
                     new Phone("92492021"), new Email("irfan@example.com"),
@@ -59,15 +59,15 @@ public class SampleDataUtil {
                     getTagSetFromTags(
                             new Tag("BIO"),
                             new Tag("CHEM"),
-                            new SessionTag("TUE 1000 1130", new Session("TUE", "1000", "1130")),
-                            new SessionTag("THU 1400 1530", new Session("THU", "1400", "1530"))
+                            new SessionTag("TUE 1000 - 1130", new Session("TUE", "1000", "1130")),
+                            new SessionTag("THU 1400 - 1530", new Session("THU", "1400", "1530"))
                     )),
             new Person(new Name("Roy Balakrishnan"), new StudyYear("UNI5"),
                     new Phone("92624417"), new Email("royb@example.com"),
                     new Address("Blk 45 Aljunied Street 85, #11-31"),
                     getTagSetFromTags(
                             new Tag("COMSCI"),
-                            new SessionTag("SAT 0900 1100", new Session("SAT", "0900", "1100"))
+                            new SessionTag("SAT 0900 - 1100", new Session("SAT", "0900", "1100"))
                     ))
         };
     }

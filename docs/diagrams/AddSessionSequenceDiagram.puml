@@ -1,0 +1,84 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddSessionCommandParser" as AddSessionCommandParser LOGIC_COLOR
+participant "a:AddSessionCommand" as AddSessionCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+participant ":Person" as Person MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addsession 1 d/MON s/0900 e/1100")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("addsession 1 d/MON s/0900 e/1100")
+activate AddressBookParser
+
+create AddSessionCommandParser
+AddressBookParser -> AddSessionCommandParser
+activate AddSessionCommandParser
+
+AddSessionCommandParser --> AddressBookParser
+deactivate AddSessionCommandParser
+
+AddressBookParser -> AddSessionCommandParser : parse("1 d/MON s/0900 e/1100")
+activate AddSessionCommandParser
+
+create AddSessionCommand
+AddSessionCommandParser -> AddSessionCommand
+activate AddSessionCommand
+
+AddSessionCommand --> AddSessionCommandParser
+deactivate AddSessionCommand
+
+AddSessionCommandParser --> AddressBookParser : a
+deactivate AddSessionCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AddSessionCommandParser -[hidden]-> AddressBookParser
+destroy AddSessionCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> AddSessionCommand : execute(m)
+activate AddSessionCommand
+
+AddSessionCommand -> Model : getFilteredPersonList()
+activate Model
+
+Model --> AddSessionCommand : personList
+deactivate Model
+
+AddSessionCommand -> Model : setPerson(personToEdit, editedPerson)
+activate Model
+
+create Person
+Model -> Person : new Person(...)
+activate Person
+
+Person --> Model
+deactivate Person
+
+Model --> AddSessionCommand
+deactivate Model
+
+create CommandResult
+AddSessionCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddSessionCommand
+deactivate CommandResult
+
+AddSessionCommand --> LogicManager : r
+deactivate AddSessionCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
