@@ -470,22 +470,29 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Use case: UC01 – Add Contact**
 
 **Guarantees**
-- A new contact is stored only if all fields are valid and the phone number is unique.
+- A new contact is stored only if all fields are valid and neither phone nor email duplicates exist.
 - On success, the updated list will reflect the new contact.
 
 **MSS**
-1. Tutor provides a contact with its details to add.
-2. Zenith validates the details.
-3. Zenith adds the contact to the list and shows the new contact.
-4. Includes: UC12 Autosave.
+1. Tutor provides contact details including name, study year, phone, email, and address.
+2. Zenith validates all details.
+3. Zenith checks for duplicate phone or email in existing contacts.
+4. Zenith adds the contact to the list and displays the new contact.
+5. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
-* 2a. Zenith detects that any detail is invalid.
-    * 2a1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError).
+* 2a. Zenith detects invalid or missing details.
+    * 2a1. Zenith shows an error message indicating which field is invalid.
       Use case ends.
-* 2b. Zenith detects that the contact already exists.
-    * 2b1. Zenith shows DuplicateError.
+* 3a. Zenith detects that the phone number already exists in another contact.
+    * 3a1. Zenith shows an error message indicating duplicate phone number.
+      Use case ends.
+* 3b. Zenith detects that the email already exists in another contact.
+    * 3b1. Zenith shows an error message indicating duplicate email.
+      Use case ends.
+* 3c. Zenith detects that both phone number and email already exist in another contact.
+    * 3c1. Zenith shows an error message indicating duplicate phone and email.
       Use case ends.
 
 
@@ -501,13 +508,13 @@ Use case ends.
 **MSS**
 1. Tutor provides the index of the contact to be deleted.
 2. Zenith validates the index.
-3. Zenith removes the contact from the list and shows the deleted contact.
-4. Includes: UC12 Autosave.
+3. Zenith removes the contact from the list and displays the deleted contact.
+4. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
 * 2a. Zenith detects that the index is invalid or missing.
-    * 2a1. Zenith shows InvalidIndexError or ArgumentError.
+    * 2a1. Zenith shows an error message indicating the index issue.
       Use case ends.
 
 
@@ -517,136 +524,152 @@ Use case ends.
 - The target contact exists.
 
 **Guarantees**
-- Only provided fields are updated; phone numbers in the list remain unique.
-- On success, Zenith shows the updated contact.
+- Only provided fields are updated; phone numbers and emails in the list remain unique.
+- On success, Zenith displays the updated contact.
 
 **MSS**
-1. Tutor provides the index and new values of the details of the contact to be edited.
-2. Zenith validates the index and any provided values.
-3. Zenith updates the contact and shows the updated contact.
-4. Includes: UC12 Autosave.
+1. Tutor provides the contact index and new values for one or more fields (name, study year, phone, email, address).
+2. Zenith validates the index and provided values.
+3. Zenith checks if the new phone or email conflicts with other contacts.
+4. Zenith updates the contact and displays the updated contact.
+5. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
 * 2a. Zenith detects that the index is invalid or missing.
-    * 2a1. Zenith shows InvalidIndexError / ArgumentError.
+    * 2a1. Zenith shows an error message indicating the index issue.
       Use case ends.
-* 2b. Zenith detects that any provided field is invalid.
-    * 2b1. Zenith shows the specific error (e.g., NameError, StudyYearError, PhoneError, AddressError, DuplicateError).
+* 2b. Zenith detects that any provided field value is invalid.
+    * 2b1. Zenith shows an error message indicating which field is invalid.
       Use case ends.
-
-
-**Use case: UC04 – Edit Session Timing for a Contact**
-
-**Preconditions**
-- The contact and the target session exist.
-
-**Guarantees**
-- The session time is updated only if the new slot is valid and non-overlapping.
-- On success, Zenith shows the contact with updated sessions.
-
-**MSS**
-1. Tutor provides the contact index, session timing details to be edited.
-2. Zenith validates indices and time values.
-3. Zenith checks for overlaps with that contact's existing sessions.
-4. Zenith updates the session and shows the updated contact.
-5. Includes: UC12 Autosave.
-Use case ends.
-
-**Extensions**
-* 2a. Zenith detects that the index is missing or invalid.
-    * 2a1. Zenith shows InvalidIndexError / InvalidSessionIndexError.
+* 3a. Zenith detects that the new phone number already exists in another contact.
+    * 3a1. Zenith shows an error message indicating duplicate phone number.
       Use case ends.
-* 2b. Zenith detects that the day is invalid.
-    *2 b1. Zenith shows InvalidDayError.
+* 3b. Zenith detects that the new email already exists in another contact.
+    * 3b1. Zenith shows an error message indicating duplicate email.
       Use case ends.
-* 2c. Zenith detects that the time format or range is invalid.
-    * 2c1. Zenith shows TimeFormatError / TimeRangeError.
-      Use case ends.
-* 3a. Zenith detects that the updated session overlaps an existing session
-    * 3a1. Zenith shows SessionConflictError.
+* 3c. Zenith detects that both the new phone number and email already exist in another contact.
+    * 3c1. Zenith shows an error message indicating duplicate phone and email.
       Use case ends.
 
 
-**Use case: UC05 – Add Session Timing to a Contact**
+**Use case: UC04 – Add Session to Contact**
 
 **Preconditions**
 - The contact exists.
 
 **Guarantees**
-- A session is added only if the slot is valid and non-overlapping.
-- On success, Zenith shows the contact with the new session.
+- A session is added only if the slot is valid and non-overlapping within that contact's schedule.
+- On success, Zenith displays the contact with the new session.
 
 **MSS**
-1. Tutor provides the contact index and session timing details to be added.
-2. Zenith validates indices and time values.
-3. Zenith checks for overlaps with that contact's existing sessions.
-4. Zenith adds the session and shows the updated contact.
-5. Includes: UC12 Autosave.
+1. Tutor provides the contact index and session timing (day, start time, end time).
+2. Zenith validates the index, day, and time values.
+3. Zenith checks for overlaps with the contact's existing sessions.
+4. Zenith adds the session to the contact and displays the updated contact.
+5. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
-Same as UC04
+* 2a. Zenith detects that the index is invalid or missing.
+    * 2a1. Zenith shows an error message indicating the index issue.
+      Use case ends.
+* 2b. Zenith detects that the day is invalid.
+    * 2b1. Zenith shows an error message indicating invalid day.
+      Use case ends.
+* 2c. Zenith detects that the time format is invalid or the end time is before start time.
+    * 2c1. Zenith shows an error message indicating the time issue.
+      Use case ends.
+* 3a. Zenith detects that the new session overlaps with an existing session.
+    * 3a1. Zenith shows an error message indicating session conflict.
+      Use case ends.
 
 
-**Use case: UC06 – Add Subject Tag to a Contact**
+**Use case: UC05 – Add Subject Tag to Contact**
 
 **Preconditions**
 - The contact exists.
 
 **Guarantees**
 - A subject tag is added only if the subject code is valid and not already present.
-- On success, Zenith shows the contact with the new tag.
+- On success, Zenith displays the contact with the new tag.
 
 **MSS**
-1. Tutor provides the contact index and the subject code for the tag to be added.
-2. Zenith validates the index and subject code.
-3. Zenith adds the tag and shows the updated contact.
-4. Includes: UC12 Autosave.
+1. Tutor provides the contact index and one or more subject codes.
+2. Zenith validates the index and subject codes.
+3. Zenith checks that no subject is specified more than once in the command.
+4. Zenith checks that the subject tags do not already exist for the contact.
+5. Zenith adds the subject tags to the contact and displays the updated contact.
+6. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
-* 2a. Zenith detects that the index is invalid or missing
-    * 2a1. Zenith shows InvalidIndexError / ArgumentError.
+* 2a. Zenith detects that the index is invalid or missing.
+    * 2a1. Zenith shows an error message indicating the index issue.
       Use case ends.
-* 2b. Zenith detects that the subject code is missing or invalid
-    * 2b1. Zenith shows InvalidSubjectError.
+* 2b. Zenith detects that a subject code is invalid.
+    * 2b1. Zenith shows an error message indicating invalid subject code.
       Use case ends.
-* 2c. Zenith detects that the subject tag is already on the contact
-    * 2c1. Zenith shows DuplicateSubjectError.
+* 3a. Zenith detects that the same subject is specified multiple times in the command.
+    * 3a1. Zenith shows an error message indicating duplicate subject in command.
+      Use case ends.
+* 4a. Zenith detects that one or more subject tags already exist for the contact.
+    * 4a1. Zenith shows an error message indicating which subjects are already assigned.
       Use case ends.
 
 
-**Use case: UC07 – Set Payment Status**
+**Use case: UC06 – Set Payment Status**
 
 **Preconditions**
 - The target contact exists.
 
 **Guarantees**
-- Payment status is updated only if the index is valid and status is one of PENDING, PAID, or OVERDUE.
+- Payment status is updated only if the index is valid and status is PENDING, PAID, or OVERDUE.
 - Billing start day, if provided, must be between 1-31.
-- On success, Zenith shows the updated contact with new payment information.
+- On success, Zenith displays the updated contact with new payment information.
 
 **MSS**
-1. Tutor provides the contact index and payment status to set.
+1. Tutor provides the contact index and payment status.
 2. Zenith validates the index and payment status.
-3. Zenith updates the contact's payment status and shows the updated contact.
-4. Includes: UC12 Autosave.
+3. Zenith updates the contact's payment status and displays the updated contact.
+4. Includes: UC13 Autosave.
 Use case ends.
 
 **Extensions**
-* 1a. Tutor provides billing start day.
+* 1a. Tutor provides optional billing start day.
     * 1a1. Zenith validates billing start day is between 1-31.
     * 1a2. Zenith updates payment status with the specified billing start day.
       Use case continues from step 3.
 * 2a. Zenith detects that the index is invalid or missing.
-    * 2a1. Zenith shows InvalidIndexError or MissingIndexError.
+    * 2a1. Zenith shows an error message indicating the index issue.
       Use case ends.
-* 2b. Zenith detects that the payment status is blank or invalid.
-    * 2b1. Zenith shows InvalidStatusError.
+* 2b. Zenith detects that the payment status is invalid.
+    * 2b1. Zenith shows an error message indicating invalid payment status.
       Use case ends.
-* 2c. Zenith detects that the billing start day is invalid (not between 1-31).
-    * 2c1. Zenith shows InvalidBillingDayError.
+* 2c. Zenith detects that the billing start day is not between 1-31.
+    * 2c1. Zenith shows an error message indicating invalid billing day.
+      Use case ends.
+
+
+**Use case: UC07 – Find Earliest Free Time**
+
+**Guarantees**
+- Zenith shows the earliest available time slot across all contacts' schedules that fits the requested duration.
+- No data is modified.
+
+**MSS**
+1. Tutor provides the duration in minutes for the desired time slot.
+2. Zenith validates the duration is a positive integer.
+3. Zenith searches through the weekly schedule to find the earliest free time slot.
+4. Zenith displays the earliest available time or indicates no free time is available.
+Use case ends.
+
+**Extensions**
+* 2a. Zenith detects that the duration is missing or invalid.
+    * 2a1. Zenith shows an error message indicating invalid duration.
+      Use case ends.
+* 3a. Zenith finds no available time slot that fits the requested duration.
+    * 3a1. Zenith shows a message indicating no free time is available.
       Use case ends.
 
 
@@ -656,14 +679,14 @@ Use case ends.
 - Zenith shows a filtered contact list based on the keywords; no data is modified.
 
 **MSS**
-1. Tutor provides the keywords to find contacts by.
+1. Tutor provides one or more keywords to search for.
 2. Zenith validates that at least one non-empty keyword is provided.
-3. Zenith filters the list and shows the results.
+3. Zenith filters the contact list and displays matching results.
 Use case ends.
 
 **Extensions**
-* 2a. Zenith detects that no valid keyword is provided
-    * 2a1. Zenith shows ArgumentError.
+* 2a. Zenith detects that no valid keyword is provided.
+    * 2a1. Zenith shows an error message indicating missing keywords.
       Use case ends.
 
 
@@ -673,26 +696,40 @@ Use case ends.
 - Zenith shows the full contact list; no data is modified.
 
 **MSS**
-1. Tutor requests to list contacts.
-2. Zenith shows all contacts.
+1. Tutor requests to list all contacts.
+2. Zenith displays all contacts.
 Use case ends.
 
 
-**Use case: UC10 – Help**
+**Use case: UC10 – Clear All Contacts**
+
+**Guarantees**
+- All contacts are removed from the address book.
+- On success, Zenith displays an empty contact list.
+
+**MSS**
+1. Tutor requests to clear all contacts.
+2. Zenith removes all contacts from the address book.
+3. Zenith displays an empty list.
+4. Includes: UC13 Autosave.
+Use case ends.
+
+
+**Use case: UC11 – Help**
 
 **Guarantees**
 - Zenith shows the available commands with brief descriptions.
 
 **MSS**
 1. Tutor requests help.
-2. Zenith displays the available commands.
+2. Zenith displays the available commands and usage guide.
 Use case ends.
 
 
-**Use case: UC11 – Exit**
+**Use case: UC12 – Exit**
 
 **Guarantees**
-- Zenith exits gracefully
+- Zenith exits gracefully.
 
 **MSS**
 1. Tutor requests to exit.
@@ -700,7 +737,7 @@ Use case ends.
 Use case ends.
 
 
-**Use case: UC12 – Autosave**
+**Use case: UC13 – Autosave**
 
 **Actor: File System**
 
@@ -708,20 +745,18 @@ Use case ends.
 - A data-modifying command has just succeeded.
 
 **Guarantees**
-- Latest state is written to local storage
-- On failure Zenith warns with an error message
+- Latest state is written to local storage if write operation succeeds.
+- Errors during write operations are logged for debugging purposes.
 
 **MSS**
-1. Zenith writes the updated data to the save file.
+1. Zenith attempts to write the updated data to the save file.
 Use case ends.
 
 **Extensions**
-* 1a. Zenith detects write failure due to permissions/disk
-    * 1a1. Zenith shows FileAccessError or DiskSpaceError.
+* 1a. Zenith encounters an error during write operation (e.g., due to file permissions or disk space).
+    * 1a1. Zenith logs the error details.
+    * 1a2. Application continues to function with in-memory data.
       Use case ends.
-* 1b. Zenith detects that the existing save file is corrupted
-    * 1b1. Zenith shows FileCorruptionError and attempts recovery/backup; on failure show BackupCreationError.
-	  Use case ends.
 
 *{More to be added}*
 
@@ -732,7 +767,7 @@ Use case ends.
 3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 4.  Autosave functionality must always preserve user data immediately after every data-changing command (add, delete, edit, session/subject changes) with no perceptible delay.
 5.  Application startup, shutdown, and command responses for core actions (add, edit, delete, addsession, addsubject) should complete in under 1 second for databases with up to 1000 students on consumer-grade hardware.
-6.  The application shall recover gracefully from partial file corruption, access errors, or disk space insufficiency, displaying clear error messages, attempting restoration from the most recent backup, and never crashing silently or destroying unsaved user data.
+6.  The application shall recover gracefully from partial file corruption, access errors, or disk space insufficiency, and never crashing silently or destroying unsaved user data.
 7.  All error and warning messages must be concise, clear, and non-ambiguous, allowing users to recover independently without technical support.
 8.  The _core functions_ of the application must work completely offline with no network dependencies, ensuring reliability regardless of internet connectivity.
 
@@ -804,6 +839,68 @@ testers are expected to do more *exploratory* testing.
 
    4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
+
+### Adding subject tags
+
+1. Adding a single subject tag
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Alice Tan y/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45` followed by `addsubject 1 sub/MATH`<br>
+       Expected: MATH subject tag is added to Alice Tan. Success message shows "Added Subject Tag(s): [MATH] to Alice Tan". Subject tag displayed in the detailed view with color coding.
+
+2. Adding multiple subject tags in one command
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Bob Lee y/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78` followed by `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
+       Expected: PHY, CHEM, and BIO subject tags are added to Bob Lee. Success message lists all three subjects. Detailed view shows all three subject tags with color coding.
+
+3. Testing case-insensitivity
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Charlie Ng y/PRI5 p/93456789 e/charlie@example.com a/Blk 789 Street 12` followed by `addsubject 1 sub/math`<br>
+       Expected: MATH subject tag is added (case-insensitive). Success message shows "[MATH]" in uppercase. Subject tag appears in uppercase in the detailed view.
+
+4. Testing duplicate subject already assigned to contact
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/David Lim y/SEC4 p/84567890 e/david@example.com a/Blk 234 Street 56`, then `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
+       Expected: Second addsubject command fails. Error message indicates "Subject Tag(s): ENG already assigned to David Lim".
+
+5. Testing duplicate subject in same command
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Emma Wong y/JC2 p/95678901 e/emma@example.com a/Blk 567 Street 89` followed by `addsubject 1 sub/MATH sub/MATH`<br>
+       Expected: No subject is added. Error message indicates "Duplicate subject tag(s) detected in command. Each subject should only be specified once."
+
+6. Testing invalid index (zero)
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Frank Tan y/POLY2 p/96789012 e/frank@example.com a/Blk 890 Street 34` followed by `addsubject 0 sub/SCI`<br>
+       Expected: No subject is added. Error message indicates invalid index.
+
+7. Testing invalid subject code
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Grace Koh y/UNI3 p/87890123 e/grace@example.com a/Blk 345 Street 67` followed by `addsubject 1 sub/INVALID`<br>
+       Expected: No subject is added. Error message shows the list of valid subject codes (MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI).
+
+8. Testing empty subject parameter
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Henry Lim y/SEC2 p/88901234 e/henry@example.com a/Blk 678 Street 90` followed by `addsubject 1 sub/`<br>
+       Expected: No subject is added. Error message indicates subject cannot be blank and shows valid subject codes.
+
+9. Testing missing subject parameter
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Iris Tan y/PRI3 p/89012345 e/iris@example.com a/Blk 901 Street 23` followed by `addsubject 1`<br>
+       Expected: No subject is added. Error message shows command usage format.
+
+10. Testing out of bounds index
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Jack Lee y/SEC5 p/80123456 e/jack@example.com a/Blk 234 Street 56` followed by `addsubject 100 sub/HIST`<br>
+       Expected: No subject is added. Error message indicates invalid person index.
+
+11. Testing with filtered list
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Alice Tan y/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45`, then `add n/Bob Lee y/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78`, then `find Alice`, then `addsubject 1 sub/GEOG`<br>
+       Expected: GEOG subject tag is added to Alice Tan (first person in filtered list). Success message confirms addition. Use `list` command to verify Alice now has GEOG.
+
+12. Testing adding subjects to contact with existing subjects
+    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    2. Test case: `add n/Kate Ng y/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
+       Expected: PHY and CHEM are added successfully. Kate now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
 
 1. _{ more test cases …​ }_
 
