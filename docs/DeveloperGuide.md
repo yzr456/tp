@@ -842,6 +842,20 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
+### Adding a session
+1. Adding a session
+    1. Prerequisites: List all persons using the `list` command. Multiple persons(at least 2) in the list but none of them with session tag(e.g. MON 1100 - 1200).
+    2. Test case 1(a): `addsession 1 d/Mon s/1100 e/1200`<br>
+       Expected: New session will be added under the first person in the list.
+    3. Test case 1(b): `addsession 2 d/Mon s/1100 e/1200`<br>
+       Expected: New session will be added under the first person in the list.
+    4. Test case 2(a): `addsession 1 d/Mon s/1100 e/1200`<br>
+       Expected: New session will be added under the first person in the list.
+    5. Test case 1(b): `addsession 1 d/Mon s/1130 e/1230`<br>
+       Expected: No new session will be added due to overlap sessions. Error details shown in the status message.
+    6. Test case 3: `addsession 1 d/Mon s/1130` <br>
+       Expected: No new person is added to the list due to missing parameter. Error details shown in status message.
+
 ### Saving data
 
 1. Dealing with missing/corrupted data files
