@@ -18,6 +18,8 @@ public class Session implements Comparable<Session> {
 
     public static final List<String> DAY_OF_WEEKS = List.of("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN");
     public static final int MINIMAL_DURATION = 15;
+    public static final LocalTime EARLIEST_START_TIME = LocalTime.of(8, 0);
+    public static final LocalTime LATEST_END_TIME = LocalTime.of(22, 0);
 
     public static final String MESSAGE_INVALID_CONSTRAINTS = "SessionStr must be in format <day> <start> - <end>";
     public static final String MESSAGE_DAY_CONSTRAINTS =
@@ -25,7 +27,8 @@ public class Session implements Comparable<Session> {
     public static final String MESSAGE_TIME_FORMAT_CONSTRAINTS =
             "Times cannot be blank and must be in HHmm (e.g., 0900, 1730) with digits only.";
     public static final String MESSAGE_TIME_RANGE_CONSTRAINTS =
-            "Start time must be before end time, with a minimum duration of " + MINIMAL_DURATION + " minutes.";
+            "Start time must be before end time, with a minimum duration of " + MINIMAL_DURATION
+                    + " minutes and within the range of 0800 to 2200";
 
     /*
      * The time must be in the format {@code HHmm}.
@@ -72,6 +75,8 @@ public class Session implements Comparable<Session> {
         }
 
         if (startTime.plusMinutes(MINIMAL_DURATION).isAfter(endTime)) {
+            throw new IllegalArgumentException(MESSAGE_TIME_RANGE_CONSTRAINTS);
+        } else if (startTime.isBefore(EARLIEST_START_TIME) || endTime.isAfter(LATEST_END_TIME)) {
             throw new IllegalArgumentException(MESSAGE_TIME_RANGE_CONSTRAINTS);
         }
     }

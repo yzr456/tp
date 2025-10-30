@@ -71,6 +71,13 @@ public class CommandBox extends UiPart<Region> {
     }
 
     /**
+     * Positions the caret at the end of the text in the command text field.
+     */
+    public void positionCaretAtEnd() {
+        commandTextField.positionCaret(commandTextField.getText().length());
+    }
+
+    /**
      * Appends text to the command text field at the current caret position.
      */
     public void appendText(String text) {

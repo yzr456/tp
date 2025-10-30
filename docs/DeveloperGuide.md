@@ -807,6 +807,52 @@ testers are expected to do more *exploratory* testing.
 
 1. _{ more test cases …​ }_
 
+### Editing a person
+
+1. Editing a person's contact details while all persons are being shown
+
+   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+   2. Test case: `edit -c 1 n/John Tan p/91234567`<br>
+      Expected: First contact's name and phone are updated. Updated contact details shown in the result display.
+
+   3. Test case: `edit -c 1 p/98765432` (where contact 2 already has phone 98765432)<br>
+      Expected: No person is updated. Error message: "A person with this phone number already exists in the address book."
+
+   4. Test case: `edit -c 0 n/John`<br>
+      Expected: No person is updated. Error message indicating invalid index shown.
+
+   5. Test case: `edit -c 1 p/abc`<br>
+      Expected: No person is updated. Error message indicating phone numbers should only contain numbers and be at least 3 digits long.
+
+   6. Test case: `edit 1 n/John`<br>
+      Expected: No person is updated. Error message: "A valid flag must be provided. Use -c for contact or -s for session."
+
+   7. Other incorrect edit commands to try: `edit -c 1` (no fields), `edit -x 1 n/John` (invalid flag), `edit -c 999 n/John` (where 999 is larger than list size)<br>
+      Expected: Error messages shown explaining the specific issue with the command format or parameters.
+
+1. Editing a person's session timings
+
+   1. Prerequisites: Have a contact with at least one session. List all persons using the `list` command.
+
+   2. Test case: `edit -s 1 d/TUE s/1000 e/1200`<br>
+      Expected: All sessions for the first contact are replaced with "TUE 1000-1200". Updated contact shown with new session timing.
+
+   3. Test case: `edit -s 1 d/MON s/0900 e/1100 d/MON s/1030 e/1230`<br>
+      Expected: No person is updated. Error message indicating sessions overlap.
+
+   4. Test case: `edit -s 1 s/0900 d/MON e/1100`<br>
+      Expected: No person is updated. Error message: "Invalid session format. Each session must follow order: d/, s/, e/."
+
+   5. Test case: `edit -s 1 d/MON s/1200 e/1000`<br>
+      Expected: No person is updated. Error message indicating start time must be before end time.
+
+   6. Test case: `edit -s 0 d/MON s/0900 e/1100`<br>
+      Expected: No person is updated. Error message indicating invalid index.
+
+   7. Other incorrect session edit commands to try: `edit -s 1 d/MON s/0900` (incomplete triplet), `edit -s 1 d/MONDAY s/0900 e/1100` (invalid day format), `edit -s 999 d/MON s/0900 e/1100` (where 999 is larger than list size)<br>
+      Expected: Error messages shown explaining the specific issue with session format or parameters.
+
 ### Setting payment status
 
 1. Setting payment status for a person while all persons are being shown
