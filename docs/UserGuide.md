@@ -151,16 +151,53 @@ Edits the contact information and subjects of a student.
 
 Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
-* You can remove all the person’s tags by typing `t/` without
-    specifying any tags after it.
+**Parameters:**
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `[n/NAME]`: New name for the student (optional)
+* `[s/STUDY_YEAR]`: New study year (optional) - Valid values: SEC1, SEC2, SEC3, JC1, JC2
+* `[p/PHONE]`: New phone number (optional)
+* `[e/EMAIL]`: New email address (optional)
+* `[a/ADDRESS]`: New address (optional)
+* `[sub/SUBJECT]…​`: New subjects (optional) - Can specify multiple subjects
+
+**Notes:**
+* At least one optional field must be provided
+* Existing values will be updated to the input values
+* When editing subjects, the existing subjects will be **replaced** (not added to)
+* Valid subjects: MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `edit -c 1 p/91234567 e/johndoe@example.com`
+    - Edits the phone number and email of the 1st student to `91234567` and `johndoe@example.com`
+* `edit -c 2 n/Betsy Crower s/JC2`
+   - Edits the name to `Betsy Crower` and study year to JC2
+* `edit -c 1 sub/MATH sub/PHY`
+  - Replaces all existing subjects with Math and Physics only
+
+#### Edit Sessions: `edit -s`
+
+Edits the tutoring sessions of a student.
+
+Format: `edit -s INDEX [d/DAY] [s/START] [e/END]…​`
+
+**Parameters:**
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `[d/DAY]`: Day of the week (MON, TUE, WED, THU, FRI, SAT, SUN)
+* `[s/START]`: Start time in 24-hour format (e.g., 0900, 1430)
+* `[e/END]`: End time in 24-hour format (e.g., 1100, 1630)
+
+**Notes:**
+* Sessions must follow the order: `d/` then `s/` then `e/`
+* You can edit multiple sessions at once by repeating the pattern
+* When editing sessions, **all existing sessions are replaced** with the new ones
+* Sessions cannot overlap with existing sessions for other students
+* Sessions cannot overlap with each other for the same student
+
+**Examples:**
+* `edit -s 1 d/MON s/0900 e/1100`
+    - Replaces all sessions for student 1 with a Monday 9am-11am session
+* `edit -s 2 d/TUE s/1400 e/1600 d/THU s/1500 e/1700`
+    - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm
 
 ### Locating persons by name: `find`
 
