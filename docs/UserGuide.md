@@ -109,8 +109,9 @@ Zenith is designed for tech-savvy private tutors who value keyboard efficiency:
     * Double-tap `↑` or `↓` arrow keys to transfer focus to the Person List
     * The Detailed View will react and display the selected contact
 
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:** You can use Zenith entirely without a mouse, making it ideal for fast typists who want to maximize efficiency.
-</div>
+<box type="tip" seamless>
+**Tip:** You can use Zenith entirely without a mouse, making it ideal for fast typists who want to maximize efficiency.
+</box>
 
 ### Mouse Support
 
@@ -266,18 +267,21 @@ Format: `setpayment INDEX status/STATUS [start/DAY]`
 * `DAY` is optional and represents the billing cycle start day (1-31). Defaults to 1 if not specified.
 * If status is **OVERDUE**, the system automatically calculates and displays days overdue based on the billing cycle.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** The system does not automatically update a PAID status to OVERDUE. You must manually update the payment status when payments become overdue.
-</div>
+<box type="info" seamless>
+ℹ️ **Note:** The system does not automatically update a **PAID** status to **OVERDUE**. You must manually update the payment status when payments become overdue.
+</box>
 
 Examples:
 * `setpayment 1 status/PAID` sets the 1st student's payment status to PAID with default billing cycle (day 1).
 * `setpayment 2 status/PENDING start/15` sets the 2nd student's status to PENDING with billing cycle starting on the 15th of each month.
 * `setpayment 3 status/OVERDUE` sets the 3rd student's status to OVERDUE and displays how many days overdue the payment is.
 
-<div markdown="span" class="alert alert-primary">:bulb: **Tips:**
+<box type="tip" seamless>
+**Tips:**
 * Use `status/PENDING` when awaiting payment, `status/PAID` when confirmed, and `status/OVERDUE` to track late payments.
 * The days overdue count helps you prioritize follow-ups with students whose payments are most delayed.
-</div>
+</box>
+
 
 ### Deleting a person : `delete`
 
