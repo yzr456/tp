@@ -210,7 +210,8 @@ public class MainWindow extends UiPart<Stage> {
                 || keyCode == KeyCode.SLASH
                 || keyCode == KeyCode.MINUS
                 || keyCode == KeyCode.BACK_SPACE
-                || keyCode == KeyCode.DELETE;
+                || keyCode == KeyCode.DELETE
+                || keyCode == KeyCode.CONTROL;
     }
 
     /**
