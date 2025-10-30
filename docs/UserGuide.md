@@ -137,7 +137,7 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
   e.g `status/pending [start/DAY]` can be used as ` status/pending start/5` or as `status/pending`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `[sub/SUBJECT]…​` can be used as ` ` (i.e. 0 times), `sub/ENG`, `sub/ENG sub/CHI` etc.
 
 * For all commands except `edit -s`, parameters can be in any order.<br>
   e.g. for the `add` command which specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
@@ -165,7 +165,7 @@ Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
 Examples:
 * `add n/John Doe s/PRI1 p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567`
 
 ### Listing all persons : `list`
 
@@ -300,8 +300,8 @@ Format: `addsession INDEX d/DAY s/START_TIME e/END_TIME`
 
 * Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * The session to be added must not overlap with any existing sessions under the same person. For all other persons, the new session must either be exactly the same or not overlap with their existing sessions.
-* `DAY` cannot be blank and must be one of: MON, TUE, WED, THU, FRI, SAT, SUN(case-insensitive).
-* `START_TIME` and `END_TIME` cannot be blank and must be in HHmm (e.g., 0900, 1730) with digits only.
+* `DAY` must be one of: `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`(case-insensitive).
+* `START_TIME` and `END_TIME` must be in `HHmm` (e.g., 0900, 1730) with digits only.
 * `START_TIME` and `END_TIME` must be between `0800` and `2200` on the same day, `START_TIME` must earlier than `END_TIME`, with a minimum duration of 15 minutes.
 
 Examples:
@@ -374,7 +374,7 @@ _Details coming soon ..._
 
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
