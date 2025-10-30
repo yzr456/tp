@@ -133,12 +133,12 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g `INDEX [n/NAME]` can be used as `1 n/John Doe` or as `1`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `[sub/SUBJECT]…​` can be used as ` ` (i.e. 0 times), `sub/ENG`, `sub/ENG sub/CHI` etc.
 
-* Parameters can be in any order.<br>
+* Parameters can be in any order unless stated otherwise.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
@@ -164,7 +164,7 @@ Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
 Examples:
 * `add n/John Doe s/PRI1 p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567`
 
 ### Listing all persons : `list`
 
@@ -370,7 +370,7 @@ _Details coming soon ..._
 
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
