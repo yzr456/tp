@@ -1,0 +1,1 @@
+This folder contains diagrams that are not in use and parts that were removed from the UG and DG that can be used as references

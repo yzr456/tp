@@ -229,6 +229,8 @@ public class MainWindow extends UiPart<Stage> {
     public void focusCommandBoxWithKey(KeyEvent event) {
         if (commandBox != null) {
             commandBox.requestFocus();
+            // Position caret at end to ensure characters are appended to the end
+            commandBox.positionCaretAtEnd();
             // Insert the character that was typed
             String text = event.getText();
             if (text != null && !text.isEmpty()) {
