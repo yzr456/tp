@@ -36,7 +36,8 @@ public class AddSessionCommand extends Command {
             + PREFIX_START + "START "
             + PREFIX_END + "END\n"
             + "Command syntax: "
-            + COMMAND_WORD + " [INDEX] " + PREFIX_DAY + "[DAY] " + PREFIX_START + "[START] " + PREFIX_END + "[END]\n"
+            + COMMAND_WORD + " [INDEX] " + PREFIX_DAY + "[DAY] " + PREFIX_START + "[START] " + PREFIX_END
+            + "[END] (START and END must be between 0800 to 2200)\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
