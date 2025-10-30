@@ -134,13 +134,13 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `INDEX [n/NAME]` can be used as `1 n/John Doe` or as `1`.
+  e.g `status/pending [start/DAY]` can be used as ` status/pending start/5` or as `status/pending`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
   e.g. `[sub/SUBJECT]…​` can be used as ` ` (i.e. 0 times), `sub/ENG`, `sub/ENG sub/CHI` etc.
 
-* Parameters can be in any order unless stated otherwise.<br>
-  e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+* For all commands except `edit -s`, parameters can be in any order.<br>
+  e.g. for the `add` command which specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
