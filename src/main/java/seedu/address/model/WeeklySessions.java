@@ -190,6 +190,7 @@ public class WeeklySessions {
             int participantCount = sessionCounts.get(session);
             if (participantCount - 1 == 0) {
                 weeklySessions.remove(session);
+                sessionCounts.remove(session);  // Remove from map when count reaches 0
             } else {
                 sessionCounts.put(session, sessionCounts.get(session) - 1);
             }
