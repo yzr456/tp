@@ -41,8 +41,13 @@ public class AddCommand extends Command {
             + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 \n";
 
     public static final String MESSAGE_SUCCESS = "New person added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
-    public static final String MESSAGE_DUPLICATE_CONTACT = "This contact already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PHONE = "A person with this phone number "
+            + "already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_EMAIL = "A person with this email address "
+            + "already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PHONE_AND_EMAIL = "A person with this phone number "
+            + "and email address already exists in the address book.";
 
     private final Person toAdd;
 
@@ -63,11 +68,41 @@ public class AddCommand extends Command {
         }
 
         if (model.hasContact(toAdd)) {
-            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
+            // Find which field(s) are duplicated
+            String errorMessage = getDuplicateContactMessage(model);
+            throw new CommandException(errorMessage);
         }
 
         model.addPerson(toAdd);
         return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+    }
+
+    /**
+     * Determines which contact field (phone, email, or both) is duplicated in the model.
+     */
+    private String getDuplicateContactMessage(Model model) {
+        boolean hasPhoneDuplicate = false;
+        boolean hasEmailDuplicate = false;
+
+        for (Person person : model.getAddressBook().getPersonList()) {
+            if (person.hasSameNumber(toAdd)) {
+                hasPhoneDuplicate = true;
+            }
+            if (person.hasSameEmail(toAdd)) {
+                hasEmailDuplicate = true;
+            }
+            if (hasPhoneDuplicate && hasEmailDuplicate) {
+                break; // Both found, no need to continue
+            }
+        }
+
+        if (hasPhoneDuplicate && hasEmailDuplicate) {
+            return MESSAGE_DUPLICATE_PHONE_AND_EMAIL;
+        } else if (hasPhoneDuplicate) {
+            return MESSAGE_DUPLICATE_PHONE;
+        } else {
+            return MESSAGE_DUPLICATE_EMAIL;
+        }
     }
 
     @Override
