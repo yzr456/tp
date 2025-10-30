@@ -134,10 +134,10 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `status/pending [start/DAY]` can be used as ` status/pending start/5` or as `status/pending`.
+  e.g `setpayment INDEX status/STATUS [start/DAY]` can be used as `setpayment 1 status/OVERDUE start/1` or as `setpayment 1 status/OVERDUE`.
 
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[sub/SUBJECT]…​` can be used as ` ` (i.e. 0 times), `sub/ENG`, `sub/ENG sub/CHI` etc.
+* Items with `…`​ after them can be used multiple times.<br>
+  e.g. `addsubject INDEX sub/SUBJECT…​` can be used as `addsubject 1 sub/MATH`, `addsubject 1 sub/MATH sub/ENG` etc.
 
 * For all commands except `edit -s`, parameters can be in any order.<br>
   e.g. for the `add` command which specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
@@ -249,6 +249,33 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
+### Adding subject tags : `addsubject`
+
+Adds one or more subject tags to a student's record to track which subjects they are taking.
+
+Format: `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​`
+
+* Adds subject tag(s) to the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …
+* `SUBJECT` must be a valid subject code (case-insensitive).
+* You can add multiple subjects at once by repeating the `sub/` prefix.
+* Each subject can only be specified once per command.
+* Subjects that are already assigned to the student will be rejected.
+
+<div markdown="span" class="alert alert-info"> <strong>Valid Subject Codes:</strong><br>
+MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI
+</div>
+
+Examples:
+* `addsubject 1 sub/MATH` adds the MATH subject tag to the 1st student.
+* `addsubject 3 sub/PHY sub/SCI` adds both PHY and SCI subject tags to the 3rd student.
+* `addsubject 2 sub/ENG sub/LIT sub/HIST` adds multiple humanities subjects to the 2nd student.
+
+<div markdown="span" class="alert alert-primary"> <strong>Tips:</strong><br>
+If you need to remove or change subjects, use the <code>edit</code> command to modify the student's tags.
+</div>
+
 ### Setting payment status : `setpayment`
 
 Sets and tracks the payment status of a student, including automatic overdue day counting.
@@ -350,10 +377,6 @@ If your changes to the data file makes its format invalid, Zenith will discard a
 Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## FAQ
@@ -372,12 +395,19 @@ _Details coming soon ..._
 
 ## Command summary
 
-Action     | Format, Examples
------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665`
-**Clear**  | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**List**   | `list`
-**Help**   | `help`
+| Action | Format, Examples |
+|--------|------------------|
+| **Add** | `add n/NAME y/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe y/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
+| **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100` |
+| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI` |
+| **Clear** | `clear` |
+| **Delete** | `delete INDEX` <br> e.g., `delete 3` |
+| **Edit Contact** | `edit -c INDEX [n/NAME] [y/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567` |
+| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100` |
+| **Exit** | `exit` |
+| **Find** | `find KEYWORD [MORE_KEYWORDS]` <br> e.g., `find John David` |
+| **Free** | `free DURATION` <br> e.g., `free 4` |
+| **Help** | `help` |
+| **List** | `list` |
+| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15` |
+
