@@ -167,7 +167,7 @@ public class WeeklySessions {
      *
      * @param replacement The WeeklySessions to copy from.
      */
-    public void setWeeklySessions(WeeklySessions replacement) {
+    public void set(WeeklySessions replacement) {
         requireNonNull(replacement);
         weeklySessions.clear();
         weeklySessions.addAll(replacement.weeklySessions);
@@ -190,6 +190,7 @@ public class WeeklySessions {
             int participantCount = sessionCounts.get(session);
             if (participantCount - 1 == 0) {
                 weeklySessions.remove(session);
+                sessionCounts.remove(session); // Remove from map when count reaches 0
             } else {
                 sessionCounts.put(session, sessionCounts.get(session) - 1);
             }

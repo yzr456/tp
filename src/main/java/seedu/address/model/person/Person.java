@@ -90,7 +90,9 @@ public class Person {
     }
 
     /**
-     * Returns true if both persons have the same name.
+     * Returns true if both persons have the same identity fields.
+     * Identity fields are: name, study year, phone, email, and address.
+     * Tags and payment status are not considered as they can change over time.
      * This defines a weaker notion of equality between two persons.
      */
     public boolean isSamePerson(Person otherPerson) {
@@ -98,8 +100,15 @@ public class Person {
             return true;
         }
 
-        return otherPerson != null
-                && (hasSameEmail(otherPerson) || hasSameNumber(otherPerson));
+        if (otherPerson == null) {
+            return false;
+        }
+
+        return name.equals(otherPerson.name)
+                && studyYear.equals(otherPerson.studyYear)
+                && phone.equals(otherPerson.phone)
+                && email.equals(otherPerson.email)
+                && address.equals(otherPerson.address);
     }
 
     public boolean hasSameNumber(Person otherPerson) {

@@ -67,20 +67,37 @@ The sections below give more details of each component.
 
 ### UI component
 
-The **API** of this component is specified in [`Ui.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/Ui.java)
+The **API** of this component is specified in [`Ui.java`](https://github.com/AY2526S1-CS2103-F12-4/tp/tree/master/src/main/java/seedu/address/ui/Ui.java)
 
 <puml src="diagrams/UiClassDiagram.puml" alt="Structure of the UI Component"/>
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `StatusBarFooter` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
+The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `PersonListPanel`, `PersonCard`, `DetailedView`, `StatusBarFooter`, `HelpWindow` etc. All these, including the `MainWindow`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
-The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
+The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/AY2526S1-CS2103-F12-4/tp/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/AY2526S1-CS2103-F12-4/tp/tree/master/src/main/resources/view/MainWindow.fxml)
+
+**Main UI Structure:**
+
+* **Header**: Application logo and Help button
+* **CommandBox**: Text field for command input with visual error feedback
+* **ResultDisplay**: Read-only text area showing command execution results
+* **Split Pane** (30% / 70% fixed division):
+  * **PersonListPanel** (left): Scrollable list of contacts, each rendered as a `PersonCard` showing index, name, study year, contact details, session tags and subject tags
+  * **DetailedView** (right): Comprehensive view of selected contact including all fields, payment status, color-coded subject tags, and color-coded session tags
+* **StatusBarFooter**: Displays save file location
+* **HelpWindow**: Separate modal dialog with command usage and user guide link
 
 The `UI` component,
 
 * executes user commands using the `Logic` component.
-* listens for changes to `Model` data so that the UI can be updated with the modified data.
+* listens for changes to `Model` data via `ObservableList<Person>` so that the UI can be updated automatically.
 * keeps a reference to the `Logic` component, because the `UI` relies on the `Logic` to execute commands.
-* depends on some classes in the `Model` component, as it displays `Person` object residing in the `Model`.
+* depends on some classes in the `Model` component, as it displays `Person` objects residing in the `Model`.
+* implements keyboard-first interaction:
+  * Typing alphanumeric keys anywhere focuses `CommandBox` and inserts the character
+  * Typing `ctrl` anywhere focuses `CommandBox`
+  * UP/DOWN arrow keys navigate the contact list
+  * F1 opens `HelpWindow`
+* automatically updates `DetailedView` when a contact is selected (via click or keyboard navigation).
 
 ### Logic component
 
@@ -124,8 +141,9 @@ How the parsing works:
 The `Model` component,
 
 * stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores a centralized view of all scheduled sessions (which are managed by a `WeeklySessions` object). See the [WeeklySessions Component](#weeklysessions-component) section for implementation details.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
-* stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
+* stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
 <box type="info" seamless>
@@ -241,19 +259,146 @@ The following activity diagram summarizes what happens when a user executes a ne
 **Aspect: How undo & redo executes:**
 
 * **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
+    * Pros: Easy to implement.
+    * Cons: May have performance issues in terms of memory usage.
 
 * **Alternative 2:** Individual command knows how to undo/redo by
   itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+    * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
+    * Cons: We must ensure that the implementation of each individual command are correct.
 
 _{more aspects and alternatives to be added}_
 
 ### \[Proposed\] Data archiving
 
 _{Explain here how the data archiving feature will be implemented}_
+
+### WeeklySessions Component
+
+The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the address book. It augments the `AddressBook` with efficient time-based query capabilities.
+
+#### Purpose
+- Maintains a global schedule view of all sessions
+- Enables efficient overlap detection
+- Supports free time gap-finding algorithms
+- Provides sorted session iteration
+
+#### Architecture
+
+`WeeklySessions` implements a dual-storage pattern within `AddressBook`:
+
+1. **Person-centric view**: Sessions stored as `SessionTag` objects within each `Person`'s tags collection
+2. **Time-centric view**: Sessions stored in a sorted `TreeSet<Session>` within `WeeklySessions`
+
+
+#### Key Data Structures
+
+**TreeSet Ordering**: Sessions are automatically sorted using `Session.compareTo()`:
+1. By `DayOfWeek` (MON → SUN)
+2. Then by `startTime`
+3. Then by `endTime`
+
+This ordering enables efficient linear scanning for free time queries.
+
+**Reference Counting**: The `sessionCounts` map tracks how many persons share each session. A session is only removed from the TreeSet when its count reaches zero, preventing premature deletion when multiple students attend the same session time.
+
+#### Core Operations
+
+**Adding Sessions** `add(Session session)`:
+- If session already exists: increment reference count
+- If new session: add to TreeSet and initialize count to 1
+
+**Removing Sessions** `remove(Session session)`:
+- Decrements reference count
+- Only removes from TreeSet when count reaches 0
+
+**Overlap Detection** `getOverlap(Session sessionToCheck)`:
+- Returns `Optional<Session>` of first overlapping session
+
+**Free Time Search** `getEarliestFreeTime(int duration)`:
+- Linear scan from Monday 08:00 to Sunday 22:00
+- Finds first gap that fits requested duration
+- Returns formatted time string or "No free time available"
+
+**Algorithm Details:**
+
+The algorithm searches for the earliest available time slot by performing a chronological scan through the week:
+
+1. **Search Space Definition:**
+   - Days: Monday through Sunday (in order)
+   - Time window per day: 08:00 to 22:00 (representing typical working hours)
+   - Minimum duration: Specified by user (in minutes)
+
+2. **Day-by-Day Iteration:**
+   - For each day of the week (starting from Monday):
+     - Initialize current time to 08:00 (earliest possible start time)
+     - Filter all sessions for the current day from the sorted TreeSet
+     - Sessions are already sorted by start time due to TreeSet ordering
+
+3. **Gap Detection Within Each Day:**
+   - For each session on the current day:
+     - Calculate gap duration: time between current time and session start time
+     - If gap duration ≥ requested duration:
+       - A suitable slot is found → return formatted result (e.g., "MON 08:00")
+     - Otherwise:
+       - Move current time to session end time (skip past this occupied slot)
+       - Continue to next session
+
+4. **Final Gap Check:**
+   - After processing all sessions for the day:
+     - Calculate gap duration: time between current time and 22:00 (end of working hours)
+     - If gap duration ≥ requested duration:
+       - A suitable slot is found → return formatted result
+     - Otherwise:
+       - Move to next day and repeat from step 2
+
+5. **No Availability:**
+   - If all days are scanned without finding a suitable gap:
+     - Return "No free time available for the specified duration."
+
+_Refer to the user guide for example usages_
+
+
+#### Data Persistence
+
+**Storage Strategy**: Only `Person` objects (with their `SessionTag`s) are serialized to JSON. The `WeeklySessions` TreeSet is not directly persisted.
+
+**Reconstruction on Load** :
+When deserializing, `WeeklySessions` is rebuilt from person tags:
+
+This ensures:
+- Single source of truth (Person tags in JSON)
+- Automatic reference counting during reconstruction
+- No data duplication in storage
+
+#### Design Rationale
+
+**Why dual storage?**
+- **Person tags**: Efficient person-to-session lookups ("Which sessions does Alice have?")
+- **TreeSet**: Efficient time-based queries ("What's the earliest free slot?")
+
+**Why reference counting?**
+Multiple students can share the same session time (e.g., group tutoring). Reference counting prevents deletion conflicts.
+
+### Free Feature
+The `free` feature is facilitated by `WeeklySessions`. It augments `Addressbook` by providing a centralised time sorted view of all scheduled sessions across all persons. It is stored internally as `weeklySessions` which gives `AddressBooks` two complementary views of session data
+
+The functionality of `WeeklySessions` are exposed to `Addressbook` and the `Model` interface with similar function names:
+* `WeeklySessions#add` -> `AddressBook/Model#addSession`
+* `WeeklySessions#remove` -> `AddressBook/Model#removeSession`
+* `WeeklySessions#set` -> `AddressBook/Model#setWeeklySessions`
+* `WeeklySessions#getOverlap` -> `AddressBook/Model#getOverlappingSessions`
+* `WeeklySessions#getEarliestFreeTime` -> no change
+
+The sequence diagram for free is similar to `delete` sequence diagram we see in [Logic component](#logic-component), with some key differences:
+* Command will be `free DURATION` instead of `delete INDEX`
+* Command and its parser will be `Free` instead of `Delete`
+* `FreeCommand` will call `Model#getEarliestFreeTime(1)`
+
+The free operation will go through the `Model` component as such:
+<puml src="diagrams/FreeSequenceDiagram-Model.puml" />
+
+
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -278,45 +423,43 @@ _{Explain here how the data archiving feature will be implemented}_
 * manages 10-50+ students across different education levels (primary to university)
 * prefers typing commands over mouse clicks for speed and efficiency
 * needs quick access to information during back-to-back sessions (no time for slow navigation)
-* juggles students of different levels, making it hard to provide personalized learning experiences
 * struggles to manage students' conflicting schedules and optimize their own time
-* faces long travel times between sessions due to poor planning around student locations and timetables
-* has student and parent details scattered across phone contacts, WhatsApp chats, and loose business cards
+* has student details scattered across phone contacts, WhatsApp chats, and loose notes
 * values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: A lightning-fast CLI address book designed for tech-savvy private tutors managing 10-50+ students. Centralizes scattered student information, tracks subjects and session schedules, and enables instant filtering by location, time, or student details—all through efficient keyboard commands that outpace traditional apps. Spend less time organizing, more time teaching.
+**Value proposition**: This product is for a tech-savvy private tutor who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
-|----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | private tutor                              | add a tutee contact record with name, contact, location, age/level | quickly access essential details |
-| `* * *`  | private tutor                              | remove a tutee contact       | have an updated contact list                                           |
-| `* * *`  | private tutor                              | edit student details         | keep their records up to date                                          |
-| `* * *`  | private tutor with many students           | easily look for students by name | quickly access their information during busy tutoring days         |
-| `* * *`  | fast typing private tutor                  | perform tasks using short efficient commands | save time                                              |
-| `* * *`  | first time user                            | have a help command          | know how to use the application                                        |
-| `* * *`  | private tutor                              | store multiple contact methods per person (phone, email, WhatsApp, etc.) | have backup communication options |
-| `* * *`  | private tutor                              | locally store all student-related and personal data | never lose important information                |
-| `* *`    | private tutor                              | view a calendar of upcoming sessions | manage my time before those sessions                           |
-| `* *`    | private tutor                              | group students by classes    | organise my addressbook                                                |
-| `* *`    | private tutor                              | receive reminders for lessons | don't miss any sessions                                               |
-| `* *`    | private tutor who earns money              | keep track of payments I received |  streamline my finances                                           |
-| `* *`    | user                                       | delete all my personal data (non-contact related information) | remove all personal information       |
-| `* *`    | private tutor                              | track test scores            | monitor improvement over time                                          |
-| `* *`    | private tutor                              | record the topics each student has covered | identify gaps in knowledge                               |
-| `* *`    | effective private tutor                    | mark areas where a student struggles | focus those in future lessons.                                 |
-| `* *`    | effective private tutor                    | highlight a student’s strong skills | build on them                                                   |
-| `* *`    | private tutor                              | record different rates for different students or classes | manage varying fees more easily            |
-| `* *`    | private tutor                              | log actual hours worked per student |  accurately bill and track my time investment                   |
-| `* *`    | beginner user                              | have a demo/tutorial         | have an intuitive way to learn the application                         |
-| `*`      | private tutor                              | assign projects to each student |  tailor their learning paths                                        |
-| `*`      | private tutor                              | update project completion status |  track project progress                                            |
-| `*`      | time-efficient private tutor               | filter students by location  |  arrange back-to-back F2F lessons efficiently                          |
-| `*`      | online private tutor                       | track time zones for international students |  schedule sessions at reasonable hours for everyone     |
+| Priority | As a …​                          | I want to …​                                                       | So that I can…​                                            |
+|----------|----------------------------------|--------------------------------------------------------------------|------------------------------------------------------------|
+| `* * *`  | private tutor                    | add a tutee contact record with name, contact, location, age/level | quickly access essential details                           |
+| `* * *`  | private tutor                    | remove a tutee contact                                             | have an updated contact list                               |
+| `* * *`  | private tutor                    | edit student details                                               | keep their records up to date                              |
+| `* * *`  | private tutor with many students | easily look for students by name                                   | quickly access their information during busy tutoring days |
+| `* * *`  | fast typing private tutor        | perform tasks using short efficient commands                       | save time                                                  |
+| `* * *`  | first time user                  | have a help command                                                | know how to use the application                            |
+| `* * *`  | private tutor                    | store multiple contact methods per person (phone, email, etc.)     | have backup communication options                          |
+| `* * *`  | private tutor                    | locally store all student-related and personal data                | never lose important information                           |
+| `* *`    | private tutor                    | view a calendar of upcoming sessions                               | manage my time before those sessions                       |
+| `* *`    | private tutor                    | group students by classes                                          | organise my addressbook                                    |
+| `* *`    | private tutor                    | receive reminders for lessons                                      | don't miss any sessions                                    |
+| `* *`    | private tutor who earns money    | keep track of payments I received                                  | streamline my finances                                     |
+| `* *`    | user                             | delete all my personal data (non-contact related information)      | remove all personal information                            |
+| `* *`    | private tutor                    | track test scores                                                  | monitor improvement over time                              |
+| `* *`    | private tutor                    | record the topics each student has covered                         | identify gaps in knowledge                                 |
+| `* *`    | effective private tutor          | mark areas where a student struggles                               | focus those in future lessons.                             |
+| `* *`    | effective private tutor          | highlight a student’s strong skills                                | build on them                                              |
+| `* *`    | private tutor                    | record different rates for different students or classes           | manage varying fees more easily                            |
+| `* *`    | private tutor                    | log actual hours worked per student                                | accurately bill and track my time investment               |
+| `* *`    | beginner user                    | have a demo/tutorial                                               | have an intuitive way to learn the application             |
+| `*`      | private tutor                    | assign projects to each student                                    | tailor their learning paths                                |
+| `*`      | private tutor                    | update project completion status                                   | track project progress                                     |
+| `*`      | time-efficient private tutor     | filter students by location                                        | arrange back-to-back F2F lessons efficiently               |
+| `*`      | online private tutor             | track time zones for international students                        | schedule sessions at reasonable hours for everyone         |
 
 *{More to be added}*
 
@@ -334,7 +477,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 1. Tutor provides a contact with its details to add.
 2. Zenith validates the details.
 3. Zenith adds the contact to the list and shows the new contact.
-4. Includes: UC11 Autosave.
+4. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -359,7 +502,7 @@ Use case ends.
 1. Tutor provides the index of the contact to be deleted.
 2. Zenith validates the index.
 3. Zenith removes the contact from the list and shows the deleted contact.
-4. Includes: UC11 Autosave.
+4. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -381,7 +524,7 @@ Use case ends.
 1. Tutor provides the index and new values of the details of the contact to be edited.
 2. Zenith validates the index and any provided values.
 3. Zenith updates the contact and shows the updated contact.
-4. Includes: UC11 Autosave.
+4. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -405,9 +548,9 @@ Use case ends.
 **MSS**
 1. Tutor provides the contact index, session timing details to be edited.
 2. Zenith validates indices and time values.
-3. Zenith checks for overlaps with that contact’s existing sessions.
+3. Zenith checks for overlaps with that contact's existing sessions.
 4. Zenith updates the session and shows the updated contact.
-5. Includes: UC11 Autosave.
+5. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -437,9 +580,9 @@ Use case ends.
 **MSS**
 1. Tutor provides the contact index and session timing details to be added.
 2. Zenith validates indices and time values.
-3. Zenith checks for overlaps with that contact’s existing sessions.
+3. Zenith checks for overlaps with that contact's existing sessions.
 4. Zenith adds the session and shows the updated contact.
-5. Includes: UC11 Autosave.
+5. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -459,7 +602,7 @@ Same as UC04
 1. Tutor provides the contact index and the subject code for the tag to be added.
 2. Zenith validates the index and subject code.
 3. Zenith adds the tag and shows the updated contact.
-4. Includes: UC11 Autosave.
+4. Includes: UC12 Autosave.
 Use case ends.
 
 **Extensions**
@@ -474,7 +617,40 @@ Use case ends.
       Use case ends.
 
 
-**Use case: UC07 – Find Contacts**
+**Use case: UC07 – Set Payment Status**
+
+**Preconditions**
+- The target contact exists.
+
+**Guarantees**
+- Payment status is updated only if the index is valid and status is one of PENDING, PAID, or OVERDUE.
+- Billing start day, if provided, must be between 1-31.
+- On success, Zenith shows the updated contact with new payment information.
+
+**MSS**
+1. Tutor provides the contact index and payment status to set.
+2. Zenith validates the index and payment status.
+3. Zenith updates the contact's payment status and shows the updated contact.
+4. Includes: UC12 Autosave.
+Use case ends.
+
+**Extensions**
+* 1a. Tutor provides billing start day.
+    * 1a1. Zenith validates billing start day is between 1-31.
+    * 1a2. Zenith updates payment status with the specified billing start day.
+      Use case continues from step 3.
+* 2a. Zenith detects that the index is invalid or missing.
+    * 2a1. Zenith shows InvalidIndexError or MissingIndexError.
+      Use case ends.
+* 2b. Zenith detects that the payment status is blank or invalid.
+    * 2b1. Zenith shows InvalidStatusError.
+      Use case ends.
+* 2c. Zenith detects that the billing start day is invalid (not between 1-31).
+    * 2c1. Zenith shows InvalidBillingDayError.
+      Use case ends.
+
+
+**Use case: UC08 – Find Contacts**
 
 **Guarantees**
 - Zenith shows a filtered contact list based on the keywords; no data is modified.
@@ -491,7 +667,7 @@ Use case ends.
       Use case ends.
 
 
-**Use case: UC08 – List Contacts**
+**Use case: UC09 – List Contacts**
 
 **Guarantees**
 - Zenith shows the full contact list; no data is modified.
@@ -502,7 +678,7 @@ Use case ends.
 Use case ends.
 
 
-**Use case: UC09 – Help**
+**Use case: UC10 – Help**
 
 **Guarantees**
 - Zenith shows the available commands with brief descriptions.
@@ -513,7 +689,7 @@ Use case ends.
 Use case ends.
 
 
-**Use case: UC10 – Exit**
+**Use case: UC11 – Exit**
 
 **Guarantees**
 - Zenith exits gracefully
@@ -524,7 +700,7 @@ Use case ends.
 Use case ends.
 
 
-**Use case: UC11 – Autosave**
+**Use case: UC12 – Autosave**
 
 **Actor: File System**
 
@@ -593,16 +769,26 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the jar file and copy into an empty folder
 
-   1. Double-click the jar file Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum.
+   2. CD into the JAR file directory and run java -jar zenith.jar Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum
+   3. (Alternative) Double-click the JAR file Expected: Similar behaviour to running it through command line
 
 1. Saving window preferences
 
    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Re-launch the app by double-clicking the jar file.<br>
+   1. Re-launch the app by running it through command line.<br>
        Expected: The most recent window size and location is retained.
 
 1. _{ more test cases …​ }_
+
+### Adding a person
+1. Adding a person
+   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty. 
+   2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
+   3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> Expected: New contact named bill is added to the list
+   4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
+   5. Test case 2(b): `add n/bill s/PRI5 p/83451234 e/billbo@gmail.com a/yishun street 12` <br> Expected: No new person is added to the list due to duplicate contacts. Error details shown in the status message.
+   6. Test case 3: `add n/bill s/PRI4 e/bill@gmail.com a/yishun street 10` <br> Expected: No new person is added to the list due to missing parameter. Error details shown in status message
 
 ### Deleting a person
 
@@ -610,14 +796,49 @@ testers are expected to do more *exploratory* testing.
 
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
-   1. Test case: `delete 1`<br>
+   2. Test case: `delete 1`<br>
       Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
 
-   1. Test case: `delete 0`<br>
+   3. Test case: `delete 0`<br>
       Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+   4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
+
+1. _{ more test cases …​ }_
+
+### Setting payment status
+
+1. Setting payment status for a person while all persons are being shown
+
+   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+   2. Test case: `setpayment 1 status/PAID`<br>
+      Expected: First contact's payment status is set to PAID with default billing day 1. Updated payment details shown in the result display and in the detailed view panel.
+
+   3. Test case: `setpayment 2 status/PENDING start/15`<br>
+      Expected: Second contact's payment status is set to PENDING with billing start day 15. Updated payment details shown in the result display and in the detailed view panel.
+
+   4. Test case: `setpayment 1 status/OVERDUE start/20`<br>
+      Expected: First contact's payment status is set to OVERDUE with billing start day 20. Payment status shown as "OVERDUE (X days)" in the detailed view, where X is calculated based on billing cycle.
+
+   5. Test case: `setpayment 1 status/paid`<br>
+      Expected: First contact's payment status is set to PAID (case-insensitive). Status is accepted and updated successfully.
+
+   6. Test case: `setpayment 0 status/PAID`<br>
+      Expected: No person is updated. Error message indicating invalid index shown in the result display.
+
+   7. Test case: `setpayment 1 status/INVALID`<br>
+      Expected: No person is updated. Error message indicating payment status must be one of: PENDING, PAID, OVERDUE.
+
+   8. Test case: `setpayment 1 status/PAID start/32`<br>
+      Expected: No person is updated. Error message indicating billing start day must be between 1-31.
+
+   9. Test case: `setpayment 1 status/PAID start/0`<br>
+      Expected: No person is updated. Error message indicating billing start day must be between 1-31.
+
+   10. Other incorrect setpayment commands to try: `setpayment`, `setpayment 1`, `setpayment x status/PAID` (where x is larger than the list size or non-numeric)<br>
+      Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
 1. _{ more test cases …​ }_
 

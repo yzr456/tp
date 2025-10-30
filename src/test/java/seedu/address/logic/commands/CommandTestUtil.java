@@ -31,6 +31,8 @@ public class CommandTestUtil {
 
     public static final String VALID_NAME_AMY = "Amy Bee";
     public static final String VALID_NAME_BOB = "Bob Choo";
+    public static final String VALID_NAME_WITH_SON_OF = "Kumar s/o Rajan";
+    public static final String VALID_NAME_WITH_SON_OF_UPPERCASE = "Mary S/O James";
     public static final String VALID_STUDY_YEAR_AMY = "UNI1";
     public static final String VALID_STUDY_YEAR_BOB = "PRI3";
     public static final String VALID_PHONE_AMY = "99999999";
@@ -46,6 +48,8 @@ public class CommandTestUtil {
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
+    public static final String NAME_DESC_WITH_SON_OF = " " + PREFIX_NAME + VALID_NAME_WITH_SON_OF;
+    public static final String NAME_DESC_WITH_SON_OF_UPPERCASE = " " + PREFIX_NAME + VALID_NAME_WITH_SON_OF_UPPERCASE;
     public static final String STUDY_YEAR_DESC_AMY = " " + PREFIX_STUDY_YEAR + VALID_STUDY_YEAR_AMY;
     public static final String STUDY_YEAR_DESC_BOB = " " + PREFIX_STUDY_YEAR + VALID_STUDY_YEAR_BOB;
     public static final String PHONE_DESC_AMY = " " + PREFIX_PHONE + VALID_PHONE_AMY;

@@ -86,6 +86,42 @@ A GUI similar to the below should appear in a few seconds. The app contains samp
 1. Refer to the [Features](#features) below for details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
+## User Interface
+
+Zenith features a clean, organized interface designed for efficient contact management:
+
+* **Command Box** at the top for entering commands quickly
+* **Result Display** directly below shows command feedback and messages
+* **Person List** on the lower left provides a summary view of all contacts with key information at a glance
+* **Detailed View** on the lower right displays comprehensive information about the selected contact
+
+This layout keeps essential information visible while maintaining a clean, uncluttered workspace that enhances productivity.
+
+### Mouseless Operation
+
+Zenith is designed for tech-savvy private tutors who value keyboard efficiency:
+
+* **From anywhere in the app**, press any typing key or `Ctrl` to instantly jump to the command box and start typing your next command
+* **When the Person List is focused**:
+    * Press `↑` or `↓` arrow keys to navigate through contacts
+    * The Detailed View automatically updates to show the selected contact's information
+* **When the Person List is not focused**:
+    * Double-tap `↑` or `↓` arrow keys to transfer focus to the Person List
+    * The Detailed View will react and display the selected contact
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:** You can use Zenith entirely without a mouse, making it ideal for fast typists who want to maximize efficiency.
+</div>
+
+### Mouse Support
+
+While Zenith is optimized for keyboard use, mouse support is fully available:
+
+* **Scroll** through the Person List using your mouse or trackpad
+* **Double-click** on any contact in the Person List to view their details in the Detailed View
+
+![Ui](images/Ui.png)
+
+--------------------------------------------------------------------------------------------------------------------
 
 ## Features
 
@@ -217,6 +253,32 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
+### Setting payment status : `setpayment`
+
+Sets and tracks the payment status of a student, including automatic overdue day counting.
+
+Format: `setpayment INDEX status/STATUS [start/DAY]`
+
+* Sets the payment status for the student at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …
+* `STATUS` must be one of: **PENDING**, **PAID**, or **OVERDUE** (case-insensitive).
+* `DAY` is optional and represents the billing cycle start day (1-31). Defaults to 1 if not specified.
+* If status is **OVERDUE**, the system automatically calculates and displays days overdue based on the billing cycle.
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The system does not automatically update a PAID status to OVERDUE. You must manually update the payment status when payments become overdue.
+</div>
+
+Examples:
+* `setpayment 1 status/PAID` sets the 1st student's payment status to PAID with default billing cycle (day 1).
+* `setpayment 2 status/PENDING start/15` sets the 2nd student's status to PENDING with billing cycle starting on the 15th of each month.
+* `setpayment 3 status/OVERDUE` sets the 3rd student's status to OVERDUE and displays how many days overdue the payment is.
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tips:**
+* Use `status/PENDING` when awaiting payment, `status/PAID` when confirmed, and `status/OVERDUE` to track late payments.
+* The days overdue count helps you prioritize follow-ups with students whose payments are most delayed.
+</div>
+
 ### Deleting a person : `delete`
 
 Deletes the specified person from the address book.
@@ -230,6 +292,21 @@ Format: `delete INDEX`
 Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+
+### Finding a free session : `free`
+
+Finds the earliest free session from the address book
+
+Format: `free DURATION`
+
+* Finds the **earliest** free session of the specified `DURATION`.
+* `DURATION` refers to any integer between 1 - 14 hours
+
+Examples:
+_These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the address book_
+* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 4` returns `MONDAY 11:00`
+* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 12` returns `WEDNESDAY 08:00`
+
 
 ### Clearing all entries : `clear`
 
@@ -245,17 +322,17 @@ Format: `exit`
 
 ### Saving the data
 
-AddressBook data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
+Zenith contact data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
 ### Editing the data file
 
-AddressBook data are saved automatically as a JSON file `[JAR file location]/data/Zenith.json`. Advanced users are welcome to update data directly by editing that data file.
+Zenith contact data are saved automatically as a JSON file `[JAR file location]/data/Zenith.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, AddressBook will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the AddressBook to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file makes its format invalid, Zenith will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
 ### Archiving data files `[coming in v2.0]`
@@ -267,7 +344,7 @@ _Details coming soon ..._
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Zenith home folder.
 
 --------------------------------------------------------------------------------------------------------------------
 

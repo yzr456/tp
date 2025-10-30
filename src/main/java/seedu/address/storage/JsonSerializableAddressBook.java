@@ -12,6 +12,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.AddressBook;
 import seedu.address.model.ReadOnlyAddressBook;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.exceptions.DuplicateContactException;
 import seedu.address.model.tag.SessionTag;
 import seedu.address.model.tag.Tag;
 
@@ -54,7 +55,11 @@ class JsonSerializableAddressBook {
             if (addressBook.hasPerson(person)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
-            addressBook.addPerson(person);
+            try {
+                addressBook.addPerson(person);
+            } catch (DuplicateContactException e) {
+                throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
+            }
 
             // Rebuild WeeklySessions from SessionTags
             for (Tag tag : person.getTags()) {

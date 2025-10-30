@@ -11,16 +11,25 @@ import static seedu.address.logic.commands.CommandTestUtil.INVALID_PHONE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_STUDY_YEAR_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_WITH_SON_OF;
+import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_WITH_SON_OF_UPPERCASE;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.PHONE_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.address.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
 import static seedu.address.logic.commands.CommandTestUtil.STUDY_YEAR_DESC_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.STUDY_YEAR_DESC_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_WITH_SON_OF;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_WITH_SON_OF_UPPERCASE;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_PHONE_BOB;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_STUDY_YEAR_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_STUDY_YEAR_BOB;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
@@ -130,6 +139,64 @@ public class AddCommandParserTest {
         Person expectedPerson = new PersonBuilder(AMY).withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + STUDY_YEAR_DESC_AMY + PHONE_DESC_AMY
                 + EMAIL_DESC_AMY + ADDRESS_DESC_AMY, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_nameWithSonOf_success() {
+        // Name with lowercase s/o
+        Person expectedPerson = new PersonBuilder().withName(VALID_NAME_WITH_SON_OF)
+                .withStudyYear(VALID_STUDY_YEAR_BOB)
+                .withPhone(VALID_PHONE_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withAddress(VALID_ADDRESS_BOB)
+                .withTags().build();
+
+        assertParseSuccess(parser, NAME_DESC_WITH_SON_OF + STUDY_YEAR_DESC_BOB
+                + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
+                new AddCommand(expectedPerson));
+
+        // Name with uppercase S/O
+        expectedPerson = new PersonBuilder().withName(VALID_NAME_WITH_SON_OF_UPPERCASE)
+                .withStudyYear(VALID_STUDY_YEAR_AMY)
+                .withPhone(VALID_PHONE_AMY)
+                .withEmail(VALID_EMAIL_AMY)
+                .withAddress(VALID_ADDRESS_AMY)
+                .withTags().build();
+
+        assertParseSuccess(parser, NAME_DESC_WITH_SON_OF_UPPERCASE + STUDY_YEAR_DESC_AMY
+                + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
+                new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_nameWithSonOfAndWhitespace_success() {
+        // Name with s/o and leading/trailing whitespace
+        Person expectedPerson = new PersonBuilder().withName(VALID_NAME_WITH_SON_OF)
+                .withStudyYear(VALID_STUDY_YEAR_BOB)
+                .withPhone(VALID_PHONE_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withAddress(VALID_ADDRESS_BOB)
+                .withTags().build();
+
+        assertParseSuccess(parser, PREAMBLE_WHITESPACE + NAME_DESC_WITH_SON_OF
+                + STUDY_YEAR_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
+                new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_nameWithMultipleSonOf_success() {
+        // Multiple s/o in name
+        String nameWithMultipleSonOf = "John s/o David s/o Michael";
+        Person expectedPerson = new PersonBuilder().withName(nameWithMultipleSonOf)
+                .withStudyYear(VALID_STUDY_YEAR_BOB)
+                .withPhone(VALID_PHONE_BOB)
+                .withEmail(VALID_EMAIL_BOB)
+                .withAddress(VALID_ADDRESS_BOB)
+                .withTags().build();
+
+        assertParseSuccess(parser, " " + PREFIX_NAME + nameWithMultipleSonOf
+                + STUDY_YEAR_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB,
+                new AddCommand(expectedPerson));
     }
 
     @Test

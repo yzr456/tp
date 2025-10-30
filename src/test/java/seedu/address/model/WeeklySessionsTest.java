@@ -221,14 +221,14 @@ public class WeeklySessionsTest {
     }
 
     @Test
-    public void setWeeklySessions_replaceWithNonEmpty_success() {
+    public void set_replaceWithNonEmpty_success() {
         weeklySessions.add(monMorning);
 
         WeeklySessions replacement = new WeeklySessions();
         replacement.add(tueAllDay);
         replacement.add(wedMorning);
 
-        weeklySessions.setWeeklySessions(replacement);
+        weeklySessions.set(replacement);
 
         assertFalse(weeklySessions.hasOverlap(monMorning));
         assertTrue(weeklySessions.hasOverlap(tueAllDay));
@@ -236,20 +236,20 @@ public class WeeklySessionsTest {
     }
 
     @Test
-    public void setWeeklySessions_replaceWithEmpty_clearsSchedule() {
+    public void set_replaceWithEmpty_clearsSchedule() {
         weeklySessions.add(monMorning);
         weeklySessions.add(monAfternoon);
 
         WeeklySessions replacement = new WeeklySessions();
-        weeklySessions.setWeeklySessions(replacement);
+        weeklySessions.set(replacement);
 
         assertFalse(weeklySessions.hasOverlap(monMorning));
         assertFalse(weeklySessions.hasOverlap(monAfternoon));
     }
 
     @Test
-    public void setWeeklySessions_null_throwsNullPointerException() {
-        assertThrows(NullPointerException.class, () -> weeklySessions.setWeeklySessions(null));
+    public void set_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> weeklySessions.set(null));
     }
 
     @Test

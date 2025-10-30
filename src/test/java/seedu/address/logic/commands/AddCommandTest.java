@@ -65,7 +65,7 @@ public class AddCommandTest {
                 .withPhone("92345678").withEmail("different@email.com").build();
         AddCommand addCommand = new AddCommand(newPersonSamePhone);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PERSON, () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PHONE, () -> addCommand.execute(modelStub));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class AddCommandTest {
                 .withPhone("87654321").withEmail("test@example.com").build();
         AddCommand addCommand = new AddCommand(newPersonSameEmail);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PERSON, () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_EMAIL, () -> addCommand.execute(modelStub));
     }
 
     @Test
@@ -255,6 +255,13 @@ public class AddCommandTest {
         public boolean hasContact(Person person) {
             requireNonNull(person);
             return this.person.hasSameEmail(person) || this.person.hasSameNumber(person);
+        }
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            AddressBook addressBook = new AddressBook();
+            addressBook.addPerson(person);
+            return addressBook;
         }
     }
 

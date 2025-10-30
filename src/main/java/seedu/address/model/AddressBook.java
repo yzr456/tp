@@ -61,13 +61,6 @@ public class AddressBook implements ReadOnlyAddressBook {
         setWeeklySessions(newData.getWeeklySessions());
     }
 
-    /**
-     * Replaces the contents of the weekly sessions with {@code weeklySessions}.
-     */
-    public void setWeeklySessions(WeeklySessions weeklySessions) {
-        this.weeklySessions.setWeeklySessions(weeklySessions);
-    }
-
     //// person-level operations
 
     /**
@@ -142,11 +135,26 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     /**
+     * Replaces the contents of the weekly sessions with {@code weeklySessions}.
+     */
+    public void setWeeklySessions(WeeklySessions weeklySessions) {
+        this.weeklySessions.set(weeklySessions);
+    }
+
+    /**
      * Removes a session from the weekly sessions.
      * The session must exist in the weekly sessions.
      */
     public void removeSession(Session session) {
         weeklySessions.remove(session);
+    }
+
+    public WeeklySessions getWeeklySessions() {
+        return weeklySessions;
+    }
+
+    public String getEarliestFreeTime(int duration) {
+        return weeklySessions.getEarliestFreeTime(duration);
     }
 
     //// util methods
@@ -164,10 +172,6 @@ public class AddressBook implements ReadOnlyAddressBook {
         return persons.asUnmodifiableObservableList();
     }
 
-    @Override
-    public WeeklySessions getWeeklySessions() {
-        return weeklySessions;
-    }
 
     @Override
     public boolean equals(Object other) {

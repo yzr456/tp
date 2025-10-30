@@ -66,16 +66,21 @@ public class EditCommand extends Command {
             + "Example (Session): " + COMMAND_WORD + " -s 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
-            + PREFIX_END + "1100";
+            + PREFIX_END + "1100\n";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one valid prefix to edit a field must be provided.";
+    public static final String MESSAGE_DUPLICATE_EMAIL = "A person with this email address "
+            + "already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PHONE_AND_EMAIL = "A person with this phone number "
+            + "and email address already exists in the address book.";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book.";
+    public static final String MESSAGE_DUPLICATE_PHONE = "A person with this phone number "
+            + "already exists in the address book.";
     public static final String MESSAGE_INVALID_FLAG = "Invalid flag provided. "
             + "Use -c for contact or -s for session.";
     public static final String MESSAGE_MISSING_FLAG = "A valid flag must be provided. "
             + "Use -c for contact or -s for session.";
-    public static final String MESSAGE_DUPLICATE_CONTACT = "This contact already exists in the address book";
     public static final String MESSAGE_MISSING_ARGUMENTS = "Missing arguments after flag. "
             + "Format: edit -c INDEX [fields...] or edit -s INDEX [fields...]";
     public static final String MESSAGE_INVALID_SESSION_SEQUENCE =
@@ -162,7 +167,43 @@ public class EditCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
         if (model.hasContactExcluding(editedPerson, personToEdit)) {
-            throw new CommandException(MESSAGE_DUPLICATE_CONTACT);
+            // Find which field(s) are duplicated
+            String errorMessage = getDuplicateContactMessage(model, editedPerson, personToEdit);
+            throw new CommandException(errorMessage);
+        }
+    }
+
+    /**
+     * Determines which contact field (phone, email, or both) is duplicated in the model,
+     * excluding the person being edited.
+     */
+    private String getDuplicateContactMessage(Model model, Person editedPerson, Person personToEdit) {
+        boolean hasPhoneDuplicate = false;
+        boolean hasEmailDuplicate = false;
+
+        for (Person person : model.getAddressBook().getPersonList()) {
+            // Skip the person being edited
+            if (person.equals(personToEdit)) {
+                continue;
+            }
+
+            if (person.hasSameNumber(editedPerson)) {
+                hasPhoneDuplicate = true;
+            }
+            if (person.hasSameEmail(editedPerson)) {
+                hasEmailDuplicate = true;
+            }
+            if (hasPhoneDuplicate && hasEmailDuplicate) {
+                break; // Both found, no need to continue
+            }
+        }
+
+        if (hasPhoneDuplicate && hasEmailDuplicate) {
+            return MESSAGE_DUPLICATE_PHONE_AND_EMAIL;
+        } else if (hasPhoneDuplicate) {
+            return MESSAGE_DUPLICATE_PHONE;
+        } else {
+            return MESSAGE_DUPLICATE_EMAIL;
         }
     }
 

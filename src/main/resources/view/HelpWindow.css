@@ -27,3 +27,16 @@
 .helpText {
     -fx-text-fill: #ffffff;
 }
+
+/* ScrollPane styling to match dark theme */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: derive(#1d1d1d, 20%);
+}
+
+.scroll-pane .content {
+    -fx-background-color: derive(#1d1d1d, 20%);
+}
