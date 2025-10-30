@@ -56,7 +56,7 @@ public class EditCommand extends Command {
             + "Session Edit Parameters: -s INDEX (must be a positive integer) "
             + "[" + PREFIX_DAY + "DAY] "
             + "[" + PREFIX_START + "START] "
-            + "[" + PREFIX_END + "END]...\n"
+            + "[" + PREFIX_END + "END]...(START and END must be between 0800 to 2200)\n"
             + "Example (Contact): " + COMMAND_WORD + " -c 1 "
             + PREFIX_NAME + "John Doe "
             + PREFIX_STUDY_YEAR + "SEC3 "
