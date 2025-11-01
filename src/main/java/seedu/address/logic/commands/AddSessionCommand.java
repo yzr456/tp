@@ -101,7 +101,8 @@ public class AddSessionCommand extends Command {
                 personToEdit.getPhone(),
                 personToEdit.getEmail(),
                 personToEdit.getAddress(),
-                newTags
+                newTags,
+                personToEdit.getPayment()
         );
 
         model.setPerson(personToEdit, editedPerson);
