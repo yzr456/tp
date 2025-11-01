@@ -163,6 +163,21 @@ Adds a person to the address book.
 
 Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
+Constraints:
+`NAME`: Alphanumerical characters, spaces, hyphens, apostrophes 
+`STUDY_YEAR`: `[ACAD_LEVEL][NUMBER]`
+        `[ACAD_LEVEL]   [NUMBER]`
+            PRI		     1 - 6
+            SEC		     1 - 5
+            JC		     1 - 2
+            POLY		 1 - 3
+            UNI		     1 - 5
+`EMAIL`: Standard email format 
+`PHONE_NUMBER`: Singaporean mobile number, starts with 8 or 9 and is 8 numeric digit long
+`ADDRESS`: Alphanumerical characters, whitespaces, hyphens and hashes
+
+    
+
 Examples:
 * `add n/John Doe s/PRI1 p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567`
@@ -186,7 +201,7 @@ Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [
 **Parameters:**
 * `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
 * `[n/NAME]`: New name for the student (optional)
-* `[s/STUDY_YEAR]`: New study year (optional) - Valid values: SEC1, SEC2, SEC3, JC1, JC2
+* `[s/STUDY_YEAR]`: New study year (optional)
 * `[p/PHONE]`: New phone number (optional)
 * `[e/EMAIL]`: New email address (optional)
 * `[a/ADDRESS]`: New address (optional)
@@ -337,7 +352,7 @@ Examples:
 
 ### Finding a free session : `free`
 
-Finds the earliest free session from the address book
+Finds the earliest free session from the address book.
 
 Format: `free DURATION`
 
@@ -382,7 +397,7 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous Zenith home folder.
+**A**: Install the app in the other computer and overwrite the .json file that is found in the data folder in the same directory as the app .jar file with your edited zenith .json file.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -395,19 +410,19 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 
 ## Command summary
 
-| Action | Format, Examples |
-|--------|------------------|
+| Action | Format, Examples                                                                                                                                              |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Add** | `add n/NAME y/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe y/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
-| **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100` |
-| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI` |
-| **Clear** | `clear` |
-| **Delete** | `delete INDEX` <br> e.g., `delete 3` |
-| **Edit Contact** | `edit -c INDEX [n/NAME] [y/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567` |
-| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100` |
-| **Exit** | `exit` |
-| **Find** | `find KEYWORD [MORE_KEYWORDS]` <br> e.g., `find John David` |
-| **Free** | `free DURATION` <br> e.g., `free 4` |
-| **Help** | `help` |
-| **List** | `list` |
-| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15` |
+| **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                          |
+| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
+| **Clear** | `clear`                                                                                                                                                       |
+| **Delete** | `delete INDEX` <br> e.g., `delete 3`                                                                                                                          |
+| **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
+| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                          |
+| **Exit** | `exit`                                                                                                                                                        |
+| **Find** | `find KEYWORD [MORE_KEYWORDS]` <br> e.g., `find John David`                                                                                                   |
+| **Free** | `free DURATION` <br> e.g., `free 4`                                                                                                                           |
+| **Help** | `help`                                                                                                                                                        |
+| **List** | `list`                                                                                                                                                        |
+| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
 
