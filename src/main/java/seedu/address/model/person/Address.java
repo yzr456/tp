@@ -9,7 +9,8 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Address {
 
-    public static final String MESSAGE_CONSTRAINTS = "Addresses can take any values as long as it is not blank";
+    public static final String MESSAGE_CONSTRAINTS = "Addresses can take any values as long as it is not blank and "
+            + "is within 70 characters.";
 
     /*
      * The first character of the address must not be a whitespace,
