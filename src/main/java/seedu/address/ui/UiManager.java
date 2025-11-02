@@ -24,12 +24,14 @@ public class UiManager implements Ui {
 
     private Logic logic;
     private MainWindow mainWindow;
+    private boolean hasFileLoadError;
 
     /**
      * Creates a {@code UiManager} with the given {@code Logic}.
      */
-    public UiManager(Logic logic) {
+    public UiManager(Logic logic, boolean hasFileLoadError) {
         this.logic = logic;
+        this.hasFileLoadError = hasFileLoadError;
     }
 
     @Override
@@ -43,6 +45,12 @@ public class UiManager implements Ui {
             mainWindow = new MainWindow(primaryStage, logic);
             mainWindow.show(); //This should be called before creating other UI parts
             mainWindow.fillInnerParts();
+
+            if (hasFileLoadError) {
+                showAlertDialogAndWait(AlertType.WARNING, "File Load Error", "",
+                        "An error was encountered while loading the data file, "
+                        + "the app will be initialised with an empty address book.");
+            }
 
         } catch (Throwable e) {
             logger.severe(StringUtil.getDetails(e));
