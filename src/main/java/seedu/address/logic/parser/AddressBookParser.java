@@ -13,6 +13,7 @@ import seedu.address.logic.commands.AddSessionCommand;
 import seedu.address.logic.commands.AddSubjectCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.ConfirmClearCommand;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.ExitCommand;
@@ -56,6 +57,10 @@ public class AddressBookParser {
         // lower) log messages such as the one below.
         // Lower level log messages are used sparingly to minimize noise in the code.
         logger.fine("Command word: " + commandWord + "; Arguments: " + arguments);
+
+        if (ClearCommand.isAwaitingConfirmation()) {
+            return new ConfirmClearCommand(commandWord);
+        }
 
         switch (commandWord) {
 
