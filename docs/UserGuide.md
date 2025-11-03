@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-Zenith is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, Zenith can get your contact management tasks done faster than traditional GUI apps.
+Zenith is for a _tech savvy private tutor_ who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -180,7 +180,7 @@ Constraints:
 
 Examples:
 * `add n/John Doe s/PRI1 p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/1234567`
+* `add n/Betsy Crowe s/UNI1 e/betsycrowe@example.com a/Newgate Prison p/84310923`
 
 ### Listing all persons : `list`
 
@@ -199,7 +199,7 @@ Edits the contact information and subjects of a student.
 Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
 
 **Parameters:**
-* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ... that is smaller or equal to the address book size)
 * `[n/NAME]`: New name for the student (optional)
 * `[s/STUDY_YEAR]`: New study year (optional)
 * `[p/PHONE]`: New phone number (optional)
@@ -228,7 +228,7 @@ Edits the tutoring sessions of a student.
 Format: `edit -s INDEX [d/DAY] [s/START] [e/END]…​`
 
 **Parameters:**
-* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ...)
+* `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
 * `[d/DAY]`: Day of the week (MON, TUE, WED, THU, FRI, SAT, SUN)
 * `[s/START]`: Start time in 24-hour format (e.g., 0900, 1430)
 * `[e/END]`: End time in 24-hour format (e.g., 1100, 1630)
@@ -272,7 +272,7 @@ Format: `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​`
 
 * Adds subject tag(s) to the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
 * `SUBJECT` must be a valid subject code (case-insensitive).
 * You can add multiple subjects at once by repeating the `sub/` prefix.
 * Each subject can only be specified once per command.
@@ -299,7 +299,7 @@ Format: `setpayment INDEX status/STATUS [start/DAY]`
 
 * Sets the payment status for the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
 * `STATUS` must be one of: **PENDING**, **PAID**, or **OVERDUE** (case-insensitive).
 * `DAY` is optional and represents the billing cycle start day (1-31). Defaults to 1 if not specified.
 * If status is **OVERDUE**, the system automatically calculates and displays days overdue based on the billing cycle.
@@ -328,7 +328,7 @@ Format: `delete INDEX`
 
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
 
 Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
@@ -340,8 +340,8 @@ Adds a session under an existing person in the address book.
 
 Format: `addsession INDEX d/DAY s/START_TIME e/END_TIME`
 
-* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* The session to be added must not overlap with any existing sessions under the same person. For all other persons, the new session must either be exactly the same or not overlap with their existing sessions.
+* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
+* The session to be added must not overlap with any other sessions that is added to the address book unless it is the same exact session. The idea is that we are allowing multiple students to attend the same session but a session cannot begin when another is ongoing
 * `DAY` must be one of: `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`(case-insensitive).
 * `START_TIME` and `END_TIME` must be in `HHmm` (e.g., 0900, 1730) with digits only.
 * `START_TIME` and `END_TIME` must be between `0800` and `2200` on the same day, `START_TIME` must earlier than `END_TIME`, with a minimum duration of 15 minutes.
@@ -357,12 +357,12 @@ Finds the earliest free session from the address book.
 Format: `free DURATION`
 
 * Finds the **earliest** free session of the specified `DURATION`.
-* `DURATION` refers to any integer between 1 - 14 hours
+* `DURATION` refers to any integer between 1 - 14 hours given that valid session times are from 0800 - 2200 daily
 
 Examples:
 _These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the address book_
 * `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 4` returns `MONDAY 11:00`
-* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 12` returns `WEDNESDAY 08:00`
+* `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/TUE s/1600 e/1800` followed by `free 12` returns `WEDNESDAY 08:00`
 
 
 ### Clearing all entries : `clear`
@@ -412,7 +412,7 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 
 | Action | Format, Examples                                                                                                                                              |
 |--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Add** | `add n/NAME y/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe y/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
+| **Add** | `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
 | **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                          |
 | **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
 | **Clear** | `clear`                                                                                                                                                       |
