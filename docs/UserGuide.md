@@ -360,6 +360,13 @@ Examples:
 
 Deletes the specified person from the contact list.
 
+<box type="warning" seamless>
+
+**Caution:**
+This action is irreversible and removes some data from the data file.
+
+</box>
+
 Format: `delete INDEX`
 
 * Deletes the person at the specified `INDEX`.
