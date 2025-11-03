@@ -952,8 +952,8 @@ Team size: 5
    **Current Limitation:** The `free` command currently returns the earliest available time slot that can accommodate the specified `DURATION`, starting from the beginning of the week. However, tutors may want to find the earliest free time slot starting from a specific day or time, rather than just the absolute earliest slot available.
 
    **Planned Enhancement:** We plan to extend the `free` command with optional parameters to specify a starting point for the search:
-    * Add an optional `day/[DAY]` parameter to search from a specific day onwards
-    * Add an optional `time/[TIME]` parameter to search from a specific time onwards
+    * Add an optional `day/DAY` parameter to search from a specific day onwards
+    * Add an optional `time/TIME` parameter to search from a specific time onwards
     * Example: `free 2 day/WED time/1400` would find the earliest 2-hour slot starting from Wednesday at 2:00 PM or later
 
    This would allow tutors to:
