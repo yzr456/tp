@@ -29,7 +29,8 @@ public class NameTest {
         assertFalse(Name.isValidName(" ")); // spaces only
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
-        assertFalse(Name.isValidName("Hubert Blaine Wolfeschlegelsteinhausenbergerdorff Sr")); // too long
+        assertFalse(Name.isValidName("Hubert Blaine Wolfeschlegelsteinhausenbergerdorffddsfdfsdfdsfdsf"
+                + "sfdsfsfdssfsfsfsfsfsfdfsffsfdfsfsfsfsfsdfSrdsdfsfdfsfsfsd")); // too long
         assertFalse(Name.isValidName("a".repeat(Name.MAXIMUM_LENGTH_NAME + 1))); // too long
 
         // valid name

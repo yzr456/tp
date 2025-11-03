@@ -69,7 +69,8 @@ public class EditCommand extends Command {
             + PREFIX_END + "1100\n";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
-    public static final String MESSAGE_NOT_EDITED = "At least one valid prefix to edit a field must be provided.";
+    public static final String MESSAGE_NOT_EDITED = "No fields specified for editing. "
+            + "Please provide at least one field to edit (e.g., n/NAME, p/PHONE, e/EMAIL).";
     public static final String MESSAGE_DUPLICATE_EMAIL = "A person with this email address "
             + "already exists in the address book.";
     public static final String MESSAGE_DUPLICATE_PHONE_AND_EMAIL = "A person with this phone number "
@@ -87,6 +88,11 @@ public class EditCommand extends Command {
             "Invalid session format. Each session must follow order: d/, s/, e/. \n"
                     + "Example: d/MON s/1100 e/1200 d/TUE s/1300 e/1400";
     public static final String MESSAGE_OVERLAPPING_SESSION = "The sessions overlap with these: %s session(s).\n";
+    public static final String MESSAGE_CONFLICTING_SUBJECT_OPERATION =
+            "Cannot clear and edit subjects simultaneously. "
+            + "Use 'sub/' alone to clear, or provide subject values to replace.";
+    public static final String MESSAGE_DUPLICATE_SUBJECT_CLEAR =
+            "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;
@@ -357,7 +363,8 @@ public class EditCommand extends Command {
             updatedTags.addAll(existingSessions);
         }
 
-        return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+        return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags,
+                personToEdit.getPayment());
     }
 
     /**

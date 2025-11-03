@@ -8,6 +8,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  * Guarantees: immutable; is valid as declared in {@link #isValidStudyYear(String)}
  */
 public class StudyYear {
+
     public static final String MESSAGE_CONSTRAINTS =
             "Study year cannot be blank, should be of format [ACAD_LEVEL][NUMBER]\n"
                     + "and adhere to the following constraints:\n"

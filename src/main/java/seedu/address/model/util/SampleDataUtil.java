@@ -75,6 +75,11 @@ public class SampleDataUtil {
     public static ReadOnlyAddressBook getSampleAddressBook() {
         AddressBook sampleAb = new AddressBook();
         for (Person samplePerson : getSamplePersons()) {
+            for (Tag tag : samplePerson.getTags()) {
+                if (tag.isSessionTag()) {
+                    sampleAb.addSession(((SessionTag) tag).getSession());
+                }
+            }
             sampleAb.addPerson(samplePerson);
         }
         return sampleAb;
