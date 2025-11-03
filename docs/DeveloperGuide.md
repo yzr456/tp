@@ -677,6 +677,7 @@ Use case ends.
 ### Glossary
 
 * **CLI (Command Line Interface)**: Text-based interface where users interact with the application by typing commands rather than clicking buttons or menus.
+* **GUI (Graphical User Interface)**: Form of user interface that allows users to interact with electronic devices through graphical icons and visual indicators such as secondary notation
 * **Contact**: A student record in zenith containing personal details, subjects, sessions, and other tutoring-related information.
 * **Core Functions**: Add, Edit, Delete, add Session, add Subject
 * **HHmm format**: 24-hour time notation using 4 digits (e.g., 0900 for 9:00 AM, 1530 for 3:30 PM).
@@ -745,62 +746,62 @@ testers are expected to do more *exploratory* testing.
 
 1. Adding a single subject tag
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Alice Tan y/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45` followed by `addsubject 1 sub/MATH`<br>
+    2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45` followed by `addsubject 1 sub/MATH`<br>
        Expected: MATH subject tag is added to Alice Tan. Success message shows "Added Subject Tag(s): [MATH] to Alice Tan". Subject tag displayed in the detailed view with color coding.
 
 2. Adding multiple subject tags in one command
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Bob Lee y/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78` followed by `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
+    2. Test case: `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78` followed by `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
        Expected: PHY, CHEM, and BIO subject tags are added to Bob Lee. Success message lists all three subjects. Detailed view shows all three subject tags with color coding.
 
 3. Testing case-insensitivity
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Charlie Ng y/PRI5 p/93456789 e/charlie@example.com a/Blk 789 Street 12` followed by `addsubject 1 sub/math`<br>
+    2. Test case: `add n/Charlie Ng s/PRI5 p/93456789 e/charlie@example.com a/Blk 789 Street 12` followed by `addsubject 1 sub/math`<br>
        Expected: MATH subject tag is added (case-insensitive). Success message shows "[MATH]" in uppercase. Subject tag appears in uppercase in the detailed view.
 
 4. Testing duplicate subject already assigned to contact
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/David Lim y/SEC4 p/84567890 e/david@example.com a/Blk 234 Street 56`, then `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
+    2. Test case: `add n/David Lim s/SEC4 p/84567890 e/david@example.com a/Blk 234 Street 56`, then `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
        Expected: Second addsubject command fails. Error message indicates "Subject Tag(s): ENG already assigned to David Lim".
 
 5. Testing duplicate subject in same command
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Emma Wong y/JC2 p/95678901 e/emma@example.com a/Blk 567 Street 89` followed by `addsubject 1 sub/MATH sub/MATH`<br>
+    2. Test case: `add n/Emma Wong s/JC2 p/95678901 e/emma@example.com a/Blk 567 Street 89` followed by `addsubject 1 sub/MATH sub/MATH`<br>
        Expected: No subject is added. Error message indicates "Duplicate subject tag(s) detected in command. Each subject should only be specified once."
 
 6. Testing invalid index (zero)
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Frank Tan y/POLY2 p/96789012 e/frank@example.com a/Blk 890 Street 34` followed by `addsubject 0 sub/SCI`<br>
+    2. Test case: `add n/Frank Tan s/POLY2 p/96789012 e/frank@example.com a/Blk 890 Street 34` followed by `addsubject 0 sub/SCI`<br>
        Expected: No subject is added. Error message indicates invalid index.
 
 7. Testing invalid subject code
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Grace Koh y/UNI3 p/87890123 e/grace@example.com a/Blk 345 Street 67` followed by `addsubject 1 sub/INVALID`<br>
+    2. Test case: `add n/Grace Koh s/UNI3 p/87890123 e/grace@example.com a/Blk 345 Street 67` followed by `addsubject 1 sub/INVALID`<br>
        Expected: No subject is added. Error message shows the list of valid subject codes (MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI).
 
 8. Testing empty subject parameter
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Henry Lim y/SEC2 p/88901234 e/henry@example.com a/Blk 678 Street 90` followed by `addsubject 1 sub/`<br>
+    2. Test case: `add n/Henry Lim s/SEC2 p/88901234 e/henry@example.com a/Blk 678 Street 90` followed by `addsubject 1 sub/`<br>
        Expected: No subject is added. Error message indicates subject cannot be blank and shows valid subject codes.
 
 9. Testing missing subject parameter
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Iris Tan y/PRI3 p/89012345 e/iris@example.com a/Blk 901 Street 23` followed by `addsubject 1`<br>
+    2. Test case: `add n/Iris Tan s/PRI3 p/89012345 e/iris@example.com a/Blk 901 Street 23` followed by `addsubject 1`<br>
        Expected: No subject is added. Error message shows command usage format.
 
 10. Testing out of bounds index
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Jack Lee y/SEC5 p/80123456 e/jack@example.com a/Blk 234 Street 56` followed by `addsubject 100 sub/HIST`<br>
+    2. Test case: `add n/Jack Lee s/SEC5 p/80123456 e/jack@example.com a/Blk 234 Street 56` followed by `addsubject 100 sub/HIST`<br>
        Expected: No subject is added. Error message indicates invalid person index.
 
 11. Testing with filtered list
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Alice Tan y/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45`, then `add n/Bob Lee y/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78`, then `find Alice`, then `addsubject 1 sub/GEOG`<br>
+    2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45`, then `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78`, then `find Alice`, then `addsubject 1 sub/GEOG`<br>
        Expected: GEOG subject tag is added to Alice Tan (first person in filtered list). Success message confirms addition. Use `list` command to verify Alice now has GEOG.
 
 12. Testing adding subjects to contact with existing subjects
     1. Prerequisites: Run `clear` to ensure the address book is empty.
-    2. Test case: `add n/Kate Ng y/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
+    2. Test case: `add n/Kate Ng s/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
        Expected: PHY and CHEM are added successfully. Kate now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
 
 1. _{ more test cases …​ }_
@@ -914,7 +915,7 @@ _Some other test cases can be found within the user guide_
     2. Test case 1(a): `addsession 1 d/Mon s/1100 e/1200`<br>
        Expected: New session will be added under the first person in the list.
     3. Test case 1(b): `addsession 2 d/Mon s/1100 e/1200`<br>
-       Expected: New session will be added under the first person in the list.
+       Expected: New session will be added under the second person in the list.
     4. Test case 2(a): `addsession 1 d/Mon s/1100 e/1200`<br>
        Expected: New session will be added under the first person in the list.
     5. Test case 1(b): `addsession 1 d/Mon s/1130 e/1230`<br>
