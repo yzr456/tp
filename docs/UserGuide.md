@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-Zenith is for a _tech savvy private tutor_ who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
+Zenith is for a _tech savvy private tutor teaching students in Singapore_, who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line contact list that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -75,7 +75,7 @@ A GUI similar to the below should appear in a few seconds. The app contains samp
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/311, Clementi Ave 2, #02-25` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/311, Clementi Ave 2, #02-25` : Adds a contact named `John Doe` to the contact list.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -135,8 +135,8 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
-* Items in square brackets are optional.<br>
-  e.g `setpayment INDEX status/STATUS [start/DAY]` can be used as `setpayment 1 status/OVERDUE start/1` or as `setpayment 1 status/OVERDUE`.
+* Items in curved brackets are optional.<br>
+  e.g. `setpayment INDEX status/STATUS (start/DAY)` can be used as `setpayment 1 status/OVERDUE start/1` or as `setpayment 1 status/OVERDUE`.
 
 * Items with `…`​ after them can be used multiple times.<br>
   e.g. `addsubject INDEX sub/SUBJECT…​` can be used as `addsubject 1 sub/MATH`, `addsubject 1 sub/MATH sub/ENG` etc.
@@ -162,22 +162,25 @@ Format: `help`
 
 ### Adding a person: `add`
 
-Adds a person to the address book.
+Adds a person to the contact list.
 
 Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
 Constraints:
-`NAME`: Alphanumerical characters, spaces, hyphens, apostrophes 
-`STUDY_YEAR`: `[ACAD_LEVEL][NUMBER]`
-        `[ACAD_LEVEL]   [NUMBER]`
-            PRI		     1 - 6
-            SEC		     1 - 5
-            JC		     1 - 2
-            POLY		 1 - 3
-            UNI		     1 - 5
-`EMAIL`: Standard email format 
-`PHONE_NUMBER`: Singaporean mobile number, starts with 8 or 9 and is 8 numeric digit long
-`ADDRESS`: Alphanumerical characters, whitespaces, hyphens and hashes
+`NAME`: Alphanumerical characters, spaces, hyphens, apostrophes, not more than 100 characters long.
+* `STUDY_YEAR`: Must follow the format `[ACAD_LEVEL][NUMBER]` where:
+
+| Academic Level | Valid Numbers |
+|----------------|---------------|
+| PRI            | 1 - 6         |
+| SEC            | 1 - 5         |
+| JC             | 1 - 2         |
+| POLY           | 1 - 3         |
+| UNI            | 1 - 5         |
+
+`EMAIL`: Standard email format.
+`PHONE_NUMBER`: Singaporean mobile number, starts with 8 or 9 and is eight numeric digits long.
+`ADDRESS`: Alphanumerical characters, whitespaces, hyphens, and hashes, not more than 500 characters long.
 
     
 
@@ -187,28 +190,28 @@ Examples:
 
 ### Listing all persons : `list`
 
-Shows a list of all persons in the address book.
+Shows a list of all persons in the contact list.
 
 Format: `list`
 
 ### Editing a person : `edit`
 
-Edits an existing student's details or sessions in the address book. This command has two modes: contact editing and session editing.
+Edits an existing student's details or sessions in the contact list. This command has two modes: contact editing and session editing.
 
 #### Edit Contact Details: `edit -c`
 
 Edits the contact information and subjects of a student.
 
-Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
+Format: `edit -c INDEX (n/NAME) (s/STUDY_YEAR) (p/PHONE) (e/EMAIL) (a/ADDRESS) (sub/SUBJECT)…​`
 
 **Parameters:**
-* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ... that is smaller or equal to the address book size)
-* `[n/NAME]`: New name for the student (optional)
-* `[s/STUDY_YEAR]`: New study year (optional)
-* `[p/PHONE]`: New phone number (optional)
-* `[e/EMAIL]`: New email address (optional)
-* `[a/ADDRESS]`: New address (optional)
-* `[sub/SUBJECT]…​`: New subjects (optional) - Can specify multiple subjects
+* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ... that is smaller or equal to the contact list size)
+* `(n/NAME)`: New name for the student (optional)
+* `(s/STUDY_YEAR)`: New study year (optional)
+* `(p/PHONE)`: New phone number (optional)
+* `(e/EMAIL)`: New email address (optional)
+* `(a/ADDRESS)`: New address (optional)
+* `(sub/SUBJECT)…​`: New subjects (optional) - Can specify multiple subjects
 
 **Notes:**
 * At least one optional field must be provided
@@ -231,32 +234,32 @@ Examples:
 
 Edits the tutoring sessions of a student.
 
-Format: `edit -s INDEX [d/DAY] [s/START] [e/END]…​`
+Format: `edit -s INDEX d/DAY s/START e/END…​`
 
 **Parameters:**
-* `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
-* `[d/DAY]`: Day of the week (MON, TUE, WED, THU, FRI, SAT, SUN)
-* `[s/START]`: Start time in 24-hour format (e.g., 0900, 1430)
-* `[e/END]`: End time in 24-hour format (e.g., 1100, 1630)
+* `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current contact list size.
+* `d/DAY`: Day of the week (MON, TUE, WED, THU, FRI, SAT, SUN).
+* `s/START`: Start time in 24-hour format (e.g., 0900, 1430).
+* `e/END`: End time in 24-hour format (e.g., 1100, 1630).
 
 **Notes:**
-* Sessions must follow the order: `d/` then `s/` then `e/`
-* You can edit multiple sessions at once by repeating the pattern
-* When editing sessions, **all existing sessions are replaced** with the new ones
-* Sessions cannot overlap with existing sessions for other students
-* Sessions cannot overlap with each other for the same student
+* Sessions must follow the order: `d/` then `s/` then `e/`.
+* You can edit multiple sessions at once by repeating the pattern.
+* When editing sessions, **all existing sessions are replaced** with the new ones.
+* Sessions cannot overlap with existing sessions for other students.
+* Sessions cannot overlap with each other for the same student.
 
 **Examples:**
 * `edit -s 1 d/MON s/0900 e/1100`
-    - Replaces all sessions for student 1 with a Monday 9am-11am session
+    - Replaces all sessions for student 1 with a Monday 9am-11am session.
 * `edit -s 2 d/TUE s/1400 e/1600 d/THU s/1500 e/1700`
-    - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm
+    - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm.
 
 ### Locating persons by name: `find`
 
 Finds persons whose names contain any of the given keywords.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format: `find KEYWORD (MORE_KEYWORDS)…​`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
@@ -274,11 +277,11 @@ Examples:
 
 Adds one or more subject tags to a student's record to track which subjects they are taking.
 
-Format: `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​`
+Format: `addsubject INDEX sub/SUBJECT (sub/MORE_SUBJECTS)…​`
 
 * Adds subject tag(s) to the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current contact list size.
 * `SUBJECT` must be a valid subject code (case-insensitive).
 * You can add multiple subjects at once by repeating the `sub/` prefix.
 * Each subject can only be specified once per command.
@@ -301,18 +304,42 @@ If you need to remove or change subjects, use the <code>edit</code> command to m
 
 Sets and tracks the payment status of a student, including automatic overdue day counting.
 
-Format: `setpayment INDEX status/STATUS [start/DAY]`
+Format: `setpayment INDEX status/STATUS (start/DAY)`
 
 * Sets the payment status for the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current contact list size.
 * `STATUS` must be one of: **PENDING**, **PAID**, or **OVERDUE** (case-insensitive).
-* `DAY` is optional and represents the billing cycle start day (1-31). Defaults to 1 if not specified.
+* `start/DAY` is optional and `DAY` represents the billing cycle start day (1-31). Defaults to 1 if not specified.
 * If status is **OVERDUE**, the system automatically calculates and displays days overdue based on the billing cycle.
 
 <box type="info" seamless>
 
-ℹ️ **Note:** The system does not automatically update a **PAID** status to **OVERDUE**. You must manually update the payment status when payments become overdue.
+ℹ️ **Note:** The system does not automatically update a **PENDING** or **PAID** status to **OVERDUE**. You must manually update the payment status when payments become overdue.
+
+</box>
+
+<box type="info" seamless>
+
+ℹ️ **Understanding Days Overdue Calculation:**
+
+The system calculates days overdue based on when the **current billing cycle** started:
+* If you set `status/OVERDUE` with `start/DAY` matching today's date, it shows **0 days overdue** because the current billing period just started today.
+* Days overdue counts from the most recent occurrence of the billing day. For example:
+  * If today is November 15 and billing day is 10, payment is 5 days overdue (from November 10)
+  * If today is November 15 and billing day is 15, payment is 0 days overdue (billing period just started)
+  * If today is November 15 and billing day is 20, payment is overdue from last month (October 20), showing ~26 days overdue
+
+This helps you track how long a payment has been outstanding within the current billing cycle.
+
+</box>
+
+<box type="info" seamless>
+
+ℹ️ **Handling months with fewer than 31 days:** If you set a billing day greater than the number of days in a month (e.g., day 31 in February), the system automatically adjusts to the last day of that month. For example:
+* Billing day 31 → February 28 (or 29 in leap years)
+* Billing day 31 → April 30
+* Billing day 30 → February 28 (or 29 in leap years)
 
 </box>
 
@@ -320,6 +347,8 @@ Examples:
 * `setpayment 1 status/PAID` sets the 1st student's payment status to PAID with default billing cycle (day 1).
 * `setpayment 2 status/PENDING start/15` sets the 2nd student's status to PENDING with billing cycle starting on the 15th of each month.
 * `setpayment 3 status/OVERDUE` sets the 3rd student's status to OVERDUE and displays how many days overdue the payment is.
+* `setpayment 4 status/PAID start/31` sets the 4th student's billing cycle to the 31st (or last day of months with fewer days).
+* `setpayment 5 status/OVERDUE start/3` (if today is November 3rd) shows 0 days overdue because the billing cycle just started today.
 
 <box type="tip" seamless>
 
@@ -332,26 +361,33 @@ Examples:
 
 ### Deleting a person : `delete`
 
-Deletes the specified person from the address book.
+Deletes the specified person from the contact list.
+
+<box type="warning" seamless>
+
+**Caution:**
+This action is irreversible and removes some data from the data file.
+
+</box>
 
 Format: `delete INDEX`
 
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
+* The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current contact list size.
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
+* `list` followed by `delete 2` deletes the 2nd person in the currently displayed contact list.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
 ### Adding a session: `addsession`
 
-Adds a session under an existing person in the address book.
+Adds a session under an existing person in the contact list.
 
 Format: `addsession INDEX d/DAY s/START_TIME e/END_TIME`
 
-* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size
-* The session to be added must not overlap with any other sessions that is added to the address book unless it is the same exact session. The idea is that we are allowing multiple students to attend the same session but a session cannot begin when another is ongoing
+* Adds a session under the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current contact list size.
+* The session to be added must not overlap with any other sessions that is added to the contact list unless it is the same exact session. The idea is that we are allowing multiple students to attend the same session but a session cannot begin when another is ongoing.
 * `DAY` must be one of: `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`(case-insensitive).
 * `START_TIME` and `END_TIME` must be in `HHmm` (e.g., 0900, 1730) with digits only.
 * `START_TIME` and `END_TIME` must be between `0800` and `2200` on the same day, `START_TIME` must earlier than `END_TIME`, with a minimum duration of 15 minutes.
@@ -362,23 +398,30 @@ Examples:
 
 ### Finding a free session : `free`
 
-Finds the earliest free session from the address book.
+Finds the earliest free session from the contact list.
 
 Format: `free DURATION`
 
 * Finds the **earliest** free session of the specified `DURATION`.
-* `DURATION` refers to any integer between 1 - 14 hours given that valid session times are from 0800 - 2200 daily
-* This implementation of free will greedily find the earliest free time slot that meets the minimum duration
+* `DURATION` refers to any integer between 1 - 14 hours given that valid session times are from 0800 - 2200 daily.
+* This implementation of free will greedily find the earliest free time slot that meets the minimum duration.
 
 Examples:
-_These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the address book_
+_These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the contact list._
 * `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/MON s/1600 e/1800` followed by `free 4` returns `MONDAY 11:00`
 * `addsession 1 d/MON s/0800 e/1100`, `addsession 1 d/TUE s/1600 e/1800` followed by `free 12` returns `WEDNESDAY 08:00`
 
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the address book.
+Clears all entries from the contact list.
+
+<box type="warning" seamless>
+
+**Caution:**
+This action is irreversible and will remove all data from the data file. 
+
+</box>
 
 Format: `clear`
 
@@ -408,8 +451,8 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 
 ## FAQ
 
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the .json file that is found in the data folder in the same directory as the app .jar file with your edited zenith .json file.
+**Q**: How do I transfer my data to another computer?<br>
+**A**: Install the app in the other computer and overwrite the .json file that is found in the data folder in the same directory as the app .jar file, with your edited zenith.json file.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -426,14 +469,15 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 |--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Add** | `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
 | **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                          |
-| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
+| **Add Subject** | `addsubject INDEX sub/SUBJECT (sub/MORE_SUBJECTS)…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
 | **Clear** | `clear`                                                                                                                                                       |
 | **Delete** | `delete INDEX` <br> e.g., `delete 3`                                                                                                                          |
-| **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
-| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                          |
+| **Edit Contact** | `edit -c INDEX (n/NAME) (s/STUDY_YEAR) (p/PHONE) (e/EMAIL) (a/ADDRESS) (sub/SUBJECT)…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
+| **Edit Session** | `edit -s INDEX d/DAY s/START e/END` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                                |
 | **Exit** | `exit`                                                                                                                                                        |
-| **Find** | `find KEYWORD [MORE_KEYWORDS]` <br> e.g., `find John David`                                                                                                   |
+| **Find** | `find KEYWORD (MORE_KEYWORDS)…​` <br> e.g., `find John David`                                                                                                 |
 | **Free** | `free DURATION` <br> e.g., `free 4`                                                                                                                           |
 | **Help** | `help`                                                                                                                                                        |
 | **List** | `list`                                                                                                                                                        |
-| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
+| **Set Payment** | `setpayment INDEX status/STATUS (start/DAY)` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
+

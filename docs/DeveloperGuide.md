@@ -35,7 +35,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/AY2526S1-CS2103-F12-4/tp/blob/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/AY2526S1-CS2103-F12-4/tp/blob/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -101,7 +101,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/AY2526S1-CS2103-F12-4/tp/blob/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -113,7 +113,7 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <box type="info" seamless>
 
-**Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+**Note:** The lifeline for Parser classes should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </box>
 
 How the `Logic` component works:
@@ -133,14 +133,14 @@ How the parsing works:
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/AY2526S1-CS2103-F12-4/tp/blob/master/src/main/java/seedu/address/model/Model.java)
 
 <puml src="diagrams/ModelClassDiagram.puml" width="450" />
 
 
 The `Model` component,
 
-* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores the contact list data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
 * stores a centralized view of all scheduled sessions (which are managed by a `WeeklySessions` object). See the [WeeklySessions Component](#weeklysessions-component) section for implementation details.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
@@ -157,12 +157,12 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/AY2526S1-CS2103-F12-4/tp/blob/master/src/main/java/seedu/address/storage/Storage.java)
 
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
-* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
+* can save both contact list data and user preference data in JSON format, and read them back into corresponding objects.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -176,7 +176,7 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 ### WeeklySessions Component
 
-The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the address book. It augments the `AddressBook` with efficient time-based query capabilities.
+The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the contact list. It augments the `AddressBook` with efficient time-based query capabilities.
 
 #### Purpose
 - Maintains a global schedule view of all sessions
@@ -320,15 +320,15 @@ The free operation will go through the `Model` component as such:
 
 **Target user profile**:
 
-* tech savvy private tutor
-* manages 10-50+ students across different education levels (primary to university)
-* prefers typing commands over mouse clicks for speed and efficiency
-* needs quick access to information during back-to-back sessions (no time for slow navigation)
-* struggles to manage students' conflicting schedules and optimize their own time
-* has student details scattered across phone contacts, WhatsApp chats, and loose notes
-* values data privacy and prefers local storage over cloud-based solutions
+* Tech savvy private tutor
+* Manages 10-50+ students in Singapore across different education levels (primary to university)
+* Prefers typing commands over mouse clicks for speed and efficiency
+* Needs quick access to information during back-to-back sessions (no time for slow navigation)
+* Struggles to manage students' conflicting schedules and optimize their own time
+* Has student details scattered across phone contacts, WhatsApp chats, and loose notes
+* Values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: This product is for a tech-savvy private tutor who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
+**Value proposition**: This product is for a tech-savvy private tutor teaching students in Singapore, who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line contact list that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 
 ### User stories
@@ -346,10 +346,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | private tutor                    | store multiple contact methods per person (phone, email, etc.)     | have backup communication options                          |
 | `* * *`  | private tutor                    | locally store all student-related and personal data                | never lose important information                           |
 | `* *`    | private tutor                    | view a calendar of upcoming sessions                               | manage my time before those sessions                       |
-| `* *`    | private tutor                    | group students by classes                                          | organise my addressbook                                    |
+| `* *`    | private tutor                    | group students by classes                                          | organise my list of contacts                               |
 | `* *`    | private tutor                    | receive reminders for lessons                                      | don't miss any sessions                                    |
 | `* *`    | private tutor who earns money    | keep track of payments I received                                  | streamline my finances                                     |
-| `* *`    | user                             | delete all my personal data (non-contact related information)      | remove all personal information                            |
 | `* *`    | private tutor                    | track test scores                                                  | monitor improvement over time                              |
 | `* *`    | private tutor                    | record the topics each student has covered                         | identify gaps in knowledge                                 |
 | `* *`    | effective private tutor          | mark areas where a student struggles                               | focus those in future lessons.                             |
@@ -360,7 +359,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | private tutor                    | assign projects to each student                                    | tailor their learning paths                                |
 | `*`      | private tutor                    | update project completion status                                   | track project progress                                     |
 | `*`      | time-efficient private tutor     | filter students by location                                        | arrange back-to-back F2F lessons efficiently               |
-| `*`      | online private tutor             | track time zones for international students                        | schedule sessions at reasonable hours for everyone         |
 
 *{More to be added}*
 
@@ -606,12 +604,12 @@ Use case ends.
 **Use case: UC10 – Clear All Contacts**
 
 **Guarantees**
-- All contacts are removed from the address book.
+- All contacts are removed from the contact list.
 - On success, Zenith displays an empty contact list.
 
 **MSS**
 1. Tutor requests to clear all contacts.
-2. Zenith removes all contacts from the address book.
+2. Zenith removes all contacts from the contact list.
 3. Zenith displays an empty list.
 4. Includes: UC13 Autosave.
 Use case ends.
@@ -719,7 +717,7 @@ testers are expected to do more *exploratory* testing.
 
 ### Adding a person
 1. Adding a person
-   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty.
+   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the contact list is empty.
    2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
    3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> Expected: New contact named bill is added to the list
    4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
@@ -744,69 +742,69 @@ testers are expected to do more *exploratory* testing.
 ### Adding subject tags
 
 1. Adding a single subject tag
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45` followed by `addsubject 1 sub/MATH`<br>
        Expected: MATH subject tag is added to Alice Tan. Success message shows "Added Subject Tag(s): [MATH] to Alice Tan". Subject tag displayed in the detailed view with color coding.
 
 2. Adding multiple subject tags in one command
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78` followed by `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
        Expected: PHY, CHEM, and BIO subject tags are added to Bob Lee. Success message lists all three subjects. Detailed view shows all three subject tags with color coding.
 
 3. Testing case-insensitivity
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Charlie Ng s/PRI5 p/93456789 e/charlie@example.com a/Blk 789 Street 12` followed by `addsubject 1 sub/math`<br>
        Expected: MATH subject tag is added (case-insensitive). Success message shows "[MATH]" in uppercase. Subject tag appears in uppercase in the detailed view.
 
 4. Testing duplicate subject already assigned to contact
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/David Lim s/SEC4 p/84567890 e/david@example.com a/Blk 234 Street 56`, then `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
        Expected: Second addsubject command fails. Error message indicates "Subject Tag(s): ENG already assigned to David Lim".
 
 5. Testing duplicate subject in same command
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Emma Wong s/JC2 p/95678901 e/emma@example.com a/Blk 567 Street 89` followed by `addsubject 1 sub/MATH sub/MATH`<br>
        Expected: No subject is added. Error message indicates "Duplicate subject tag(s) detected in command. Each subject should only be specified once."
 
 6. Testing invalid index (zero)
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Frank Tan s/POLY2 p/96789012 e/frank@example.com a/Blk 890 Street 34` followed by `addsubject 0 sub/SCI`<br>
        Expected: No subject is added. Error message indicates invalid index.
 
 7. Testing invalid subject code
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Grace Koh s/UNI3 p/87890123 e/grace@example.com a/Blk 345 Street 67` followed by `addsubject 1 sub/INVALID`<br>
        Expected: No subject is added. Error message shows the list of valid subject codes (MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI).
 
 8. Testing empty subject parameter
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Henry Lim s/SEC2 p/88901234 e/henry@example.com a/Blk 678 Street 90` followed by `addsubject 1 sub/`<br>
        Expected: No subject is added. Error message indicates subject cannot be blank and shows valid subject codes.
 
 9. Testing missing subject parameter
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Iris Tan s/PRI3 p/89012345 e/iris@example.com a/Blk 901 Street 23` followed by `addsubject 1`<br>
        Expected: No subject is added. Error message shows command usage format.
 
 10. Testing out of bounds index
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Jack Lee s/SEC5 p/80123456 e/jack@example.com a/Blk 234 Street 56` followed by `addsubject 100 sub/HIST`<br>
        Expected: No subject is added. Error message indicates invalid person index.
 
 11. Testing with filtered list
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45`, then `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78`, then `find Alice`, then `addsubject 1 sub/GEOG`<br>
        Expected: GEOG subject tag is added to Alice Tan (first person in filtered list). Success message confirms addition. Use `list` command to verify Alice now has GEOG.
 
 12. Testing adding subjects to contact with existing subjects
-    1. Prerequisites: Run `clear` to ensure the address book is empty.
+    1. Prerequisites: Run `clear` to ensure the contact list is empty.
     2. Test case: `add n/Kate Ng s/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
        Expected: PHY and CHEM are added successfully. Kate now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
 
 ### Finding earliest free time slot
 Finding a free session
 
-Prerequisites: Have at least one person in the address book for adding sessions.
+Prerequisites: Have at least one person in the contact list for adding sessions.
 
 1. Test Case 1: Invalid duration values
    - Test case 1a: free 0
@@ -816,7 +814,7 @@ Prerequisites: Have at least one person in the address book for adding sessions.
    - Test case 1c: free
    Expected: Error message indicating missing duration parameter.
 2. Test Case 2: Empty schedule
-   - Prerequisites: Clear all sessions from the address book.
+   - Prerequisites: Clear all sessions from the contact list.
    - Test case: free 2
    Expected: "The earliest free time is: MON 08:00"
 3. Test Case 3: Boundary duration
@@ -835,7 +833,7 @@ _Some other test cases can be found within the user guide_
       Expected: First contact's name and phone are updated. Updated contact details shown in the result display.
 
    3. Test case: `edit -c 1 p/98765432` (where contact 2 already has phone 98765432)<br>
-      Expected: No person is updated. Error message: "A person with this phone number already exists in the address book."
+      Expected: No person is updated. Error message: "A person with this phone number already exists in the contact list."
 
    4. Test case: `edit -c 0 n/John`<br>
       Expected: No person is updated. Error message indicating invalid index shown.

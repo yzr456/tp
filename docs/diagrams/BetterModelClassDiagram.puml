@@ -44,5 +44,5 @@ enum Subject {
     COMSCI
 }
 
-Tag ..> Subject : "subject tags\nuse values from"
+Tag ..> Subject
 @enduml

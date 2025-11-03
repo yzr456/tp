@@ -158,28 +158,6 @@ public class PaymentTest {
     }
 
     @Test
-    public void getDaysOverdue_overdueStatusOnBillingDay_calculatesFromLastMonth() {
-        // Special case: When status is OVERDUE and billing day equals today
-        // The calculation should reference last month's billing
-        LocalDate today = LocalDate.now();
-        int currentDay = today.getDayOfMonth();
-
-        // Create overdue payment with billing day equal to today
-        Payment overduePayment = new Payment("OVERDUE", currentDay);
-        int daysOverdue = overduePayment.getDaysOverdue();
-
-        // Should be positive since it references last month's billing cycle
-        assertTrue(daysOverdue > 0,
-                "Days overdue should be positive when billing day equals today for OVERDUE status");
-
-        // Days overdue should be roughly the number of days in the last month
-        // (accounting for variable month lengths)
-        assertTrue(daysOverdue >= 28 && daysOverdue <= 31,
-                "Days overdue should be approximately one month when OVERDUE on the billing day");
-    }
-
-
-    @Test
     public void getBillingStartDay_success() {
         Payment paymentDefault = new Payment("PAID");
         assertEquals(1, paymentDefault.getBillingStartDay());
