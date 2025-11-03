@@ -90,6 +90,8 @@ public class EditCommand extends Command {
     public static final String MESSAGE_OVERLAPPING_SESSION = "The sessions overlap with these: %s session(s).\n";
     public static final String MESSAGE_CONFLICTING_SUBJECT_OPERATION =
             "Cannot clear and add subjects in the same command. Use 'sub/' alone to clear all subjects.";
+    public static final String MESSAGE_DUPLICATE_SUBJECT_CLEAR =
+            "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects.";
 
     private final Index index;
     private final EditPersonDescriptor editPersonDescriptor;

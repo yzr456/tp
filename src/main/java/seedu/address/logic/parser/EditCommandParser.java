@@ -132,6 +132,13 @@ public class EditCommandParser implements Parser<EditCommand> {
         // Parse subjects - check for conflicting operations first
         Collection<String> subjectValues = argMultimap.getAllValues(PREFIX_SUBJECT);
         if (subjectValues.size() > 1) {
+            // Check if all are empty (duplicate clear operations)
+            boolean allEmpty = subjectValues.stream().allMatch(String::isEmpty);
+            if (allEmpty) {
+                throw new ParseException(EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+            }
+            
+            // Check for mixed operations (clear and add at the same time)
             boolean hasEmpty = subjectValues.stream().anyMatch(String::isEmpty);
             boolean hasNonEmpty = subjectValues.stream().anyMatch(s -> !s.isEmpty());
             if (hasEmpty && hasNonEmpty) {

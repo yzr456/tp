@@ -565,4 +565,32 @@ public class EditCommandParserTest {
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
     }
+
+    @Test
+    public void parse_contactEditDuplicateEmptySubjects_failure() {
+        // Test with two empty subject prefixes
+        String userInput = "-c 1 sub/ sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+    }
+
+    @Test
+    public void parse_contactEditMultipleEmptySubjects_failure() {
+        // Test with three empty subject prefixes
+        String userInput = "-c 1 sub/ sub/ sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+    }
+
+    @Test
+    public void parse_contactEditMixedEmptyAndNonEmptySubjects_failure() {
+        // Test conflicting operation: trying to clear and add at the same time
+        String userInput = "-c 1 sub/ sub/MATH";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
+    }
+
+    @Test
+    public void parse_contactEditMixedNonEmptyAndEmptySubjects_failure() {
+        // Test conflicting operation in reverse order
+        String userInput = "-c 1 sub/MATH sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
+    }
 }
