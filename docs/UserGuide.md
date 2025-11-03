@@ -135,8 +135,8 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
-* Items in curved brackets are optional.<br>
-  e.g. `setpayment INDEX status/STATUS (start/DAY)` can be used as `setpayment 1 status/OVERDUE start/1` or as `setpayment 1 status/OVERDUE`.
+* Items in square brackets are optional.<br>
+  e.g. `setpayment INDEX status/STATUS [start/DAY]` can be used as `setpayment 1 status/OVERDUE start/1` or as `setpayment 1 status/OVERDUE`.
 
 * Items with `…`​ after them can be used multiple times.<br>
   e.g. `addsubject INDEX sub/SUBJECT…​` can be used as `addsubject 1 sub/MATH`, `addsubject 1 sub/MATH sub/ENG` etc.
@@ -168,7 +168,7 @@ Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
 Constraints:
 `NAME`: Alphanumerical characters, spaces, hyphens, apostrophes, not more than 100 characters long.
-* `STUDY_YEAR`: Must follow the format `[ACAD_LEVEL][NUMBER]` where:
+* `STUDY_YEAR`: Must follow the format `(ACAD_LEVEL)(NUMBER)` where:
 
 | Academic Level | Valid Numbers |
 |----------------|---------------|
@@ -202,16 +202,16 @@ Edits an existing student's details or sessions in the contact list. This comman
 
 Edits the contact information and subjects of a student.
 
-Format: `edit -c INDEX (n/NAME) (s/STUDY_YEAR) (p/PHONE) (e/EMAIL) (a/ADDRESS) (sub/SUBJECT)…​`
+Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
 
 **Parameters:**
 * `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ... that is smaller or equal to the contact list size)
-* `(n/NAME)`: New name for the student (optional)
-* `(s/STUDY_YEAR)`: New study year (optional)
-* `(p/PHONE)`: New phone number (optional)
-* `(e/EMAIL)`: New email address (optional)
-* `(a/ADDRESS)`: New address (optional)
-* `(sub/SUBJECT)…​`: New subjects (optional) - Can specify multiple subjects
+* `[n/NAME]`: New name for the student (optional)
+* `[s/STUDY_YEAR]`: New study year (optional)
+* `[p/PHONE]`: New phone number (optional)
+* `[e/EMAIL]`: New email address (optional)
+* `[a/ADDRESS]`: New address (optional)
+* `[sub/SUBJECT]…​`: New subjects (optional) - Can specify multiple subjects
 
 **Notes:**
 * At least one optional field must be provided
@@ -259,7 +259,7 @@ Format: `edit -s INDEX d/DAY s/START e/END…​`
 
 Finds persons whose names contain any of the given keywords.
 
-Format: `find KEYWORD (MORE_KEYWORDS)…​`
+Format: `find KEYWORD [MORE_KEYWORDS]…​`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
@@ -277,7 +277,7 @@ Examples:
 
 Adds one or more subject tags to a student's record to track which subjects they are taking.
 
-Format: `addsubject INDEX sub/SUBJECT (sub/MORE_SUBJECTS)…​`
+Format: `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​`
 
 * Adds subject tag(s) to the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
@@ -304,7 +304,7 @@ If you need to remove or change subjects, use the <code>edit</code> command to m
 
 Sets and tracks the payment status of a student, including automatic overdue day counting.
 
-Format: `setpayment INDEX status/STATUS (start/DAY)`
+Format: `setpayment INDEX status/STATUS [start/DAY]`
 
 * Sets the payment status for the student at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
@@ -437,7 +437,7 @@ Zenith contact data are saved in the hard disk automatically after any command t
 
 ### Editing the data file
 
-Zenith contact data are saved automatically as a JSON file `[JAR file location]/data/Zenith.json`. Advanced users are welcome to update data directly by editing that data file.
+Zenith contact data are saved automatically as a JSON file `(JAR file location)/data/Zenith.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
@@ -469,15 +469,15 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 |--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Add** | `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
 | **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                          |
-| **Add Subject** | `addsubject INDEX sub/SUBJECT (sub/MORE_SUBJECTS)…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
+| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
 | **Clear** | `clear`                                                                                                                                                       |
 | **Delete** | `delete INDEX` <br> e.g., `delete 3`                                                                                                                          |
-| **Edit Contact** | `edit -c INDEX (n/NAME) (s/STUDY_YEAR) (p/PHONE) (e/EMAIL) (a/ADDRESS) (sub/SUBJECT)…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
+| **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
 | **Edit Session** | `edit -s INDEX d/DAY s/START e/END` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                                |
 | **Exit** | `exit`                                                                                                                                                        |
-| **Find** | `find KEYWORD (MORE_KEYWORDS)…​` <br> e.g., `find John David`                                                                                                 |
+| **Find** | `find KEYWORD [MORE_KEYWORDS]…​` <br> e.g., `find John David`                                                                                                 |
 | **Free** | `free DURATION` <br> e.g., `free 4`                                                                                                                           |
 | **Help** | `help`                                                                                                                                                        |
 | **List** | `list`                                                                                                                                                        |
-| **Set Payment** | `setpayment INDEX status/STATUS (start/DAY)` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
+| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
 
