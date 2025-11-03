@@ -1048,7 +1048,7 @@ testers are expected to do more *exploratory* testing.
    1. Open and close the jar file at least once
    2. There should be a data folder in the same directory as the jar file
    3. Open the .json file that is found within the folder
-   4. Within the outer most curly brace, input "break" anywhere
+   4. Within the outermost curly brace, input "break" anywhere
    5. On the next open of the jar file, there will be a prompt indicating that there were some problems loading the data file
    6. The application will be opened with an empty list
 
@@ -1066,5 +1066,32 @@ testers are expected to do more *exploratory* testing.
 ## **Appendix: Planned enhancements**
 
 Team size: 5
-1. **Users cannot specify a time period when using the Free Command**: The `free` command currently returns the earliest available time slot that can accommodate the specified `DURATION`. However, tutors may want to find the earliest free time slot starting from a specific time, rather than just the absolute earliest slot available. This can be achieved by adding addtion   
-2. **Automatic payment status update from PENDING/PAID to OVERDUE**: The `setpayment` command currently requires manual updates when payments become overdue. The system does not automatically transition a PENDING or PAID status to OVERDUE when the billing cycle passes. In a future enhancement, Zenith could implement automatic status checking that updates payment statuses to OVERDUE when the billing cycle date is reached, eliminating the need for manual status updates and ensuring payment tracking remains accurate without user intervention.
+
+1. **Users cannot specify a time period when using the Free Command**
+   
+   **Current Limitation:** The `free` command currently returns the earliest available time slot that can accommodate the specified `DURATION`, starting from the beginning of the week. However, tutors may want to find the earliest free time slot starting from a specific day or time, rather than just the absolute earliest slot available.
+
+   **Planned Enhancement:** We plan to extend the `free` command with optional parameters to specify a starting point for the search:
+    * Add an optional `day/DAY` parameter to search from a specific day onwards
+    * Add an optional `time/TIME` parameter to search from a specific time onwards
+    * Example: `free 2 day/WED time/1400` would find the earliest 2-hour slot starting from Wednesday at 2:00 PM or later
+
+   This would allow tutors to:
+    * Find availability within a specific timeframe (e.g., "What's my next free slot after Tuesday afternoon?")
+    * Plan sessions around existing commitments more effectively
+    * Accommodate student preferences for certain days or times
+
+2. **Extend session timing range beyond 0800-2200 with customizable resting hours**
+
+   **Current Limitation:** All sessions are currently limited to timings between 0800 (8:00AM) and 2200 (10:00PM). This restriction may not accommodate tutors who conduct early morning sessions (before 8AM) or late evening sessions (after 10PM).
+
+   **Planned Enhancement:** We plan to extend the acceptable time range to support the full 24-hour period (0000 to 2359), with the ability for tutors to set customizable "Resting hours".
+
+   Tutors will be able to define their personal resting hours (e.g., 2300-0700 for overnight rest), and the system will:
+    * Prevent `addsession` from scheduling sessions that fall within the defined resting hours
+    * Exclude resting hours when the `free` command searches for available time slots
+    * Allow tutors to modify their resting hours as their schedule changes
+
+   This gives tutors full flexibility to personalize Zenith around their tutoring working hours, as we understand that different tutors have different work arrangements and availability.
+
+3. **Automatic payment status update from PENDING/PAID to OVERDUE**: The `setpayment` command currently requires manual updates when payments become overdue. The system does not automatically transition a PENDING or PAID status to OVERDUE when the billing cycle passes. In a future enhancement, Zenith could implement automatic status checking that updates payment statuses to OVERDUE when the billing cycle date is reached, eliminating the need for manual status updates and ensuring payment tracking remains accurate without user intervention.
