@@ -938,6 +938,15 @@ testers are expected to do more *exploratory* testing.
    6. Test case: `edit 1 n/John`<br>
       Expected: No person is updated. Error message: "A valid flag must be provided. Use -c for contact or -s for session."
 
+   7. Test case: `edit -c 1 sub/`<br>
+         Expected: All subjects are cleared from the first contact. Success message confirms subjects have been cleared.
+
+   8. Test case: `edit -c 1 sub/ sub/`<br>
+      Expected: No person is updated. Error message: "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects."
+
+   9. Test case: `edit -c 1 sub/ sub/MATH`<br>
+      Expected: No person is updated. Error message: "Cannot clear and edit subjects simultaneously. Use 'sub/' alone to clear, or provide subject values to replace."
+
    10. Other incorrect edit commands to try: `edit -c 1` (no fields), `edit -x 1 n/John` (invalid flag), `edit -c 999 n/John` (where 999 is larger than list size)<br>
       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
@@ -960,7 +969,7 @@ testers are expected to do more *exploratory* testing.
    6. Test case: `edit -s 0 d/MON s/0900 e/1100`<br>
       Expected: No person is updated. Error message indicating invalid index.
 
-   7. Other incorrect session edit commands to try: `edit -s 1 d/MON s/0900` (incomplete triplet), `edit -s 1 d/MONDAY s/0900 e/1100` (invalid day format), `edit -s 999 d/MON s/0900 e/1100` (where 999 is larger than list size)<br>
+   7. Other incorrect session edit commands to try: `edit -s 1 d/MON s/0900` (incomplete triplet), `edit -s 1 d/MONDAY s/0900 e/1100` (invalid day format), `edit -s 999 d/MON s/0900 e/1100` (where 999 is larger than list size) `edit -s 1 d/MON s/0900 e/0800 clear/`(invalid command syntax) <br>
       Expected: Error messages shown explaining the specific issue with session format or parameters.
 
 ### Setting payment status

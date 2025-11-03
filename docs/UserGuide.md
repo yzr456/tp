@@ -234,7 +234,7 @@ Examples:
 
 Edits the tutoring sessions of a student.
 
-Format: `edit -s INDEX d/DAY s/START e/END…​`
+Format: `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/] `
 
 **Parameters:**
 * `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size.
@@ -243,6 +243,8 @@ Format: `edit -s INDEX d/DAY s/START e/END…​`
 * `e/END`: End time in 24-hour format (e.g., 1100, 1630).
 
 **Notes:**
+* `[d/DAY] [s/START] [e/END]` make up one parameter group and `[clear/]` make up the second parameter group, at least one parameter group must be present
+* `[clear/]` can be used to clear all sessions associated with that person 
 * Sessions must follow the order: `d/` then `s/` then `e/`.
 * You can edit multiple sessions at once by repeating the pattern.
 * When editing sessions, **all existing sessions are replaced** with the new ones.
@@ -254,6 +256,8 @@ Format: `edit -s INDEX d/DAY s/START e/END…​`
     - Replaces all sessions for student 1 with a Monday 9am-11am session.
 * `edit -s 2 d/TUE s/1400 e/1600 d/THU s/1500 e/1700`
     - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm.
+* `edit -s 1 clear/`
+    - Removes all sessions associated with person at index 1
 
 ### Locating persons by name: `find`
 
@@ -472,7 +476,7 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 | **Clear** | `clear`                                                                                                                                                       |
 | **Delete** | `delete INDEX` <br> e.g., `delete 3`                                                                                                                          |
 | **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
-| **Edit Session** | `edit -s INDEX d/DAY s/START e/END` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                                |
+| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                 |
 | **Exit** | `exit`                                                                                                                                                        |
 | **Find** | `find KEYWORD [MORE_KEYWORDS]…​` <br> e.g., `find John David`                                                                                                 |
 | **Free** | `free DURATION` <br> e.g., `free 4`                                                                                                                           |
