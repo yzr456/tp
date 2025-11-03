@@ -9,15 +9,16 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Address {
 
-    public static final String MESSAGE_CONSTRAINTS = "Addresses can take any values as long as it is not blank and "
-            + "is within 70 characters.";
-
+    //@@author mackerelsoup
+    public static final String MESSAGE_CONSTRAINTS = "Addresses can take any values as long as it is not blank"
+              + " and is less than 500 characters";
+    //@@author
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
      */
     public static final String VALIDATION_REGEX = "[^\\s].*";
-    public static final int MAXIMUM_LENGTH_ADDRESS = 70;
+    public static final int MAXIMUM_LENGTH_ADDRESS = 500;
 
     public final String value;
 

@@ -46,6 +46,8 @@ public class MainApp extends Application {
     protected Model model;
     protected Config config;
 
+    private boolean hasFileLoadError = false;
+
     @Override
     public void init() throws Exception {
         logger.info("=============================[ Initializing AddressBook ]===========================");
@@ -64,7 +66,7 @@ public class MainApp extends Application {
 
         logic = new LogicManager(model, storage);
 
-        ui = new UiManager(logic);
+        ui = new UiManager(logic, hasFileLoadError);
     }
 
     /**
@@ -87,6 +89,7 @@ public class MainApp extends Application {
         } catch (DataLoadingException e) {
             logger.warning("Data file at " + storage.getAddressBookFilePath() + " could not be loaded."
                     + " Will be starting with an empty AddressBook.");
+            hasFileLoadError = true;
             initialData = new AddressBook();
         }
 

@@ -151,7 +151,7 @@ public class WeeklySessionsTest {
     @Test
     public void getEarliestFreeTime_emptySchedule_returnsMonday8am() {
         String result = weeklySessions.getEarliestFreeTime(2);
-        assertEquals("The earliest free time is: MONDAY 08:00", result);
+        assertEquals("MONDAY 08:00", result);
     }
 
     @Test
@@ -159,7 +159,7 @@ public class WeeklySessionsTest {
         weeklySessions.add(monMorning);
         weeklySessions.add(monAfternoon);
         String result = weeklySessions.getEarliestFreeTime(2);
-        assertEquals("The earliest free time is: MONDAY 12:00", result);
+        assertEquals("MONDAY 12:00", result);
     }
 
     @Test
@@ -167,14 +167,14 @@ public class WeeklySessionsTest {
         weeklySessions.add(monMorning);
         weeklySessions.add(monAfternoon);
         String result = weeklySessions.getEarliestFreeTime(11);
-        assertEquals("The earliest free time is: TUESDAY 08:00", result);
+        assertEquals("TUESDAY 08:00", result);
     }
 
     @Test
     public void getEarliestFreeTime_afterExistingSession() {
         weeklySessions.add(monMorning);
         String result = weeklySessions.getEarliestFreeTime(2);
-        assertEquals("The earliest free time is: MONDAY 12:00", result);
+        assertEquals("MONDAY 12:00", result);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class WeeklySessionsTest {
         Session monLate = new Session("MON", "1400", "1600");
         weeklySessions.add(monLate);
         String result = weeklySessions.getEarliestFreeTime(2);
-        assertEquals("The earliest free time is: MONDAY 08:00", result);
+        assertEquals("MONDAY 08:00", result);
     }
 
     @Test
@@ -208,7 +208,7 @@ public class WeeklySessionsTest {
     public void getEarliestFreeTime_exactlyFitsAtEndOfDay() {
         weeklySessions.add(monMorning);
         String result = weeklySessions.getEarliestFreeTime(10);
-        assertEquals("The earliest free time is: MONDAY 12:00", result);
+        assertEquals("MONDAY 12:00", result);
     }
 
     @Test
@@ -217,7 +217,7 @@ public class WeeklySessionsTest {
         weeklySessions.add(monAfternoon);
         weeklySessions.add(new Session("TUE", "0800", "1200"));
         String result = weeklySessions.getEarliestFreeTime(11);
-        assertEquals("The earliest free time is: WEDNESDAY 08:00", result);
+        assertEquals("WEDNESDAY 08:00", result);
     }
 
     @Test
