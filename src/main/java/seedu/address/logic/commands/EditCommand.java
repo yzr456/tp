@@ -357,7 +357,8 @@ public class EditCommand extends Command {
             updatedTags.addAll(existingSessions);
         }
 
-        return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags);
+        return new Person(updatedName, updatedStudyYear, updatedPhone, updatedEmail, updatedAddress, updatedTags,
+                personToEdit.getPayment());
     }
 
     /**

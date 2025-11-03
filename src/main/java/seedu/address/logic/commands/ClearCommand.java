@@ -1,8 +1,5 @@
 package seedu.address.logic.commands;
 
-import static java.util.Objects.requireNonNull;
-
-import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 
 /**
@@ -12,12 +9,22 @@ public class ClearCommand extends Command {
 
     public static final String COMMAND_WORD = "clear";
     public static final String MESSAGE_SUCCESS = "Address book has been cleared!";
-
+    public static final String MESSAGE_CONFIRM = "Are you sure you want to clear all data? (y/n)";
+    public static final String MESSAGE_CANCELLED = "Clear command cancelled.";
+    public static final String MESSAGE_INVALID = "Invalid input. Please try 'clear' again, then enter 'y' or 'n'.";
+    private static boolean awaitingConfirmation = false;
 
     @Override
     public CommandResult execute(Model model) {
-        requireNonNull(model);
-        model.setAddressBook(new AddressBook());
-        return new CommandResult(MESSAGE_SUCCESS);
+        setAwaitingConfirmation(true);
+        return new CommandResult(MESSAGE_CONFIRM);
+    }
+
+    public static boolean isAwaitingConfirmation() {
+        return awaitingConfirmation;
+    }
+
+    public static void setAwaitingConfirmation(boolean awaiting) {
+        awaitingConfirmation = awaiting;
     }
 }
