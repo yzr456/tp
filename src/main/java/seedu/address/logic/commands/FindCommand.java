@@ -24,7 +24,7 @@ public class FindCommand extends Command {
 
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contact(s) found for search %2$s";
     public static final String MESSAGE_MISSING_KEYWORDS =
-            "The keywords field cannot be blank";
+            "The keyword field cannot be blank";
 
     private final NameContainsKeywordsPredicate predicate;
 

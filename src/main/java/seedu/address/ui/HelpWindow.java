@@ -15,6 +15,7 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.AddSessionCommand;
 import seedu.address.logic.commands.AddSubjectCommand;
+import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.DeleteCommand;
 import seedu.address.logic.commands.EditCommand;
@@ -120,6 +121,7 @@ public class HelpWindow extends UiPart<Stage> {
         registeredCommands.add(AddSubjectCommand.class);
         registeredCommands.add(EditCommand.class);
         registeredCommands.add(DeleteCommand.class);
+        registeredCommands.add(ClearCommand.class);
         registeredCommands.add(ListCommand.class);
         registeredCommands.add(FindCommand.class);
         registeredCommands.add(FreeCommand.class);
