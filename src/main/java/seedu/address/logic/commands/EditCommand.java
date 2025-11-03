@@ -89,7 +89,8 @@ public class EditCommand extends Command {
                     + "Example: d/MON s/1100 e/1200 d/TUE s/1300 e/1400";
     public static final String MESSAGE_OVERLAPPING_SESSION = "The sessions overlap with these: %s session(s).\n";
     public static final String MESSAGE_CONFLICTING_SUBJECT_OPERATION =
-            "Cannot clear and edit subjects simultaneously. Use 'sub/' alone to clear, or provide subject values to replace.";
+            "Cannot clear and edit subjects simultaneously. "
+            + "Use 'sub/' alone to clear, or provide subject values to replace.";
     public static final String MESSAGE_DUPLICATE_SUBJECT_CLEAR =
             "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects.";
 

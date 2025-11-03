@@ -137,7 +137,7 @@ public class EditCommandParser implements Parser<EditCommand> {
             if (allEmpty) {
                 throw new ParseException(EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
             }
-            
+
             // Check for mixed operations (clear and add at the same time)
             boolean hasEmpty = subjectValues.stream().anyMatch(String::isEmpty);
             boolean hasNonEmpty = subjectValues.stream().anyMatch(s -> !s.isEmpty());
@@ -302,7 +302,8 @@ public class EditCommandParser implements Parser<EditCommand> {
     /**
      * Parses {@code Collection<String> subjects} into a {@code Set<Tag>} if {@code subjects} is non-empty.
      * Validates that each subject is a valid subject code.
-     * If subjects contains a single completely empty string (no whitespace), returns an empty set to clear all subjects.
+     * If subjects contains a single completely empty string (no whitespace),
+     * returns an empty set to clear all subjects.
      */
     private Optional<Set<Tag>> parseSubjectsForEdit(Collection<String> subjects) throws ParseException {
         assert subjects != null;
