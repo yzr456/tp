@@ -15,7 +15,7 @@ public class FreeCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Finds the earliest free time slot with the specified duration\n"
             + "Parameters: DURATION (must be a positive integer) \n"
-            + "Command syntax: free [DURATION]\n"
+            + "Command syntax: free DURATION\n"
             + "Example: " + COMMAND_WORD + " 1\n";
 
     public static final String MESSAGE_FREE_TIME_FOUND = "The earliest %d hour time slot is at: %s \n";

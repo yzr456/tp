@@ -18,13 +18,13 @@ public class FindCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Finds all persons whose names contain any of "
             + "the specified keywords (case-insensitive) and displays them as a list with index numbers.\n"
             + "Parameters: KEYWORD...\n"
-            + "Command syntax: " + COMMAND_WORD + " [KEYWORD]...\n"
+            + "Command syntax: " + COMMAND_WORD + " KEYWORD [MORE_KEYWORDS]...\n"
             + "Example: " + COMMAND_WORD + " alice\n"
             + "Example: " + COMMAND_WORD + " alice bob charlie\n";
 
     public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d contact(s) found for search %2$s";
     public static final String MESSAGE_MISSING_KEYWORDS =
-            "The keywords field cannot be blank";
+            "The keyword field cannot be blank";
 
     private final NameContainsKeywordsPredicate predicate;
 

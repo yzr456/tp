@@ -8,6 +8,8 @@ import seedu.address.model.Model;
 public class ClearCommand extends Command {
 
     public static final String COMMAND_WORD = "clear";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Clears all entries from the address book.\n"
+            + "Example: " + COMMAND_WORD + "\nNote: You will be prompted to confirm before data is deleted.\n";
     public static final String MESSAGE_SUCCESS = "Address book has been cleared!";
     public static final String MESSAGE_CONFIRM = "Are you sure you want to clear all data? (y/n)";
     public static final String MESSAGE_CANCELLED = "Clear command cancelled.";

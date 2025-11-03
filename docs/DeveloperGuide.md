@@ -95,7 +95,7 @@ The `UI` component,
 * implements keyboard-first interaction:
   * Typing alphanumeric keys anywhere focuses `CommandBox` and inserts the character
   * Typing `ctrl` anywhere focuses `CommandBox`
-  * UP/DOWN arrow keys navigate the contact list
+  * UP/DOWN arrow keys navigate the address book
   * F1 opens `HelpWindow`
 * automatically updates `DetailedView` when a contact is selected (via click or keyboard navigation).
 
@@ -140,7 +140,7 @@ How the parsing works:
 
 The `Model` component,
 
-* stores the contact list data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
+* stores the address book data i.e., all `Person` objects (which are contained in a `UniquePersonList` object).
 * stores a centralized view of all scheduled sessions (which are managed by a `WeeklySessions` object). See the [WeeklySessions Component](#weeklysessions-component) section for implementation details.
 * stores the currently 'selected' `Person` objects (e.g., results of a search query) as a separate _filtered_ list which is exposed to outsiders as an unmodifiable `ObservableList<Person>` that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
 * stores a `UserPref` object that represents the user's preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
@@ -162,7 +162,7 @@ The `Model` component,
 <puml src="diagrams/StorageClassDiagram.puml" width="550" />
 
 The `Storage` component,
-* can save both contact list data and user preference data in JSON format, and read them back into corresponding objects.
+* can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
@@ -176,7 +176,7 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 ### WeeklySessions Component
 
-The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the contact list. It augments the `AddressBook` with efficient time-based query capabilities.
+The `WeeklySessions` component provides a centralized, time-sorted view of all scheduled sessions across all persons in the address book. It augments the `AddressBook` with efficient time-based query capabilities.
 
 #### Purpose
 - Maintains a global schedule view of all sessions
@@ -328,7 +328,7 @@ The free operation will go through the `Model` component as such:
 * Has student details scattered across phone contacts, WhatsApp chats, and loose notes
 * Values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: This product is for a tech-savvy private tutor teaching students in Singapore, who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line contact list that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
+**Value proposition**: This product is for a tech-savvy private tutor teaching students in Singapore, who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 
 ### User stories
@@ -338,17 +338,26 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | Priority | As a …​                          | I want to …​                                                       | So that I can…​                                            |
 |----------|----------------------------------|--------------------------------------------------------------------|------------------------------------------------------------|
 | `* * *`  | private tutor                    | add a tutee contact record with name, contact, location, age/level | quickly access essential details                           |
-| `* * *`  | private tutor                    | remove a tutee contact                                             | have an updated contact list                               |
+| `* * *`  | private tutor                    | remove a tutee contact                                             | have an updated address book                               |
 | `* * *`  | private tutor                    | edit student details                                               | keep their records up to date                              |
 | `* * *`  | private tutor with many students | easily look for students by name                                   | quickly access their information during busy tutoring days |
 | `* * *`  | fast typing private tutor        | perform tasks using short efficient commands                       | save time                                                  |
 | `* * *`  | first time user                  | have a help command                                                | know how to use the application                            |
 | `* * *`  | private tutor                    | store multiple contact methods per person (phone, email, etc.)     | have backup communication options                          |
 | `* * *`  | private tutor                    | locally store all student-related and personal data                | never lose important information                           |
+| `* * *`  | private tutor                    | add tutoring sessions for each student                             | track when I meet with each student                        |
+| `* * *`  | private tutor                    | edit tutoring sessions                                             | update my schedule when times change                       |
+| `* * *`  | private tutor                    | tag students with subjects they are taking                         | quickly see what I am teaching each student                |
+| `* * *`  | busy private tutor               | find the earliest free time slot in my schedule                    | efficiently schedule new students                          |
+| `* * *`  | private tutor                    | view all my contacts in a list                                     | see my entire student roster at once                       |
+| `* * *`  | private tutor                    | clear all contacts                                                 | start fresh when needed                                    |
+| `* *`    | private tutor who earns money    | keep track of payments I received                                  | streamline my finances                                     |
+| `* *`    | private tutor                    | set payment status for each student                                | track who has paid and who has not                         |
+| `* *`    | private tutor                    | set billing cycle start days                                       | align payment tracking with my billing schedule            |
+| `* *`    | private tutor                    | see how many days a payment is overdue                             | follow up with late payments promptly                      |
 | `* *`    | private tutor                    | view a calendar of upcoming sessions                               | manage my time before those sessions                       |
 | `* *`    | private tutor                    | group students by classes                                          | organise my list of contacts                               |
-| `* *`    | private tutor                    | receive reminders for lessons                                      | don't miss any sessions                                    |
-| `* *`    | private tutor who earns money    | keep track of payments I received                                  | streamline my finances                                     |
+| `* *`    | private tutor                    | receive reminders for lessons                                      | do not miss any sessions                                   |
 | `* *`    | private tutor                    | track test scores                                                  | monitor improvement over time                              |
 | `* *`    | private tutor                    | record the topics each student has covered                         | identify gaps in knowledge                                 |
 | `* *`    | effective private tutor          | mark areas where a student struggles                               | focus those in future lessons.                             |
@@ -359,8 +368,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | private tutor                    | assign projects to each student                                    | tailor their learning paths                                |
 | `*`      | private tutor                    | update project completion status                                   | track project progress                                     |
 | `*`      | time-efficient private tutor     | filter students by location                                        | arrange back-to-back F2F lessons efficiently               |
-
-*{More to be added}*
 
 ### Use cases
 
@@ -576,12 +583,12 @@ Use case ends.
 **Use case: UC08 – Find Contacts**
 
 **Guarantees**
-- Zenith shows a filtered contact list based on the keywords; no data is modified.
+- Zenith shows a filtered address book based on the keywords; no data is modified.
 
 **MSS**
 1. Tutor provides one or more keywords to search for.
 2. Zenith validates that at least one non-empty keyword is provided.
-3. Zenith filters the contact list and displays matching results.
+3. Zenith filters the address book and displays matching results.
 Use case ends.
 
 **Extensions**
@@ -593,7 +600,7 @@ Use case ends.
 **Use case: UC09 – List Contacts**
 
 **Guarantees**
-- Zenith shows the full contact list; no data is modified.
+- Zenith shows the full address book; no data is modified.
 
 **MSS**
 1. Tutor requests to list all contacts.
@@ -604,15 +611,28 @@ Use case ends.
 **Use case: UC10 – Clear All Contacts**
 
 **Guarantees**
-- All contacts are removed from the contact list.
-- On success, Zenith displays an empty contact list.
+- All contacts are removed from the address book only if the tutor confirms the action.
+- On success, Zenith displays an empty address book.
+- On cancellation, all contacts remain unchanged.
 
 **MSS**
 1. Tutor requests to clear all contacts.
-2. Zenith removes all contacts from the contact list.
-3. Zenith displays an empty list.
-4. Includes: UC13 Autosave.
+2. Zenith requests confirmation from the tutor.
+3. Tutor confirms the action.
+4. Zenith removes all contacts from the address book.
+5. Zenith displays an empty list with a success message.
+6. Includes: UC13 Autosave.
 Use case ends.
+
+**Extensions**
+* 3a. Tutor cancels the action.
+    * 3a1. Zenith displays a cancellation message.
+    * 3a2. Zenith retains all contacts in the list.
+      Use case ends.
+* 3b. Tutor provides invalid input.
+    * 3b1. Zenith displays an error message requesting valid input (y/n).
+    * 3b2. Zenith does not remove any contacts.
+      Use case ends.
 
 
 **Use case: UC11 – Help**
@@ -646,7 +666,7 @@ Use case ends.
 
 **Guarantees**
 - Latest state is written to local storage if write operation succeeds.
-- Errors during write operations are logged for debugging purposes.
+- User is notified of any errors during read or write operations.
 
 **MSS**
 1. Zenith attempts to write the updated data to the save file.
@@ -654,11 +674,15 @@ Use case ends.
 
 **Extensions**
 * 1a. Zenith encounters an error during write operation (e.g., due to file permissions or disk space).
-    * 1a1. Zenith logs the error details.
-    * 1a2. Application continues to function with in-memory data.
+    * 1a1. Zenith shows an error message to the user indicating the save operation failed.
+    * 1a2. Zenith logs the error details.
+    * 1a3. Application continues to function with in-memory data.
       Use case ends.
-
-*{More to be added}*
+* 1b. Zenith encounters an error during read operation on startup (e.g., corrupted data file).
+    * 1b1. Zenith shows an error message to the user indicating the data could not be loaded.
+    * 1b2. Zenith logs the error details.
+    * 1b3. Application starts with an empty address book.
+      Use case ends.
 
 ### Non-Functional Requirements
 
@@ -670,8 +694,6 @@ Use case ends.
 6.  The application shall recover gracefully from partial file corruption, access errors, or disk space insufficiency, and never crashing silently or destroying unsaved user data.
 7.  All error and warning messages must be concise, clear, and non-ambiguous, allowing users to recover independently without technical support.
 8.  The _core functions_ of the application must work completely offline with no network dependencies, ensuring reliability regardless of internet connectivity.
-
-*{More to be added}*
 
 ### Glossary
 
@@ -708,21 +730,70 @@ testers are expected to do more *exploratory* testing.
    2. CD into the JAR file directory and run java -jar zenith.jar Expected: Shows the GUI with a set of sample contacts. The window size may not be optimum
    3. (Alternative) Double-click the JAR file Expected: Similar behaviour to running it through command line
 
-1. Saving window preferences
+2. Saving window preferences
 
    1. Resize the window to an optimum size. Move the window to a different location. Close the window.
 
-   1. Re-launch the app by running it through command line.<br>
+   2. Re-launch the app by running it through command line.<br>
        Expected: The most recent window size and location is retained.
 
 ### Adding a person
-1. Adding a person
-   1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the contact list is empty.
-   2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
-   3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> Expected: New contact named bill is added to the list
-   4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> Expected: New contact named bill is added to the list
-   5. Test case 2(b): `add n/bill s/PRI5 p/83451234 e/billbo@gmail.com a/yishun street 12` <br> Expected: No new person is added to the list due to duplicate contacts. Error details shown in the status message.
-   6. Test case 3: `add n/bill s/PRI4 e/bill@gmail.com a/yishun street 10` <br> Expected: No new person is added to the list due to missing parameter. Error details shown in status message
+
+1. Adding a person while all persons are being shown
+
+   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+      At the start of every new test(_new number_) case, run `clear` to ensure that the address book is empty.
+   
+   2. Test case 1(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> 
+      Expected: New contact named bill is added to the list
+   
+   3. Test case 1(b): `add n/bill s/SEC3 p/91203442 e/billbi@gmail.com a/yishun street 11`<br> 
+      Expected: New contact named bill is added to the list
+   
+   4. Test case 2(a): `add n/bill s/SEC2 p/83451234 e/bill@gmail.com a/yishun street 10`<br> 
+      Expected: New contact named bill is added to the list
+   
+   5. Test case 2(b): `add n/bill s/PRI5 p/83451234 e/billbo@gmail.com a/yishun street 12` <br>
+      Expected: No new person is added to the list due to duplicate contacts. Error message indicating duplicate contact.
+   
+   6. Test case 3: `add n/bill s/PRI4 e/bill@gmail.com a/yishun street 10` <br>
+      Expected: No new person is added to the list due to missing parameter. Error message indicating missing parameter.
+
+### Listing all persons
+
+1. Listing all persons in the address book
+
+    1. Prerequisites: Have at least one person in the address book.
+
+    2. Test case: `list`<br>
+       Expected: All contacts are displayed in the person list. Result display shows the number of persons listed.
+
+    3. Test case: After using `find John` to filter the list, use `list`<br>
+       Expected: The filtered view is cleared and all contacts are shown again.
+
+   4. Test case: `list extra parameters`<br>
+      Expected: All contacts are displayed. Extra parameters are ignored.
+
+### Finding persons by name
+
+1. Finding persons whose names contain given keywords
+
+    1. Prerequisites: Have multiple persons in the address book with different names.
+
+    2. Test case: `find John`<br>
+       Expected: All persons with "John" in their name (case-insensitive) are displayed. Result display shows the number of persons found.
+
+    3. Test case: `find john doe`<br>
+       Expected: All persons with either "john" or "doe" in their name are displayed (OR search).
+
+    4. Test case: `find alex david`<br>
+       Expected: Persons with "alex" or "david" in their names are shown.
+
+    6. Test case: `find`<br>
+       Expected: Error message indicating the keyword field cannot be empty.
+
+    7. Test case: Partial matches like `find han` (should match "Hans")<br>
+       Expected: All persons with "han" anywhere in their name are displayed.
 
 ### Deleting a person
 
@@ -731,98 +802,115 @@ testers are expected to do more *exploratory* testing.
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
    2. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+      Expected: First contact is deleted from the list. Details of the deleted contact shown in the result display.
 
    3. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+      Expected: No person is deleted. Error messaging indicating invalid index.
 
-   4. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+   4. Test case: `delete -1`<br>
+      Expected: No person is deleted. Error message indicating invalid index.
+
+   5. Test case: `delete x` (where x is larger than the list size)<br>
+      Expected: No person is deleted. Error message indicating the index provided is out of bounds.
+
+   6. Test case: `delete abc`<br>
+      Expected: No person is deleted. Error message indicating invalid command format.
+
+   7. Test case: `delete`<br>
+      Expected: No person is deleted. Error message showing the correct command format.
+
+2. Deleting a person from a filtered list
+
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+
+    2. Test case: Use `find John` to filter the list, then `delete 1`<br>
+       Expected: First contact in the filtered list is deleted. Details of the deleted contact shown in the result display.
+
+    3. Test case: Use `find John` to filter the list, then `delete 5` (where filtered list has fewer than 5 persons)<br>
+       Expected: No person is deleted. Error message indicating the index provided is out of bounds.
+
+    4. Test case: Use `find NonExistentName` to get an empty filtered list, then `delete 1`<br>
+       Expected: No person is deleted. Error message indicating the index provided is out of bounds.
+
 
 ### Adding subject tags
 
-1. Adding a single subject tag
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45` followed by `addsubject 1 sub/MATH`<br>
-       Expected: MATH subject tag is added to Alice Tan. Success message shows "Added Subject Tag(s): [MATH] to Alice Tan". Subject tag displayed in the detailed view with color coding.
+1. Adding subject tags for a person while all persons are being shown
 
-2. Adding multiple subject tags in one command
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78` followed by `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
-       Expected: PHY, CHEM, and BIO subject tags are added to Bob Lee. Success message lists all three subjects. Detailed view shows all three subject tags with color coding.
+    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
+       At the start of every new test case, run `clear` to ensure that the address book is empty.
 
-3. Testing case-insensitivity
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Charlie Ng s/PRI5 p/93456789 e/charlie@example.com a/Blk 789 Street 12` followed by `addsubject 1 sub/math`<br>
-       Expected: MATH subject tag is added (case-insensitive). Success message shows "[MATH]" in uppercase. Subject tag appears in uppercase in the detailed view.
+    2. Test case: `addsubject 1 sub/MATH`<br>
+       Expected: MATH subject tag is added to first contact. Success message shows subject tag added to contact. Subject tag displayed in the detailed view with color coding.
 
-4. Testing duplicate subject already assigned to contact
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/David Lim s/SEC4 p/84567890 e/david@example.com a/Blk 234 Street 56`, then `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
-       Expected: Second addsubject command fails. Error message indicates "Subject Tag(s): ENG already assigned to David Lim".
+    3. Test case: `addsubject 1 sub/PHY sub/CHEM sub/BIO`<br>
+       Expected: PHY, CHEM, and BIO subject tags are added to first contact. Success message lists all three subjects. Detailed view shows all three subject tags with color coding.
 
-5. Testing duplicate subject in same command
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Emma Wong s/JC2 p/95678901 e/emma@example.com a/Blk 567 Street 89` followed by `addsubject 1 sub/MATH sub/MATH`<br>
-       Expected: No subject is added. Error message indicates "Duplicate subject tag(s) detected in command. Each subject should only be specified once."
+    4. Test case: `addsubject 1 sub/math`<br>
+       Expected: MATH subject tag is added (case-insensitive). Success message shows subject tag added to contact. Subject tag appears in uppercase in the detailed view.
 
-6. Testing invalid index (zero)
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Frank Tan s/POLY2 p/96789012 e/frank@example.com a/Blk 890 Street 34` followed by `addsubject 0 sub/SCI`<br>
+    5. Test case: `addsubject 1 sub/ENG`, then `addsubject 1 sub/ENG`<br>
+       Expected: Second addsubject command fails. Error message indicates subject tags already exist for the contact".
+
+    6. Test case: `addsubject 1 sub/MATH sub/MATH`<br>
+       Expected: No subject is added. Error message indicates duplicate subject tag(s) detected in command. 
+
+    7. Test case: `addsubject 0 sub/SCI`<br>
        Expected: No subject is added. Error message indicates invalid index.
 
-7. Testing invalid subject code
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Grace Koh s/UNI3 p/87890123 e/grace@example.com a/Blk 345 Street 67` followed by `addsubject 1 sub/INVALID`<br>
-       Expected: No subject is added. Error message shows the list of valid subject codes (MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI).
+    8. Test case: `addsubject 1 sub/INVALID`<br>
+       Expected: No subject is added. Error message shows the list of valid subject codes.
 
-8. Testing empty subject parameter
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Henry Lim s/SEC2 p/88901234 e/henry@example.com a/Blk 678 Street 90` followed by `addsubject 1 sub/`<br>
+    9. Test case: `addsubject 1 sub/`<br>
        Expected: No subject is added. Error message indicates subject cannot be blank and shows valid subject codes.
 
-9. Testing missing subject parameter
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Iris Tan s/PRI3 p/89012345 e/iris@example.com a/Blk 901 Street 23` followed by `addsubject 1`<br>
+    10. Test case: `addsubject 1`<br>
        Expected: No subject is added. Error message shows command usage format.
 
-10. Testing out of bounds index
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Jack Lee s/SEC5 p/80123456 e/jack@example.com a/Blk 234 Street 56` followed by `addsubject 100 sub/HIST`<br>
+    11. Test case: `addsubject 100 sub/HIST` (where 100 is larger than the list size)<br>
        Expected: No subject is added. Error message indicates invalid person index.
 
-11. Testing with filtered list
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Alice Tan s/SEC3 p/91234567 e/alice@example.com a/Blk 123 Street 45`, then `add n/Bob Lee s/JC1 p/82345678 e/bob@example.com a/Blk 456 Street 78`, then `find Alice`, then `addsubject 1 sub/GEOG`<br>
-       Expected: GEOG subject tag is added to Alice Tan (first person in filtered list). Success message confirms addition. Use `list` command to verify Alice now has GEOG.
+    12. Test case: `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
+       Expected: PHY and CHEM are added successfully. Contact now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
 
-12. Testing adding subjects to contact with existing subjects
-    1. Prerequisites: Run `clear` to ensure the contact list is empty.
-    2. Test case: `add n/Kate Ng s/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
-       Expected: PHY and CHEM are added successfully. Kate now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
+    13. Test case: `addsubject -1 sub/MATH`<br>
+       Expected: No subject is added. Error message indicates invalid index.
+
+    14. Test case: `addsubject abc sub/MATH`<br>
+       Expected: No subject is added. Error message indicates invalid command format or invalid index.
+
+    15. Other incorrect addsubject commands to try: `addsubject`, `addsubject x sub/MATH` (where x is non-numeric or larger than list size)<br>
+       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
 ### Finding earliest free time slot
-Finding a free session
 
-Prerequisites: Have at least one person in the contact list for adding sessions.
+1. Finding a free time slot with invalid duration values
 
-1. Test Case 1: Invalid duration values
-   - Test case 1a: free 0
-   Expected: Error message indicating invalid duration.
-   - Test case 1b: free -2
-   Expected: Error message indicating invalid duration.
-   - Test case 1c: free
-   Expected: Error message indicating missing duration parameter.
-2. Test Case 2: Empty schedule
-   - Prerequisites: Clear all sessions from the contact list.
-   - Test case: free 2
-   Expected: "The earliest free time is: MON 08:00"
-3. Test Case 3: Boundary duration
-   - Prerequisites: No sessions or minimal sessions.
-   - Test case: free 14
-   Expected: Returns earliest day with 14 consecutive free hours or "No free time available."
+    1. Prerequisites: Have at least one person in the address book for adding sessions.
 
-_Some other test cases can be found within the user guide_
+    2. Test case: `free 0`<br>
+       Expected: Error message indicating invalid duration.
+
+    3. Test case: `free -2`<br>
+       Expected: Error message indicating invalid duration.
+
+    4. Test case: `free`<br>
+       Expected: Error message indicating missing duration parameter or showing correct command format.
+
+2. Finding a free time slot with empty schedule
+
+   1. Prerequisites: Run `clear` and confirm to ensure all contacts and sessions are removed from the address book.
+
+   2. Test case: `free 2`<br>
+      Expected: "The earliest free time is: MONDAY 08:00"
+
+3. Finding a free time slot with boundary duration
+
+   1. Prerequisites: Have minimal or no sessions in the address book.
+
+   1. Test case: `free 14`<br>
+      Expected: Returns earliest day with 14 consecutive free hours (e.g., "MONDAY 08:00") or "No free time available" if no such slot exists.
+
 ### Editing a person
 
 1. Editing a person's contact details while all persons are being shown
@@ -833,7 +921,7 @@ _Some other test cases can be found within the user guide_
       Expected: First contact's name and phone are updated. Updated contact details shown in the result display.
 
    3. Test case: `edit -c 1 p/98765432` (where contact 2 already has phone 98765432)<br>
-      Expected: No person is updated. Error message: "A person with this phone number already exists in the contact list."
+      Expected: No person is updated. Error message: "A person with this phone number already exists in the address book."
 
    4. Test case: `edit -c 0 n/John`<br>
       Expected: No person is updated. Error message indicating invalid index shown.
@@ -844,19 +932,10 @@ _Some other test cases can be found within the user guide_
    6. Test case: `edit 1 n/John`<br>
       Expected: No person is updated. Error message: "A valid flag must be provided. Use -c for contact or -s for session."
 
-   7. Test case: `edit -c 1 sub/`<br>
-      Expected: All subjects are cleared from the first contact. Success message confirms subjects have been cleared.
-
-   8. Test case: `edit -c 1 sub/ sub/`<br>
-      Expected: No person is updated. Error message: "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects."
-
-   9. Test case: `edit -c 1 sub/ sub/MATH`<br>
-      Expected: No person is updated. Error message: "Cannot clear and edit subjects simultaneously. Use 'sub/' alone to clear, or provide subject values to replace."
-
    10. Other incorrect edit commands to try: `edit -c 1` (no fields), `edit -x 1 n/John` (invalid flag), `edit -c 999 n/John` (where 999 is larger than list size)<br>
       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
-1. Editing a person's session timings
+2. Editing a person's session timings while all persons are being shown
 
    1. Prerequisites: Have a contact with at least one session. List all persons using the `list` command.
 
@@ -911,25 +990,61 @@ _Some other test cases can be found within the user guide_
    10. Other incorrect setpayment commands to try: `setpayment`, `setpayment 1`, `setpayment x status/PAID` (where x is larger than the list size or non-numeric)<br>
       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
-
 ### Adding a session
-1. Adding a session
-    1. Prerequisites: List all persons using the `list` command. Multiple persons(at least 2) in the list but none of them with session tag(e.g. MON 1100 - 1200).
+
+1. Adding a session for a person while all persons are being shown
+
+    1. Prerequisites: List all persons using the `list` command. Multiple persons(at least 2) in the list but none of them with session tag(e.g. MON 1100 - 1200). 
+       At the start of every new test(_new number_), case run `clear` to ensure that the address book is empty.
+   
     2. Test case 1(a): `addsession 1 d/Mon s/1100 e/1200`<br>
        Expected: New session will be added under the first person in the list.
+   
     3. Test case 1(b): `addsession 2 d/Mon s/1100 e/1200`<br>
        Expected: New session will be added under the second person in the list.
+   
     4. Test case 2(a): `addsession 1 d/Mon s/1100 e/1200`<br>
        Expected: New session will be added under the first person in the list.
+   
     5. Test case 1(b): `addsession 1 d/Mon s/1130 e/1230`<br>
-       Expected: No new session will be added due to overlap sessions. Error details shown in the status message.
+       Expected: No new session will be added due to overlapping sessions. Error message indicating sessions overlap.
+   
     6. Test case 3: `addsession 1 d/Mon s/1130` <br>
-       Expected: No new person is added to the list due to missing parameter. Error details shown in status message.
+       Expected: No new person is added to the list due to missing parameter. Error message indicating missing parameter.
+
+### Clearing all entries
+
+1. Clearing all contacts from the address book
+
+    1. Prerequisites: Have at least one person in the address book.
+
+   2. Test case: `clear` followed by `y`<br>
+      Expected: After entering `clear`, a confirmation message "Are you sure you want to clear all data? (y/n)" is displayed. After entering `y`, all contacts are removed from the list. Result display shows success message. Person list is now empty.
+
+   3. Test case: `clear` followed by `n`<br>
+      Expected: After entering `clear`, a confirmation message is displayed. After entering `n`, the clear operation is cancelled. Result display shows command cancellation. All contacts remain in the list.
+
+   4. Test case: `clear` followed by invalid input (e.g., `abc`, `yes`, `no`)<br>
+      Expected: After entering `clear`, a confirmation message is displayed. After entering invalid input, result display shows "Invalid input. Please try 'clear' again, then enter 'y' or 'n'.". All contacts remain in the list.
+
+   5. Test case: `clear` on an already empty list, followed by `y`<br>
+      Expected: Confirmation message is displayed. After entering `y`, list remains empty. Success message still shown.
+
+   6. Test case: `clear extra parameters`<br>
+      Expected: Confirmation message is displayed (extra parameters are ignored). Entering `y` will clear all contacts, entering `n` will cancel the operation.
+
+   7. Test case: After `clear` and `y`, try `list`<br>
+      Expected: Empty list displayed with "0 persons listed!" message.
+
+<box type="warning" seamless>
+
+**Note:** The `clear` command is irreversible and will remove all data from the data file.
+
+</box>
 
 ### Saving data
 
 1. Dealing with missing/corrupted data files
-
    1. Open and close the jar file at least once
    2. There should be a data folder in the same directory as the jar file
    3. Open the .json file that is found within the folder
@@ -938,15 +1053,20 @@ _Some other test cases can be found within the user guide_
    6. The application will be opened with an empty list
 
 ## **Appendix: Effort**
-* Difficulty and Challenges faces
-  * Trying to integrate sessions was challenging as it meant that we had to keep track of how each operation that added or removed a session for a particular individual would affect other sessions in the addressbook. 
+
+* Difficulty and Challenges faced
+  * Trying to integrate sessions was challenging as it meant that we had to keep track of how each operation that added or removed a session for a particular individual would affect other sessions in the address book. 
+
 * Effort and Achievements of the project
-  * Extended Tags with a `SessionTag` class which allow for easy identification and keep track of the `Session` associated to the tag
-  * Extended AddressBook with `WeeklySessions` that will keep track of all the unique sessions within a week to allow for scheduling operations to be performed
-  * 
+  * Extended Tags with a `SessionTag` class which allow for easy identification and keep track of the `Session` associated to the tag.
+  * Extended AddressBook with `WeeklySessions` that will keep track of all the unique sessions within a week to allow for scheduling operations to be performed.
+  * Implemented a payment tracking system with three statuses (PENDING, PAID, OVERDUE), customizable billing cycles (1-31 days), automatic days overdue calculation
+
 
 ## **Appendix: Planned enhancements**
+
 Team size: 5
+
 1. **Users cannot specify a time period when using the Free Command**
    
    **Current Limitation:** The `free` command currently returns the earliest available time slot that can accommodate the specified `DURATION`, starting from the beginning of the week. However, tutors may want to find the earliest free time slot starting from a specific day or time, rather than just the absolute earliest slot available.
@@ -974,3 +1094,4 @@ Team size: 5
 
    This gives tutors full flexibility to personalize Zenith around their tutoring working hours, as we understand that different tutors have different work arrangements and availability.
 
+3. **Automatic payment status update from PENDING/PAID to OVERDUE**: The `setpayment` command currently requires manual updates when payments become overdue. The system does not automatically transition a PENDING or PAID status to OVERDUE when the billing cycle passes. In a future enhancement, Zenith could implement automatic status checking that updates payment statuses to OVERDUE when the billing cycle date is reached, eliminating the need for manual status updates and ensuring payment tracking remains accurate without user intervention.
