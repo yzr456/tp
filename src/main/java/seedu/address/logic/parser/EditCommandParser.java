@@ -129,8 +129,23 @@ public class EditCommandParser implements Parser<EditCommand> {
             editPersonDescriptor.setAddress(ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get()));
         }
 
-        // Parse subjects
-        parseSubjectsForEdit(argMultimap.getAllValues(PREFIX_SUBJECT)).ifPresent(editPersonDescriptor::setSubjects);
+        // Parse subjects - check for conflicting operations first
+        Collection<String> subjectValues = argMultimap.getAllValues(PREFIX_SUBJECT);
+        if (subjectValues.size() > 1) {
+            // Check if all are empty (duplicate clear operations)
+            boolean allEmpty = subjectValues.stream().allMatch(String::isEmpty);
+            if (allEmpty) {
+                throw new ParseException(EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+            }
+
+            // Check for mixed operations (clear and add at the same time)
+            boolean hasEmpty = subjectValues.stream().anyMatch(String::isEmpty);
+            boolean hasNonEmpty = subjectValues.stream().anyMatch(s -> !s.isEmpty());
+            if (hasEmpty && hasNonEmpty) {
+                throw new ParseException(EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
+            }
+        }
+        parseSubjectsForEdit(subjectValues).ifPresent(editPersonDescriptor::setSubjects);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
             throw new ParseException(EditCommand.MESSAGE_NOT_EDITED);
@@ -287,12 +302,19 @@ public class EditCommandParser implements Parser<EditCommand> {
     /**
      * Parses {@code Collection<String> subjects} into a {@code Set<Tag>} if {@code subjects} is non-empty.
      * Validates that each subject is a valid subject code.
+     * If subjects contains a single completely empty string (no whitespace),
+     * returns an empty set to clear all subjects.
      */
     private Optional<Set<Tag>> parseSubjectsForEdit(Collection<String> subjects) throws ParseException {
         assert subjects != null;
 
         if (subjects.isEmpty()) {
             return Optional.empty();
+        }
+
+        // Check if user explicitly wants to clear subjects (sub/ with completely empty value, no whitespace)
+        if (subjects.size() == 1 && subjects.iterator().next().isEmpty()) {
+            return Optional.of(Collections.emptySet());
         }
 
         Set<Tag> subjectTags = new HashSet<>();

@@ -109,6 +109,13 @@ public class PersonListPanel extends UiPart<Region> {
     }
 
     /**
+     * Returns the currently selected person, or null if none is selected.
+     */
+    public Person getSelectedPerson() {
+        return personListView.getSelectionModel().getSelectedItem();
+    }
+
+    /**
      * Custom {@code ListCell} that displays the graphics of a {@code Person} using a {@code PersonCard}.
      */
     class PersonListViewCell extends ListCell<Person> {

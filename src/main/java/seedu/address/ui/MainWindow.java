@@ -346,7 +346,7 @@ public class MainWindow extends UiPart<Stage> {
             if (commandResult.isExit()) {
                 handleExit();
             }
-            // Return focus to person list for fast typing
+            updateDetailedView(personListPanel.getSelectedPerson());
             Platform.runLater(() -> {
                 personListPanel.requestFocus();
             });
