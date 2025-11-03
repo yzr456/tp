@@ -110,7 +110,9 @@ Zenith is designed for tech-savvy private tutors who value keyboard efficiency:
     * The Detailed View will react and display the selected contact
 
 <box type="tip" seamless>
+
 **Tip:** You can use Zenith entirely without a mouse, making it ideal for fast typists who want to maximize efficiency.
+
 </box>
 
 ### Mouse Support
@@ -146,6 +148,7 @@ While Zenith is optimized for keyboard use, mouse support is fully available:
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
+
 </box>
 
 ### Viewing help : `help`
@@ -305,7 +308,9 @@ Format: `setpayment INDEX status/STATUS [start/DAY]`
 * If status is **OVERDUE**, the system automatically calculates and displays days overdue based on the billing cycle.
 
 <box type="info" seamless>
+
 ℹ️ **Note:** The system does not automatically update a **PAID** status to **OVERDUE**. You must manually update the payment status when payments become overdue.
+
 </box>
 
 Examples:
@@ -314,9 +319,11 @@ Examples:
 * `setpayment 3 status/OVERDUE` sets the 3rd student's status to OVERDUE and displays how many days overdue the payment is.
 
 <box type="tip" seamless>
+
 **Tips:**
 * Use `status/PENDING` when awaiting payment, `status/PAID` when confirmed, and `status/OVERDUE` to track late payments.
 * The days overdue count helps you prioritize follow-ups with students whose payments are most delayed.
+
 </box>
 
 
@@ -390,6 +397,7 @@ Zenith contact data are saved automatically as a JSON file `[JAR file location]/
 **Caution:**
 If your changes to the data file makes its format invalid, Zenith will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+
 </box>
 
 --------------------------------------------------------------------------------------------------------------------
