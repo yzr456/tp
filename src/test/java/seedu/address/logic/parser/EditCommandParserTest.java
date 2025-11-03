@@ -593,4 +593,68 @@ public class EditCommandParserTest {
         String userInput = "-c 1 sub/MATH sub/";
         assertParseFailure(parser, userInput, EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
     }
+
+    @Test
+    public void parse_sessionEditClearAllSessions_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = "-s " + targetIndex.getOneBased() + " clear/";
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSessions(new HashSet<>()); // Empty set to clear all sessions
+
+        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_sessionEditClearWithTextAfter_failure() {
+        String userInput = "-s 1 clear/text";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_sessionEditClearWithAdditionalContent_failure() {
+        String userInput = "-s 1 clear/ extra";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_sessionEditClearWithSessionPrefixes_failure() {
+        String userInput = "-s 1 clear/ d/MON s/0900 e/1100";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_sessionEditClearWithSessionPrefixesReverse_failure() {
+        String userInput = "-s 1 d/MON s/0900 e/1100 clear/";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_sessionEditClearNoIndex_failure() {
+        String userInput = "-s clear/";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_MISSING_INDEX, EditCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_sessionEditClearInvalidIndex_failure() {
+        // negative index
+        assertParseFailure(parser, "-s -1 clear/", MESSAGE_INVALID_INDEX);
+
+        // zero index
+        assertParseFailure(parser, "-s 0 clear/", MESSAGE_INVALID_INDEX);
+    }
+
+    @Test
+    public void parse_sessionEditClearWithOnlySessionPrefix_failure() {
+        // clear/ mixed with just one session prefix should fail
+        String userInput = "-s 1 clear/ d/MON";
+        assertParseFailure(parser, userInput,
+                String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+    }
 }
