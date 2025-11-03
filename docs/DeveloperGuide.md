@@ -429,7 +429,8 @@ Use case ends.
 - On success, Zenith displays the updated contact.
 
 **MSS**
-1. Tutor provides the contact index and new values for one or more fields (name, study year, phone, email, address).
+1. Tutor enters the edit command with the contact index and at least one field to update
+   (name, study year, phone, email, address, subjects, or sessions).
 2. Zenith validates the index and provided values.
 3. Zenith checks if the new phone or email conflicts with other contacts.
 4. Zenith updates the contact and displays the updated contact.
@@ -845,7 +846,16 @@ _Some other test cases can be found within the user guide_
    6. Test case: `edit 1 n/John`<br>
       Expected: No person is updated. Error message: "A valid flag must be provided. Use -c for contact or -s for session."
 
-   7. Other incorrect edit commands to try: `edit -c 1` (no fields), `edit -x 1 n/John` (invalid flag), `edit -c 999 n/John` (where 999 is larger than list size)<br>
+   7. Test case: `edit -c 1 sub/`<br>
+      Expected: All subjects are cleared from the first contact. Success message confirms subjects have been cleared.
+
+   8. Test case: `edit -c 1 sub/ sub/`<br>
+      Expected: No person is updated. Error message: "Multiple subject clear operations detected. Use 'sub/' only once to clear all subjects."
+
+   9. Test case: `edit -c 1 sub/ sub/MATH`<br>
+      Expected: No person is updated. Error message: "Cannot clear and edit subjects simultaneously. Use 'sub/' alone to clear, or provide subject values to replace."
+
+   10. Other incorrect edit commands to try: `edit -c 1` (no fields), `edit -x 1 n/John` (invalid flag), `edit -c 999 n/John` (where 999 is larger than list size)<br>
       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
 1. Editing a person's session timings
@@ -928,4 +938,3 @@ _Some other test cases can be found within the user guide_
    4. Within the outer most curly brace, input "break" anywhere
    5. On the next open of the jar file, there will be a prompt indicating that there were some problems loading the data file
    6. The application will be opened with an empty list
-
