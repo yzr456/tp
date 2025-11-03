@@ -159,7 +159,7 @@ public class WeeklySessions {
      * @return A formatted string describing the free time slot.
      */
     private String formatResult(DayOfWeek day, LocalTime time) {
-        return String.format("The earliest free time is: %s %s", day, time);
+        return day.toString() + " " + time.toString();
     }
 
     /**
