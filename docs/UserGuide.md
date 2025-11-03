@@ -365,6 +365,7 @@ Format: `free DURATION`
 
 * Finds the **earliest** free session of the specified `DURATION`.
 * `DURATION` refers to any integer between 1 - 14 hours given that valid session times are from 0800 - 2200 daily
+* This implementation of free will greedily find the earliest free time slot that meets the minimum duration
 
 Examples:
 _These are independent examples assuming that 1. The person we are trying to add sessions to exists 2. There are currently no sessions in the address book_
