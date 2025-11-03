@@ -929,3 +929,15 @@ _Some other test cases can be found within the user guide_
    5. On the next open of the jar file, there will be a prompt indicating that there were some problems loading the data file
    6. The application will be opened with an empty list
 
+## **Appendix: Effort**
+* Difficulty and Challenges faces
+  * Trying to integrate sessions was challenging as it meant that we had to keep track of how each operation that added or removed a session for a particular individual would affect other sessions in the addressbook. 
+* Effort and Achievements of the project
+  * Extended Tags with a `SessionTag` class which allow for easy identification and keep track of the `Session` associated to the tag
+  * Extended AddressBook with `WeeklySessions` that will keep track of all the unique sessions within a week to allow for scheduling operations to be performed
+  * 
+
+## **Appendix: Planned enhancements**
+Team size: 5
+1. **Users cannot specify a time period when using the Free Command**: The `free` command currently returns the earliest available time slot that can accommodate the specified `DURATION`. However, tutors may want to find the earliest free time slot starting from a specific time, rather than just the absolute earliest slot available. This can be achieved by adding addtion   
+
