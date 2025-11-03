@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CLEAR;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
@@ -182,7 +183,7 @@ public class EditCommandParser implements Parser<EditCommand> {
      */
     private EditCommand parseSessionEdit(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END);
+                ArgumentTokenizer.tokenize(args, PREFIX_DAY, PREFIX_START, PREFIX_END, PREFIX_CLEAR);
 
         if (argMultimap.getPreamble().isBlank()) {
             throw new ParseException(String.format(Messages.MESSAGE_MISSING_INDEX,
@@ -191,16 +192,25 @@ public class EditCommandParser implements Parser<EditCommand> {
 
         Index index = ParserUtil.parseIndex(argMultimap.getPreamble().split("\\s+")[0]);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
-            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
-                    EditCommand.MESSAGE_USAGE));
-        }
-
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
 
         // Extract only the session parameters (after the index)
         String sessionArgs = args.substring(args.indexOf(index.getOneBased() + "")
                 + String.valueOf(index.getOneBased()).length()).trim();
+        boolean hasClearPrefix = argMultimap.getValue(PREFIX_CLEAR).isPresent();
+        if (hasClearPrefix) {
+            if (!sessionArgs.equals("clear/")) {
+                throw new ParseException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT,
+                        EditCommand.MESSAGE_USAGE));
+            }
+            editPersonDescriptor.setSessions(Collections.emptySet());
+            return new EditCommand(index, editPersonDescriptor);
+        }
+
+        if (!arePrefixesPresent(argMultimap, PREFIX_DAY, PREFIX_START, PREFIX_END)) {
+            throw new ParseException(String.format(Messages.MESSAGE_MISSING_PREFIX,
+                    EditCommand.MESSAGE_USAGE));
+        }
 
         // Check if session parameters are empty - session editing requires at least one complete triplet
         if (sessionArgs.isEmpty()) {
