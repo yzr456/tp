@@ -305,7 +305,8 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_sessionEditNoFieldSpecified_failure() {
-        assertParseFailure(parser, "-s 1", String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "-s 1",
+                String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -420,9 +421,21 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = "-c " + targetIndex.getOneBased() + " sub/   " + NAME_DESC_AMY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(VALID_NAME_AMY)
-                .build();
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setName(new Name(VALID_NAME_AMY));
+        descriptor.setSubjects(new HashSet<>()); // Empty set to clear all subjects
+
+        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_contactEditClearAllSubjects_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = "-c " + targetIndex.getOneBased() + " sub/";
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSubjects(new HashSet<>()); // Empty set to clear all subjects
 
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
