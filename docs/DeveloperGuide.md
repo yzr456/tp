@@ -113,7 +113,7 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 <box type="info" seamless>
 
-**Note:** The lifeline for `DeleteCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
+**Note:** The lifeline for Parser classes should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline continues till the end of diagram.
 </box>
 
 How the `Logic` component works:
@@ -320,15 +320,15 @@ The free operation will go through the `Model` component as such:
 
 **Target user profile**:
 
-* tech savvy private tutor
-* manages 10-50+ students across different education levels (primary to university)
-* prefers typing commands over mouse clicks for speed and efficiency
-* needs quick access to information during back-to-back sessions (no time for slow navigation)
-* struggles to manage students' conflicting schedules and optimize their own time
-* has student details scattered across phone contacts, WhatsApp chats, and loose notes
-* values data privacy and prefers local storage over cloud-based solutions
+* Tech savvy private tutor
+* Manages 10-50+ students in Singapore across different education levels (primary to university)
+* Prefers typing commands over mouse clicks for speed and efficiency
+* Needs quick access to information during back-to-back sessions (no time for slow navigation)
+* Struggles to manage students' conflicting schedules and optimize their own time
+* Has student details scattered across phone contacts, WhatsApp chats, and loose notes
+* Values data privacy and prefers local storage over cloud-based solutions
 
-**Value proposition**: This product is for a tech-savvy private tutor who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
+**Value proposition**: This product is for a tech-savvy private tutor teaching students in Singapore, who prefers the use of CLI over GUI for its efficiency and minimalism. It simplifies tutoring workflow with a command-line address book that centralises student details, payments, and optimizes scheduling, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 
 ### User stories
@@ -349,7 +349,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *`    | private tutor                    | group students by classes                                          | organise my addressbook                                    |
 | `* *`    | private tutor                    | receive reminders for lessons                                      | don't miss any sessions                                    |
 | `* *`    | private tutor who earns money    | keep track of payments I received                                  | streamline my finances                                     |
-| `* *`    | user                             | delete all my personal data (non-contact related information)      | remove all personal information                            |
 | `* *`    | private tutor                    | track test scores                                                  | monitor improvement over time                              |
 | `* *`    | private tutor                    | record the topics each student has covered                         | identify gaps in knowledge                                 |
 | `* *`    | effective private tutor          | mark areas where a student struggles                               | focus those in future lessons.                             |
@@ -360,7 +359,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `*`      | private tutor                    | assign projects to each student                                    | tailor their learning paths                                |
 | `*`      | private tutor                    | update project completion status                                   | track project progress                                     |
 | `*`      | time-efficient private tutor     | filter students by location                                        | arrange back-to-back F2F lessons efficiently               |
-| `*`      | online private tutor             | track time zones for international students                        | schedule sessions at reasonable hours for everyone         |
 
 *{More to be added}*
 

@@ -74,7 +74,7 @@ Person *--> Payment
 SessionTag --|> Tag
 SessionTag *--> Session
 
-Tag ..> Subject : "subject tags\nuse values from"
+Tag ..> Subject
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
