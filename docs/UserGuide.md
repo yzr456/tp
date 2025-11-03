@@ -214,6 +214,7 @@ Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [
 * At least one optional field must be provided
 * Existing values will be updated to the input values
 * When editing subjects, the existing subjects will be **replaced** (not added to)
+* To clear all subjects from a student, use `sub/` with an empty value
 * Valid subjects: MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI
 
 Examples:
@@ -223,6 +224,8 @@ Examples:
    - Edits the name to `Betsy Crower` and study year to JC2
 * `edit -c 1 sub/MATH sub/PHY`
   - Replaces all existing subjects with Math and Physics only
+* `edit -c 1 sub/`
+  - Clears all subjects from the 1st student
 
 #### Edit Sessions: `edit -s`
 
@@ -434,4 +437,3 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 | **Help** | `help`                                                                                                                                                        |
 | **List** | `list`                                                                                                                                                        |
 | **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
-

@@ -305,7 +305,8 @@ public class EditCommandParserTest {
 
     @Test
     public void parse_sessionEditNoFieldSpecified_failure() {
-        assertParseFailure(parser, "-s 1", String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "-s 1",
+                String.format(Messages.MESSAGE_MISSING_PREFIX, EditCommand.MESSAGE_USAGE));
     }
 
     @Test
@@ -420,9 +421,21 @@ public class EditCommandParserTest {
         Index targetIndex = INDEX_FIRST_PERSON;
         String userInput = "-c " + targetIndex.getOneBased() + " sub/   " + NAME_DESC_AMY;
 
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(VALID_NAME_AMY)
-                .build();
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setName(new Name(VALID_NAME_AMY));
+        descriptor.setSubjects(new HashSet<>()); // Empty set to clear all subjects
+
+        EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_contactEditClearAllSubjects_success() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = "-c " + targetIndex.getOneBased() + " sub/";
+
+        EditPersonDescriptor descriptor = new EditPersonDescriptor();
+        descriptor.setSubjects(new HashSet<>()); // Empty set to clear all subjects
 
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
@@ -551,5 +564,33 @@ public class EditCommandParserTest {
 
         EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    public void parse_contactEditDuplicateEmptySubjects_failure() {
+        // Test with two empty subject prefixes
+        String userInput = "-c 1 sub/ sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+    }
+
+    @Test
+    public void parse_contactEditMultipleEmptySubjects_failure() {
+        // Test with three empty subject prefixes
+        String userInput = "-c 1 sub/ sub/ sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_DUPLICATE_SUBJECT_CLEAR);
+    }
+
+    @Test
+    public void parse_contactEditMixedEmptyAndNonEmptySubjects_failure() {
+        // Test conflicting operation: trying to clear and add at the same time
+        String userInput = "-c 1 sub/ sub/MATH";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
+    }
+
+    @Test
+    public void parse_contactEditMixedNonEmptyAndEmptySubjects_failure() {
+        // Test conflicting operation in reverse order
+        String userInput = "-c 1 sub/MATH sub/";
+        assertParseFailure(parser, userInput, EditCommand.MESSAGE_CONFLICTING_SUBJECT_OPERATION);
     }
 }
