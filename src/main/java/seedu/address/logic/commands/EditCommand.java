@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_CLEAR;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DAY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END;
@@ -57,6 +58,8 @@ public class EditCommand extends Command {
             + PREFIX_DAY + "DAY "
             + PREFIX_START + "START "
             + PREFIX_END + "END [MORE_SESSIONS]... (START and END must be between 0800 to 2200)\n"
+            + "Session Clear Parameters: -s INDEX (must be a positive integer) "
+            + "[" + PREFIX_CLEAR + "]\n"
             + "Example (Contact): " + COMMAND_WORD + " -c 1 "
             + PREFIX_NAME + "John Doe "
             + PREFIX_STUDY_YEAR + "SEC3 "
@@ -66,7 +69,9 @@ public class EditCommand extends Command {
             + "Example (Session): " + COMMAND_WORD + " -s 1 "
             + PREFIX_DAY + "MON "
             + PREFIX_START + "0900 "
-            + PREFIX_END + "1100\n";
+            + PREFIX_END + "1100\n"
+            + "Example (Clear Sessions): " + COMMAND_WORD + " -s 1 "
+            + PREFIX_CLEAR + "\n";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %1$s";
     public static final String MESSAGE_NOT_EDITED = "No fields specified for editing. "
