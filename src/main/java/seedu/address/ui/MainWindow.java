@@ -276,9 +276,18 @@ public class MainWindow extends UiPart<Stage> {
         primaryStage.setHeight(guiSettings.getWindowHeight());
         primaryStage.setWidth(guiSettings.getWindowWidth());
         if (guiSettings.getWindowCoordinates() != null) {
-            primaryStage.setX(guiSettings.getWindowCoordinates().getX());
-            primaryStage.setY(guiSettings.getWindowCoordinates().getY());
+            double x = guiSettings.getWindowCoordinates().getX();
+            double y = guiSettings.getWindowCoordinates().getY();
+            if (isWithinScreenBounds(x, y)) {
+                primaryStage.setX(x);
+                primaryStage.setY(y);
+            }
         }
+    }
+
+    private boolean isWithinScreenBounds(double x, double y) {
+        return javafx.stage.Screen.getScreens().stream()
+                .anyMatch(screen -> screen.getBounds().contains(x, y));
     }
 
     /**
