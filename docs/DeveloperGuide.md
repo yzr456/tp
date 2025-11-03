@@ -716,8 +716,6 @@ testers are expected to do more *exploratory* testing.
    1. Re-launch the app by running it through command line.<br>
        Expected: The most recent window size and location is retained.
 
-1. _{ more test cases …​ }_
-
 ### Adding a person
 1. Adding a person
    1. Prerequisites: At the start of every new test(_new number_) case run `Clear` to ensure that the address book is empty.
@@ -803,8 +801,6 @@ testers are expected to do more *exploratory* testing.
     1. Prerequisites: Run `clear` to ensure the address book is empty.
     2. Test case: `add n/Kate Ng s/JC2 p/81234568 e/kate@example.com a/Blk 567 Street 89`, then `addsubject 1 sub/MATH`, then `addsubject 1 sub/PHY sub/CHEM`<br>
        Expected: PHY and CHEM are added successfully. Kate now has three subject tags (MATH, PHY, CHEM). Success message confirms addition of PHY and CHEM.
-
-1. _{ more test cases …​ }_
 
 ### Finding earliest free time slot
 Finding a free session
@@ -907,7 +903,6 @@ _Some other test cases can be found within the user guide_
    10. Other incorrect setpayment commands to try: `setpayment`, `setpayment 1`, `setpayment x status/PAID` (where x is larger than the list size or non-numeric)<br>
       Expected: Error messages shown explaining the specific issue with the command format or parameters.
 
-1. _{ more test cases …​ }_
 
 ### Adding a session
 1. Adding a session
@@ -927,6 +922,10 @@ _Some other test cases can be found within the user guide_
 
 1. Dealing with missing/corrupted data files
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Open and close the jar file at least once
+   2. There should be a data folder in the same directory as the jar file
+   3. Open the .json file that is found within the folder
+   4. Within the outer most curly brace, input "break" anywhere
+   5. On the next open of the jar file, there will be a prompt indicating that there were some problems loading the data file
+   6. The application will be opened with an empty list
 
-1. _{ more test cases …​ }_
