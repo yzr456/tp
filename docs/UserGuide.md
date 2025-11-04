@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-Zenith is for a _tech savvy private tutor teaching students in Singapore_, who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
+Zenith is a desktop address book application for a _tech savvy private tutor teaching students in Singapore_, who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 <!-- * Table of Contents -->
 <page-nav-print />
