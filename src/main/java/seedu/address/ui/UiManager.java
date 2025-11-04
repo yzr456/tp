@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import seedu.address.MainApp;
@@ -80,15 +79,6 @@ public class UiManager implements Ui {
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
         alert.getDialogPane().setId(ALERT_DIALOG_PANE_FIELD_ID);
-        alert.getDialogPane().setPrefWidth(500);
-        alert.getDialogPane().setMinHeight(150);
-        Platform.runLater(() -> {
-            Label contentLabel = (Label) alert.getDialogPane().lookup(".content.label");
-            if (contentLabel != null) {
-                contentLabel.setWrapText(true);
-                contentLabel.setPrefWidth(450);
-            }
-        });
         alert.showAndWait();
     }
 
