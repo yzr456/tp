@@ -1059,13 +1059,15 @@ testers are expected to do more *exploratory* testing.
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
-   1. Open and close the jar file at least once
-   2. There should be a data folder in the same directory as the jar file
-   3. Open the .json file that is found within the folder
-   4. Within the outermost curly brace, input "break" anywhere
-   5. On the next open of the jar file, there will be a prompt indicating that there were some problems loading the data file
-   6. The application will be opened with an empty list
+1. Simulating missing/corrupted data files
+   1. Open the app
+   2. Do at least one operation (e.g. list)
+   3. Close the app
+   4. There should be a data folder in the same directory as the jar file
+   5. Open the zenith.json file found within the data folder
+   6. Within the outermost curly brace, input "break" anywhere
+   7. The next time the app is opened, there will be a prompt indicating that there were some problems loading the data file
+   8. The application will be opened with an empty list
 
 ## **Appendix: Effort**
 
@@ -1109,4 +1111,28 @@ Team size: 5
 
    This gives tutors full flexibility to personalize Zenith around their tutoring working hours, as we understand that different tutors have different work arrangements and availability.
 
-3. **Automatic payment status update from PENDING/PAID to OVERDUE**: The `setpayment` command currently requires manual updates when payments become overdue. The system does not automatically transition a PENDING or PAID status to OVERDUE when the billing cycle passes. In a future enhancement, Zenith could implement automatic status checking that updates payment statuses to OVERDUE when the billing cycle date is reached, eliminating the need for manual status updates and ensuring payment tracking remains accurate without user intervention.
+3. **Automatic payment status update from PENDING/PAID to OVERDUE**
+
+   **Current Limitation:**
+   The `setpayment` command currently requires manual updates when payments become overdue. The system does not
+   automatically transition a PENDING or PAID status to OVERDUE when the billing cycle passes.
+
+   **Planned Enhancement:**
+   We plan to implement automatic status checking that updates payment statuses to OVERDUE when the billing cycle date
+   is reached. 
+
+   Tutors will be able to:
+    * Have payments automatically marked as OVERDUE when the billing date passes
+    * Track payment status accuracy without manual intervention
+    * Receive notifications about newly overdue payments
+
+4. **Expand Study Year Parameter Scope**
+
+   **Current Limitation:** The study year parameter is restricted to predefined academic levels (PRI, SEC, JC, POLY, UNI) with specific year numbers. This does not accommodate individuals who are not pursuing formal education or those in alternative education pathways.
+
+   **Planned Enhancement:** Introduce more flexible categorization options to support diverse student backgrounds and tutoring scenarios.
+
+   Tutors will be able to:
+    - Add contacts who are not currently enrolled in traditional educational institutions
+    - Categorize students in alternative education pathways not covered by current categories
+    - Use flexible labels like "N/A" or "Other" for cases that don't fit standard academic classifications

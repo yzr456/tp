@@ -6,7 +6,7 @@
 
 # Zenith User Guide
 
-Zenith is for a _tech savvy private tutor teaching students in Singapore_, who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
+Zenith is a desktop address book application for a _tech savvy private tutor teaching students in Singapore_, who prefers the use of CLI over GUI for its efficiency and minimalism. It **simplifies tutoring workflow** with a command-line address book that **centralises student details, payments, and optimizes scheduling**, all designed to enhance personalised tutoring through quick, efficient access and management.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -166,8 +166,8 @@ Adds a person to the address book.
 
 Format: `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS`
 
-Constraints:
-`NAME`: Alphanumerical characters, spaces, hyphens, apostrophes, not more than 100 characters long.
+**Constraints:**
+* `NAME`: Alphanumerical characters, spaces, hyphens, apostrophes, not more than 100 characters long.
 * `STUDY_YEAR`: Must follow the format `(ACAD_LEVEL)(NUMBER)` where:
 
 | Academic Level | Valid Numbers |
@@ -178,11 +178,9 @@ Constraints:
 | POLY           | 1 - 3         |
 | UNI            | 1 - 5         |
 
-`EMAIL`: Standard email format.
-`PHONE_NUMBER`: Singaporean mobile number, starts with 8 or 9 and is eight numeric digits long.
-`ADDRESS`: Alphanumerical characters, whitespaces, hyphens, and hashes, not more than 500 characters long.
-
-    
+* `EMAIL`: Standard email format.
+* `PHONE_NUMBER`: Singaporean mobile number, starts with 8 or 9 and is eight numeric digits long.
+* `ADDRESS`: Alphanumerical characters, whitespaces, hyphens, and hashes, not more than 500 characters long.
 
 Examples:
 * `add n/John Doe s/PRI1 p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
@@ -205,18 +203,18 @@ Edits the contact information and subjects of a student.
 Format: `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​`
 
 **Parameters:**
-* `INDEX`: The position number of the student in the displayed list (must be a positive integer: 1, 2, 3, ... that is smaller or equal to the address book size)
-* `[n/NAME]`: New name for the student (optional)
-* `[s/STUDY_YEAR]`: New study year (optional)
-* `[p/PHONE]`: New phone number (optional)
-* `[e/EMAIL]`: New email address (optional)
-* `[a/ADDRESS]`: New address (optional)
-* `[sub/SUBJECT]…​`: New subjects (optional) - Can specify multiple subjects
+* `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size.
+* `[n/NAME]`: New name for the student (optional, cannot be blank if specified)
+* `[s/STUDY_YEAR]`: New study year (optional, cannot be blank if specified)
+* `[p/PHONE]`: New phone number (optional, cannot be blank if specified)
+* `[e/EMAIL]`: New email address (optional, cannot be blank if specified)
+* `[a/ADDRESS]`: New address (optional, cannot be blank if specified)
+* `[sub/SUBJECT]…​`: New subjects (optional, can be blank if specified) (multiple subjects can also be specified)
 
 **Notes:**
-* At least one optional field must be provided
-* Existing values will be updated to the input values
-* When editing subjects, the existing subjects will be **replaced** (not added to)
+* At least one optional field must be provided.
+* Existing values will be updated to the input values.
+* When editing subjects, the existing subjects will be **replaced** (not added to).
 * To clear all subjects from a student, use `sub/` with an empty value
 * Valid subjects: MATH, ENG, SCI, PHY, CHEM, BIO, HIST, GEOG, LIT, CHI, MALAY, TAMIL, POA, ECONS, ART, MUSIC, COMSCI
 
@@ -224,17 +222,18 @@ Examples:
 * `edit -c 1 p/91234567 e/johndoe@example.com`
     - Edits the phone number and email of the 1st student to `91234567` and `johndoe@example.com`
 * `edit -c 2 n/Betsy Crower s/JC2`
-   - Edits the name to `Betsy Crower` and study year to JC2
+    - Edits the name to `Betsy Crower` and study year to JC2
 * `edit -c 1 sub/MATH sub/PHY`
-  - Replaces all existing subjects with Math and Physics only
+    - Replaces all existing subjects with Math and Physics only
 * `edit -c 1 sub/`
-  - Clears all subjects from the 1st student
+    - Clears all subjects from the 1st student
 
 #### Edit Sessions: `edit -s`
 
 Edits the tutoring sessions of a student.
 
-Format: `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/] `
+Format: `edit -s INDEX d/DAY s/START e/END …​`
+Format: `edit -s INDEX clear/`
 
 **Parameters:**
 * `INDEX`: The position number of the student in the displayed list and **must be a positive integer** 1, 2, 3, …​ that is smaller or equal to the current address book size.
@@ -243,8 +242,8 @@ Format: `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/] `
 * `e/END`: End time in 24-hour format (e.g., 1100, 1630).
 
 **Notes:**
-* `[d/DAY] [s/START] [e/END]` make up one parameter group and `[clear/]` make up the second parameter group, at least one parameter group must be present
-* `[clear/]` can be used to clear all sessions associated with that person 
+* `d/DAY s/START e/END` is a parameter group for a session. You can add multiple sessions by repeating the pattern.
+* `clear/` can be used to clear all sessions associated with that person.
 * Sessions must follow the order: `d/` then `s/` then `e/`.
 * You can edit multiple sessions at once by repeating the pattern.
 * When editing sessions, **all existing sessions are replaced** with the new ones.
@@ -257,7 +256,7 @@ Format: `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/] `
 * `edit -s 2 d/TUE s/1400 e/1600 d/THU s/1500 e/1700`
     - Replaces all sessions for student 2 with two sessions: Tuesday 2pm-4pm and Thursday 3pm-5pm.
 * `edit -s 1 clear/`
-    - Removes all sessions associated with person at index 1
+    - Removes all sessions associated with person at index 1.
 
 ### Locating persons by name: `find`
 
@@ -265,12 +264,12 @@ Finds persons whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]…​`
 
-* The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
+* The search is case-insensitive. e.g `hans` will match `Hans`.
+* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`.
 * Only the name is searched.
 * Partial matches are also shown, `ans` will match `Hans` `ansel`.
 * Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`.
 
 Examples:
 * `find John` returns `john` and `John Doe`
@@ -402,7 +401,7 @@ Examples:
 
 ### Finding a free session : `free`
 
-Finds the earliest free session from the address book.
+Finds the earliest free session in the week from the address book.
 
 Format: `free DURATION`
 
@@ -418,7 +417,7 @@ _These are independent examples assuming that 1. The person we are trying to add
 
 ### Clearing all entries : `clear`
 
-Clears all entries from the address book.
+Clears all entries from the address book after confirmation.
 
 <box type="warning" seamless>
 
@@ -428,6 +427,21 @@ This action is irreversible and will remove all data from the data file.
 </box>
 
 Format: `clear`
+
+**How it works:**
+1. Enter `clear` command - you will be prompted to confirm this action
+2. Type `y` to confirm and delete all entries, or `n` to cancel
+3. Any other input will be treated as invalid and you'll need to start over
+
+Examples:
+* `clear` followed by `y` - clears all entries
+* `clear` followed by `n` - cancels the clear operation and keeps all data
+
+<box type="tip" seamless>
+
+**Tip:** The confirmation step helps prevent accidental data loss. Make sure you really want to delete all entries before typing `y`.
+
+</box>
 
 ### Exiting the program : `exit`
 
@@ -446,8 +460,9 @@ Zenith contact data are saved automatically as a JSON file `(JAR file location)/
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, Zenith will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file makes its format invalid, Zenith will display an error message and start with an empty address book.<br>
+The invalid data file will remain unchanged until you perform any operation, at which point the file will be overwritten with the new data. Hence, it is recommended to take a backup of the file before editing it, and if you see an error message on startup, you can restore your backup before making any changes.<br>
+Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.<br>
 
 </box>
 
@@ -456,31 +471,25 @@ Furthermore, certain edits can cause Zenith to behave in unexpected ways (e.g., 
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?<br>
-**A**: Install the app in the other computer and overwrite the .json file that is found in the data folder in the same directory as the app .jar file, with your edited zenith.json file.
-
---------------------------------------------------------------------------------------------------------------------
-
-## Known issues
-
-1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
+**A**: Install the app in the other computer and overwrite zenith.json which is found in the data folder in the same directory as zenith.jar, with your edited zenith.json file.
 
 --------------------------------------------------------------------------------------------------------------------
 
 ## Command summary
 
-| Action | Format, Examples                                                                                                                                              |
-|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Add** | `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
-| **Add Session** | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                          |
-| **Add Subject** | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                               |
-| **Clear** | `clear`                                                                                                                                                       |
-| **Delete** | `delete INDEX` <br> e.g., `delete 3`                                                                                                                          |
-| **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                          |
-| **Edit Session** | `edit -s INDEX [d/DAY] [s/START] [e/END] [clear/]` <br> e.g., `edit -s 1 d/MON s/0900 e/1100`                                                                 |
-| **Exit** | `exit`                                                                                                                                                        |
-| **Find** | `find KEYWORD [MORE_KEYWORDS]…​` <br> e.g., `find John David`                                                                                                 |
-| **Free** | `free DURATION` <br> e.g., `free 4`                                                                                                                           |
-| **Help** | `help`                                                                                                                                                        |
-| **List** | `list`                                                                                                                                                        |
-| **Set Payment** | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                   |
+| Action           | Format, Examples                                                                                                                                            |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Add**          | `add n/NAME s/STUDY_YEAR p/PHONE_NUMBER e/EMAIL a/ADDRESS` <br> e.g., `add n/John Doe s/SEC3 p/98765432 e/johnd@example.com a/John street, block 123, #01-01` |
+| **Add Session**  | `addsession INDEX d/DAY s/START e/END` <br> e.g., `addsession 1 d/MON s/0900 e/1100`                                                                        |
+| **Add Subject**  | `addsubject INDEX sub/SUBJECT [sub/MORE_SUBJECTS]…​` <br> e.g., `addsubject 1 sub/MATH sub/SCI`                                                             |
+| **Clear**        | `clear`                                                                                                                                                     |
+| **Delete**       | `delete INDEX` <br> e.g., `delete 3`                                                                                                                        |
+| **Edit Contact** | `edit -c INDEX [n/NAME] [s/STUDY_YEAR] [p/PHONE] [e/EMAIL] [a/ADDRESS] [sub/SUBJECT]…​` <br> e.g., `edit -c 1 n/John Doe p/91234567`                        |
+| **Edit Session** | `edit -s INDEX d/DAY s/START e/END …​` or `edit -s INDEX clear/` <br> e.g., `edit -s 1 d/MON s/0900 e/1100` or `edit -s 1 clear/`                           |
+| **Exit**         | `exit`                                                                                                                                                      |
+| **Find**         | `find KEYWORD [MORE_KEYWORDS]…​` <br> e.g., `find John David`                                                                                               |
+| **Free**         | `free DURATION` <br> e.g., `free 4`                                                                                                                         |
+| **Help**         | `help`                                                                                                                                                      |
+| **List**         | `list`                                                                                                                                                      |
+| **Set Payment**  | `setpayment INDEX status/STATUS [start/DAY]` <br> e.g., `setpayment 1 status/PAID start/15`                                                                 |
 
