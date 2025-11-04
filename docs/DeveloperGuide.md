@@ -1074,6 +1074,7 @@ testers are expected to do more *exploratory* testing.
 * Difficulty and Challenges faced
   * Trying to integrate sessions was challenging as it meant that we had to keep track of how each operation that added or removed a session for a particular individual would affect other sessions in the address book. 
 
+
 * Effort and Achievements of the project
   * Extended Tags with a `SessionTag` class which allow for easy identification and keep track of the `Session` associated to the tag.
   * Extended AddressBook with `WeeklySessions` that will keep track of all the unique sessions within a week to allow for scheduling operations to be performed.
