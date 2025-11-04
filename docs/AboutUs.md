@@ -18,6 +18,7 @@ We are a team based in the [School of Computing, National University of Singapor
 [[github](https://github.com/mackerelsoup)]
 
 * Role: In charge of logic
+* Responsibilities: Add & Free command logic
 
 =======
 ## Project team
@@ -30,6 +31,7 @@ We are a team based in the [School of Computing, National University of Singapor
 [[portfolio](team/johndoe.md)]
 
 * Role: Deliverables and deadlines
+* Responsibilities: Edit command logic
 
 ### Zirui
 
@@ -37,7 +39,8 @@ We are a team based in the [School of Computing, National University of Singapor
 
 [[github](https://github.com/yzr456)]
 
-* Role: In charge of Code quality
+* Role: In charge of code quality & logic
+* Responsibilities: Command parsing, Subject, & Payment command logic
 
 ### Yeo Kai Bin
 
@@ -46,7 +49,7 @@ We are a team based in the [School of Computing, National University of Singapor
 [[github](https://github.com/kbyeo)]
 
 * Role: Scheduling and tracking
-* Responsibilities: Storage
+* Responsibilities: UI
 
 ### Jin Seng
 
@@ -56,5 +59,5 @@ We are a team based in the [School of Computing, National University of Singapor
 [[portfolio](team/johndoe.md)]
 
 * Role: Testing
-* Responsibilities: UI
+* Responsibilities: Session command logic
 
