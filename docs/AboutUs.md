@@ -28,7 +28,6 @@ We are a team based in the [School of Computing, National University of Singapor
 <img src="images/zaviercsj.png" width="200px">
 
 [[github](https://github.com/ZavierCSJ)]
-[[portfolio](team/johndoe.md)]
 
 * Role: Deliverables and deadlines
 * Responsibilities: Edit command logic
@@ -56,7 +55,6 @@ We are a team based in the [School of Computing, National University of Singapor
 <img src="images/teejinseng.png" width="200px">
 
 [[github](https://github.com/TeeJinSeng)]
-[[portfolio](team/johndoe.md)]
 
 * Role: Testing
 * Responsibilities: Session command logic
